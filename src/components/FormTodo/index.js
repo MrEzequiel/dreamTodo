@@ -1,14 +1,18 @@
 import { useRef, useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
+import { ACTIONS } from '../../App'
 
 import * as s from './styles'
 
-function FormTodo() {
+function FormTodo({ dispatch }) {
   const inputEl = useRef()
   const [name, setName] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault()
+    if (!name.trim()) return
+
+    dispatch({ types: ACTIONS.ADD_TODO, payload: { name } })
     setName('')
     inputEl.current.focus()
   }

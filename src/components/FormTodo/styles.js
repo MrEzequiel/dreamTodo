@@ -32,7 +32,7 @@ export const ButtonStyle = styled.button`
   align-items: center;
   justify-content: center;
   background: #1de;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 30px;
   height: 30px;
   color: #0e0e0e;
