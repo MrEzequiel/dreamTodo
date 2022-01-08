@@ -15,10 +15,9 @@ export default createGlobalStyle`
   }
 
   body {
-    background: #181818;
-    color: #f7f7f7;
+    background: ${props => props.theme.colors.g2};
+    color: ${props => props.theme.colors.g5};
     font: 400 1.6rem sans-serif;
-    margin: 10px;
   }
 
   button,

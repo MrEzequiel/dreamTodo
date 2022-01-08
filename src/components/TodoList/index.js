@@ -6,7 +6,9 @@ function TodoList({ todos }) {
 
   return (
     <s.TodoWrapper>
-      <h2>To Do - {todos.length}</h2>
+      <h2>
+        {todos.length > 1 ? 'Tasks' : 'Task'} - {todos.length}
+      </h2>
 
       <s.TodoListWrapper>
         {todos.map(todo => (

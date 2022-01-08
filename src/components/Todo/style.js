@@ -1,12 +1,11 @@
 import styled from 'styled-components'
 
 export const TodoWrapper = styled.li`
-  background: #121212;
-  border-radius: 15px;
+  background: ${props => props.theme.colors.g3};
+  border-radius: ${props => props.theme.borderRadius};
   padding: 15px;
 
   display: flex;
-  align-items: center;
   gap: 15px;
 
   transition: box-shadow 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -32,9 +31,15 @@ export const TodoWrapper = styled.li`
   &:hover {
     box-shadow: 0 8px 8px -3px rgba(0, 0, 0, 0.1);
   }
+
+  p {
+    align-self: center;
+    line-height: 1.5em;
+  }
 `
 
 export const InputCheckboxTodo = styled.label`
+  flex-shrink: 0;
   user-select: none;
   cursor: pointer;
   position: relative;
@@ -42,8 +47,8 @@ export const InputCheckboxTodo = styled.label`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #1de;
-  border-radius: 15px;
+  border: 2px solid ${props => props.theme.colors.colorPrimary};
+  border-radius: 10px;
   width: 25px;
   height: 25px;
 
