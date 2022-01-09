@@ -18,7 +18,7 @@ function newTodo(name) {
 function reducer(todos, action) {
   switch (action.types) {
     case ACTIONS.ADD_TODO:
-      return [...todos, newTodo(action.payload.name)]
+      return [newTodo(action.payload.name), ...todos]
     default:
       return todos
   }

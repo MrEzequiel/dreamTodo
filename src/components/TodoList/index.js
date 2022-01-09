@@ -2,7 +2,7 @@ import Todo from '../Todo'
 import * as s from './styles'
 
 function TodoList({ todos }) {
-  console.log(todos)
+  // const todosCompleted = todos.filter(todo => todo.complete)
 
   return (
     <s.TodoWrapper>

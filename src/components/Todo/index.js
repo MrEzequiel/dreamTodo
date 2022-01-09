@@ -1,13 +1,13 @@
 import { memo } from 'react'
-import { FaCheck } from 'react-icons/fa'
 import * as s from './style'
 
 function Todo({ todo }) {
+  function handleChangeForComplete() {}
+
   return (
     <s.TodoWrapper>
       <s.InputCheckboxTodo>
-        <input type="checkbox" />
-        <FaCheck size={12} />
+        <input type="checkbox" onChange={handleChangeForComplete} />
       </s.InputCheckboxTodo>
 
       <p>{todo.name}</p>

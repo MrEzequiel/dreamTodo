@@ -17,7 +17,7 @@ export default createGlobalStyle`
   body {
     background: ${props => props.theme.colors.g2};
     color: ${props => props.theme.colors.g5};
-    font: 400 1.6rem sans-serif;
+    font: 400 1.6rem 'Lexend', sans-serif;
   }
 
   button,
