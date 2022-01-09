@@ -1,12 +1,14 @@
-import { useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
-import { ACTIONS } from '../../App'
+import { TodoListContext } from '../../context/TodoListContext'
 
 import * as s from './styles'
 
-function FormTodo({ dispatch }) {
+function FormTodo() {
   const inputEl = useRef()
   const [name, setName] = useState('')
+
+  const { dispatch, ACTIONS } = useContext(TodoListContext)
 
   function handleSubmit(e) {
     e.preventDefault()

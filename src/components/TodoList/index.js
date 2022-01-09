@@ -1,7 +1,12 @@
+import { useContext } from 'react'
+import { TodoListContext } from '../../context/TodoListContext'
 import Todo from '../Todo'
 import * as s from './styles'
 
-function TodoList({ todos }) {
+function TodoList() {
+  const { todos } = useContext(TodoListContext)
+  if (!todos.length) return null
+
   // const todosCompleted = todos.filter(todo => todo.complete)
 
   return (
