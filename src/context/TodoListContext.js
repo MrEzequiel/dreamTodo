@@ -10,13 +10,22 @@ function reducer(todos, action) {
   switch (action.types) {
     case ACTIONS.ADD_TODO:
       return [newTodo(action.payload.name), ...todos]
+
+    case ACTIONS.TOGGLE_TODO:
+      return todos.map(todo => {
+        if (action.payload.id !== todo.id) return todo
+
+        return { ...todo, complete: !todo.complete }
+      })
+
     default:
       return todos
   }
 }
 
 const ACTIONS = {
-  ADD_TODO: 'add-todo'
+  ADD_TODO: 'add-todo',
+  TOGGLE_TODO: 'toggle-todo'
 }
 
 function TodoListProvider({ children }) {
