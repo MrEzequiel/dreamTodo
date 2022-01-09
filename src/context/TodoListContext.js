@@ -12,11 +12,17 @@ function reducer(todos, action) {
       return [newTodo(action.payload.name), ...todos]
 
     case ACTIONS.TOGGLE_TODO:
-      return todos.map(todo => {
-        if (action.payload.id !== todo.id) return todo
+      // find todo complete and toggle complete
+      let todoToggle = todos.find(todo => action.payload.id === todo.id)
+      todoToggle = { ...todoToggle, complete: !todoToggle.complete }
 
-        return { ...todo, complete: !todo.complete }
-      })
+      // if there is only one task, the other procedures are unnecessary.
+      if (todos.length === 1) return [todoToggle]
+
+      // removing to do you changed and adding to the first item in the array
+      todos = todos.filter(todo => action.payload.id !== todo.id)
+      todos.unshift(todoToggle)
+      return todos
 
     default:
       return todos
