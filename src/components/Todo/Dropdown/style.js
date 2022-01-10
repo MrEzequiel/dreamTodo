@@ -32,16 +32,14 @@ export const DropdownStyle = styled.div`
 
   @keyframes show-down {
     from {
-      opacity: 0.4;
       max-height: 0%;
     }
     to {
-      opacity: 1;
       max-height: 400px;
     }
   }
 
-  animation: show-down 1s ease;
+  animation: show-down 800ms ease-in-out;
 
   width: 100px;
   border-radius: ${props => props.theme.borderRadius};

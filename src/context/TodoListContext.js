@@ -6,6 +6,10 @@ function newTodo(name) {
   return { id: Date.now(), name, complete: false }
 }
 
+function removeTodoFromId(id, todos) {
+  return todos.filter(todo => id !== todo.id)
+}
+
 function reducer(todos, action) {
   switch (action.types) {
     case ACTIONS.ADD_TODO:
@@ -20,9 +24,12 @@ function reducer(todos, action) {
       if (todos.length === 1) return [todoToggle]
 
       // removing to do you changed and adding to the first item in the array
-      todos = todos.filter(todo => action.payload.id !== todo.id)
+      todos = removeTodoFromId(action.payload.id, todos)
       todos.unshift(todoToggle)
       return todos
+
+    case ACTIONS.REMOVE_TODO:
+      return removeTodoFromId(action.payload.id, todos)
 
     default:
       return todos
@@ -31,7 +38,8 @@ function reducer(todos, action) {
 
 const ACTIONS = {
   ADD_TODO: 'add-todo',
-  TOGGLE_TODO: 'toggle-todo'
+  TOGGLE_TODO: 'toggle-todo',
+  REMOVE_TODO: 'remove-todo'
 }
 
 function TodoListProvider({ children }) {

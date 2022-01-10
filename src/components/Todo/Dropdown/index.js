@@ -1,24 +1,35 @@
-import { useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { TodoListContext } from '../../../context/TodoListContext'
+
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
 import * as s from './style'
 
 function Dropdown({ todo }) {
+  const { dispatch, ACTIONS } = useContext(TodoListContext)
   const DropdownEl = useRef()
   const [open, setOpen] = useState(false)
 
-  function handleOutsideClick({ target }) {
-    if (!DropdownEl.current.contains(target)) {
-      setOpen(prev => !prev)
-      window.removeEventListener('click', handleOutsideClick)
-    }
-  }
-
   function handleClick() {
     setOpen(prev => !prev)
+  }
 
-    setTimeout(() => window.addEventListener('click', handleOutsideClick))
+  useEffect(() => {
+    function handleOutsideClick({ target }) {
+      if (!DropdownEl.current?.contains(target)) {
+        window.removeEventListener('click', handleOutsideClick)
+        setOpen(prev => !prev)
+      }
+    }
 
-    if (!open) window.removeEventListener('click', handleOutsideClick)
+    if (open) {
+      window.addEventListener('click', handleOutsideClick)
+    }
+
+    return () => window.removeEventListener('click', handleOutsideClick)
+  }, [open])
+
+  function handleClickRemove() {
+    dispatch({ types: ACTIONS.REMOVE_TODO, payload: { id: todo.id } })
   }
 
   return (
@@ -34,7 +45,7 @@ function Dropdown({ todo }) {
             edit
           </s.DropdownItens>
 
-          <s.DropdownItens>
+          <s.DropdownItens onClick={handleClickRemove}>
             <FaTrash />
             remove
           </s.DropdownItens>
