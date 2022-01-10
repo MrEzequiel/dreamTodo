@@ -25,6 +25,8 @@ function Dropdown({ todo, setHasEdit }) {
     } else {
       window.removeEventListener('click', handleOutsideClick)
     }
+
+    return () => window.removeEventListener('click', handleOutsideClick)
   }, [open])
 
   function handleClickRemove() {
