@@ -11,7 +11,8 @@ const darkTheme = {
     g3: '#2E2E2E',
     g4: '#404040',
     g5: '#f7f7f7',
-    g6: '#EDEDED'
+    g6: '#EDEDED',
+    g7: '#DEDEDE'
   }
 }
 

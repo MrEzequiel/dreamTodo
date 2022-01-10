@@ -17,26 +17,28 @@ function TodoList() {
         <>
           <h2>
             {todosNotCompleted.length > 1 ? 'Tasks' : 'Task'} -{' '}
-            {todosNotCompleted.length}
+            <strong>{todosNotCompleted.length}</strong>
           </h2>
 
-          <s.TodoListWrapper>
+          <ul>
             {todosNotCompleted.map(todo => (
               <Todo key={todo.id} todo={todo} />
             ))}
-          </s.TodoListWrapper>
+          </ul>
         </>
       )}
 
       {!!todosCompleted.length && (
         <>
-          <h2>Completed - {todosCompleted.length}</h2>
+          <h2>
+            Completed - <strong>{todosCompleted.length}</strong>
+          </h2>
 
-          <s.TodoListWrapper>
+          <ul>
             {todosCompleted.map(todo => (
               <Todo key={todo.id} todo={todo} />
             ))}
-          </s.TodoListWrapper>
+          </ul>
         </>
       )}
     </s.TodoWrapper>

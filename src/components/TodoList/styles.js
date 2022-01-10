@@ -4,12 +4,16 @@ import { Container } from '../../styles/LayoutComponents'
 export const TodoWrapper = styled.div`
   ${Container()}
   margin-bottom: 40px;
+  padding-top: 10px;
 
   h2 {
-    margin: 40px 0 20px;
-  }
-`
+    margin: 30px 0 20px;
+    font-weight: 300;
+    color: ${props => props.theme.colors.g7};
 
-export const TodoListWrapper = styled.ul`
-  margin-top: 20px;
+    strong {
+      font-weight: 500;
+      color: ${props => props.theme.colors.g6};
+    }
+  }
 `
