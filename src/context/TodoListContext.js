@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useEffect, useReducer } from 'react'
 
 export const TodoListContext = createContext()
 
@@ -43,6 +43,12 @@ function reducer(todos, action) {
   }
 }
 
+const getTodoFromLocalStorage = () => {
+  const storageValue = localStorage.getItem('key')
+
+  return storageValue ? JSON.parse(storageValue) : []
+}
+
 const ACTIONS = {
   ADD_TODO: 'add-todo',
   TOGGLE_TODO: 'toggle-todo',
@@ -51,7 +57,11 @@ const ACTIONS = {
 }
 
 function TodoListProvider({ children }) {
-  const [todos, dispatch] = useReducer(reducer, [])
+  const [todos, dispatch] = useReducer(reducer, getTodoFromLocalStorage())
+
+  useEffect(() => {
+    localStorage.setItem('key', JSON.stringify(todos))
+  }, [todos])
 
   return (
     <TodoListContext.Provider value={{ todos, dispatch, ACTIONS }}>
