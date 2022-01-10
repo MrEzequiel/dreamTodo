@@ -21,12 +21,12 @@ export const TodoWrapper = styled.li`
       transform: translateY(-30px);
     }
     to {
-      opacity: 1;
-      transform: translateX(0);
+      opacity: initial;
+      transform: initial;
     }
   }
 
-  animation: show-down 1s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+  animation: show-down 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &:hover {
     box-shadow: 0 8px 8px -3px rgba(0, 0, 0, 0.1);
@@ -35,6 +35,7 @@ export const TodoWrapper = styled.li`
   p {
     align-self: center;
     line-height: 1.5em;
+    width: 100%;
   }
 `
 

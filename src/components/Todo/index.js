@@ -1,5 +1,7 @@
 import { memo, useContext, useState } from 'react'
 import { TodoListContext } from '../../context/TodoListContext'
+import Dropdown from './Dropdown'
+
 import * as s from './style'
 
 function Todo({ todo }) {
@@ -24,6 +26,8 @@ function Todo({ todo }) {
       <p style={{ textDecoration: toggle ? 'line-through' : 'none' }}>
         {todo.name}
       </p>
+
+      <Dropdown todo={todo} />
     </s.TodoWrapper>
   )
 }
