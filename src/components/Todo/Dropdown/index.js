@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from 'react'
-import { TodoListContext } from '../../../context/TodoListContext'
+import { useEffect, useRef, useState } from 'react'
+import useTodo from '../../../hooks/useTodo'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
 import * as s from './style'
 
 function Dropdown({ todo }) {
-  const { dispatch, ACTIONS } = useContext(TodoListContext)
+  const { dispatch, ACTIONS } = useTodo()
   const DropdownEl = useRef()
   const [open, setOpen] = useState(false)
 

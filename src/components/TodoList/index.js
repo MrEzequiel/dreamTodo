@@ -1,10 +1,9 @@
-import { useContext } from 'react'
-import { TodoListContext } from '../../context/TodoListContext'
+import useTodo from '../../hooks/useTodo'
 import Todo from '../Todo'
 import * as s from './styles'
 
 function TodoList() {
-  const { todos } = useContext(TodoListContext)
+  const { todos } = useTodo()
   if (!todos.length) return null
 
   const todosCompleted = todos.filter(todo => todo.complete)

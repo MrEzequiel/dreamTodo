@@ -1,11 +1,11 @@
-import { memo, useContext, useState } from 'react'
-import { TodoListContext } from '../../context/TodoListContext'
+import { memo, useState } from 'react'
+import useTodo from '../../hooks/useTodo'
 import Dropdown from './Dropdown'
 
 import * as s from './style'
 
 function Todo({ todo }) {
-  const { dispatch, ACTIONS } = useContext(TodoListContext)
+  const { dispatch, ACTIONS } = useTodo()
   const [toggle, setToggle] = useState(todo.complete)
 
   function handleChangeForComplete() {
