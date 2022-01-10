@@ -15,18 +15,18 @@ export const TodoWrapper = styled.li`
     margin-top: 15px;
   }
 
-  @keyframes show-down {
+  @keyframes show-down-todo {
     from {
       opacity: 0;
       transform: translateY(-30px);
     }
     to {
       opacity: initial;
-      transform: initial;
+      transform: translateY(0);
     }
   }
 
-  animation: show-down 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation: show-down-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &:hover {
     box-shadow: 0 8px 8px -3px rgba(0, 0, 0, 0.1);

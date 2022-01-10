@@ -30,7 +30,7 @@ export const DropdownStyle = styled.div`
   right: 10px;
   box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.1);
 
-  @keyframes show-down {
+  @keyframes show-down-dropdown {
     from {
       max-height: 0%;
     }
@@ -39,7 +39,7 @@ export const DropdownStyle = styled.div`
     }
   }
 
-  animation: show-down 800ms ease-in-out;
+  animation: show-down-dropdown 800ms ease-in-out;
 
   width: 100px;
   border-radius: ${props => props.theme.borderRadius};
