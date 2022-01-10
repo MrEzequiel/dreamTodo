@@ -86,3 +86,10 @@ export const InputCheckboxTodo = styled.label`
     }
   }
 `
+
+export const InputEditTodo = styled.input`
+  width: 100%;
+  line-height: 1.5em;
+  font-size: 1.6rem;
+  font-weight: 400;
+`

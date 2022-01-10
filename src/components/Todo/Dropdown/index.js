@@ -4,7 +4,7 @@ import useTodo from '../../../hooks/useTodo'
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
 import * as s from './style'
 
-function Dropdown({ todo }) {
+function Dropdown({ todo, setHasEdit }) {
   const { dispatch, ACTIONS } = useTodo()
   const DropdownEl = useRef()
   const [open, setOpen] = useState(false)
@@ -16,20 +16,24 @@ function Dropdown({ todo }) {
   useEffect(() => {
     function handleOutsideClick({ target }) {
       if (!DropdownEl.current?.contains(target)) {
-        window.removeEventListener('click', handleOutsideClick)
-        setOpen(prev => !prev)
+        setOpen(false)
       }
     }
 
     if (open) {
       window.addEventListener('click', handleOutsideClick)
+    } else {
+      window.removeEventListener('click', handleOutsideClick)
     }
-
-    return () => window.removeEventListener('click', handleOutsideClick)
   }, [open])
 
   function handleClickRemove() {
     dispatch({ types: ACTIONS.REMOVE_TODO, payload: { id: todo.id } })
+  }
+
+  function handleClickEdit() {
+    setHasEdit(true)
+    setOpen(false)
   }
 
   return (
@@ -40,7 +44,7 @@ function Dropdown({ todo }) {
 
       {!!open && (
         <s.DropdownStyle>
-          <s.DropdownItens>
+          <s.DropdownItens onClick={handleClickEdit}>
             <FaEdit />
             edit
           </s.DropdownItens>

@@ -31,6 +31,13 @@ function reducer(todos, action) {
     case ACTIONS.REMOVE_TODO:
       return removeTodoFromId(action.payload.id, todos)
 
+    case ACTIONS.EDIT_TODO:
+      return todos.map(todo => {
+        if (todo.id !== action.payload.id) return todo
+
+        return { ...todo, name: action.payload.name }
+      })
+
     default:
       return todos
   }
@@ -39,7 +46,8 @@ function reducer(todos, action) {
 const ACTIONS = {
   ADD_TODO: 'add-todo',
   TOGGLE_TODO: 'toggle-todo',
-  REMOVE_TODO: 'remove-todo'
+  REMOVE_TODO: 'remove-todo',
+  EDIT_TODO: 'edit-todo'
 }
 
 function TodoListProvider({ children }) {
