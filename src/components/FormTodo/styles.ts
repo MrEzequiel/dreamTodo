@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Container } from '../../styles/LayoutComponents'
 
 export const FormWrapper = styled.div`
+  position: relative;
   ${Container()}
 `
 
@@ -21,6 +22,8 @@ export const FormStyle = styled.form`
     border-color: ${props => props.theme.colors.colorPrimary};
     box-shadow: 0 0 0 4px ${props => props.theme.colors.colorPrimary2};
   }
+
+  background: ${props => props.theme.colors.g2};
 `
 
 export const InputStyle = styled.input`
@@ -41,4 +44,27 @@ export const ButtonStyle = styled.button`
   width: 30px;
   height: 30px;
   color: ${props => props.theme.colors.g1};
+`
+
+export const MoreInformation = styled.a`
+  cursor: pointer;
+  position: absolute;
+  bottom: -25px;
+  left: 20px;
+  text-decoration: underline;
+  font-size: 1.4rem;
+  font-weight: 300;
+  z-index: 0;
+  color: ${props => props.theme.colors.g7};
+
+  @keyframes show-down-anime {
+    from {
+      transform: translateY(-25px);
+    }
+    to {
+      transform: translateY(0px);
+    }
+  }
+
+  animation: show-down-anime 500ms;
 `

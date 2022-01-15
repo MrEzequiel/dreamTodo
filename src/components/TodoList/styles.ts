@@ -7,7 +7,7 @@ export const TodoWrapper = styled.div`
   padding-top: 10px;
 
   h2 {
-    margin: 30px 0 20px;
+    margin: 40px 0 20px;
     font-weight: 300;
     color: ${props => props.theme.colors.g7};
 
