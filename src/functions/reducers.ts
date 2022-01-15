@@ -48,7 +48,7 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
 
   switch(action.type) {
     case Types.Add:
-      todos.push(newTodo(action.payload.name))
+      todos.unshift(newTodo(action.payload.name))
       return { ...state, todos }
 
     case 'TOGGLE_TODO':

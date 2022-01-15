@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch, useReducer } from 'react'
+import React, { createContext, Dispatch, useEffect, useReducer } from 'react'
 import { TodoActions, todoReducer } from '../functions/reducers'
 
 export type ITodo = {
@@ -11,8 +11,15 @@ export type InitialStateType = {
   todos: ITodo[]
 }
 
+const getTodosFromLocalStorage = (): ITodo[] => {
+  const storage = localStorage.getItem("todos")
+  if(storage) return JSON.parse(storage)
+
+  return []
+}
+
 const initialState = {
-  todos: []
+  todos: getTodosFromLocalStorage()
 }
 
 export const TodoContext = createContext<{
@@ -25,6 +32,10 @@ export const TodoContext = createContext<{
 
 const TodoProvider: React.FC = ({ children }) => {
   const [ state, dispatch ] = useReducer(todoReducer, initialState)
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(state.todos))
+  }, [state])
 
   return (
     <TodoContext.Provider value={{ state, dispatch }}>

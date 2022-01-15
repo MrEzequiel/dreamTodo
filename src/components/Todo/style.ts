@@ -1,9 +1,16 @@
 import styled from 'styled-components'
 
-export const TodoWrapper = styled.li`
+interface ContainerProps {
+  edit: boolean
+}
+
+export const TodoWrapper = styled.li<ContainerProps>`
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
+  border: 1px solid transparent;
   padding: 15px;
+  
+  border-color: ${({edit}) => edit ? "#11EEDD" : "transparent"};
 
   display: flex;
   gap: 15px;
@@ -27,6 +34,7 @@ export const TodoWrapper = styled.li`
   }
 
   animation: show-down-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: all 500ms;
 
   &:hover {
     box-shadow: 0 8px 8px -3px rgba(0, 0, 0, 0.1);
@@ -78,7 +86,7 @@ export const InputCheckboxTodo = styled.label`
       transform: scale(0);
       transform-origin: bottom left;
       transition: 120ms transform ease-in-out;
-      box-shadow: inset 1em 1em ${props => props.theme.colors.g2};
+      box-shadow: inset 14px 14px ${props => props.theme.colors.g2};
     }
 
     &:hover {
@@ -92,4 +100,5 @@ export const InputEditTodo = styled.input`
   line-height: 1.5em;
   font-size: 1.6rem;
   font-weight: 400;
+  caret-color: ${props => props.theme.colors.colorPrimary};
 `

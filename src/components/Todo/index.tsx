@@ -37,7 +37,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   }, [hasEdit])
 
   return (
-    <s.TodoWrapper>
+    <s.TodoWrapper edit={hasEdit}>
       <s.InputCheckboxTodo>
         <input
           type="checkbox"
@@ -48,6 +48,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
       {hasEdit ? (
         <s.InputEditTodo
+          type="text"
           value={edit}
           onChange={handleChange}
           ref={inputEl}
