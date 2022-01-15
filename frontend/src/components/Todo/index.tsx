@@ -28,7 +28,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   }
 
   function handleBlurInput() {
-    if(!edit.trim()) {
+    if (!edit.trim()) {
       setEdit(todo.name)
     } else {
       dispatch({ type: Types.Edit, payload: { id: todo.id, name: edit } })

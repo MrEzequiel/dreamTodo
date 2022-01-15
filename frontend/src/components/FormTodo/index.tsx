@@ -9,8 +9,8 @@ import * as s from './styles'
 const FormTodo: React.FC = () => {
   const contextTodo = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
-  const [ name, setName ] = useState('')
-  const [ focus, setFocus ] = useState(false)
+  const [name, setName] = useState('')
+  const [focus, setFocus] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
   function handleSubmit(e: React.FormEvent) {
@@ -42,11 +42,12 @@ const FormTodo: React.FC = () => {
       </s.FormStyle>
 
       {focus && (
-      <s.MoreInformation onClick={() => setOpenModal(true)}>
-        More information
-      </s.MoreInformation>)}
+        <s.MoreInformation onClick={() => setOpenModal(true)}>
+          More information
+        </s.MoreInformation>
+      )}
 
-      {openModal && <Modal closeModal={setOpenModal}/>}
+      {openModal && <Modal closeModal={setOpenModal} />}
     </s.FormWrapper>
   )
 }

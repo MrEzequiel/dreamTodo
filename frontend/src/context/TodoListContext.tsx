@@ -2,9 +2,9 @@ import React, { createContext, Dispatch, useEffect, useReducer } from 'react'
 import { TodoActions, todoReducer } from '../functions/reducers'
 
 export type ITodo = {
-  id: number;
-  name: string;
-  complete: boolean;
+  id: number
+  name: string
+  complete: boolean
 }
 
 export type InitialStateType = {
@@ -12,8 +12,8 @@ export type InitialStateType = {
 }
 
 const getTodosFromLocalStorage = (): ITodo[] => {
-  const storage = localStorage.getItem("todos")
-  if(storage) return JSON.parse(storage)
+  const storage = localStorage.getItem('todos')
+  if (storage) return JSON.parse(storage)
 
   return []
 }
@@ -31,10 +31,10 @@ export const TodoContext = createContext<{
 })
 
 const TodoProvider: React.FC = ({ children }) => {
-  const [ state, dispatch ] = useReducer(todoReducer, initialState)
+  const [state, dispatch] = useReducer(todoReducer, initialState)
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(state.todos))
+    localStorage.setItem('todos', JSON.stringify(state.todos))
   }, [state])
 
   return (

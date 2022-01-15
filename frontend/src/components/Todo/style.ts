@@ -9,8 +9,8 @@ export const TodoWrapper = styled.li<ContainerProps>`
   border-radius: ${props => props.theme.borderRadius};
   border: 1px solid transparent;
   padding: 15px;
-  
-  border-color: ${({edit}) => edit ? "#11EEDD" : "transparent"};
+
+  border-color: ${({ edit }) => (edit ? '#11EEDD' : 'transparent')};
 
   display: flex;
   gap: 15px;
