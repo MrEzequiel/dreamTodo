@@ -23,12 +23,16 @@ const Todo: React.FC<Props> = ({ todo }) => {
     setToggle(prev => !prev)
   }
 
-  function handleChange(e: any) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setEdit(e.target.value)
   }
 
   function handleBlurInput() {
-    dispatch({ type: Types.Edit, payload: { id: todo.id, name: edit } })
+    if(!edit.trim()) {
+      setEdit(todo.name)
+    } else {
+      dispatch({ type: Types.Edit, payload: { id: todo.id, name: edit } })
+    }
     setHasEdit(false)
   }
 
