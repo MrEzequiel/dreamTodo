@@ -5,18 +5,18 @@ import TodoList from './components/TodoList'
 import GlobalStyles from './styles/GlobalStyles'
 import TitleStyle from './styles/TitleStyle'
 import darkTheme from './styles/theme/dark'
-import TodoListProvider from './context/TodoListContext'
+import TodoProvider from './context/TodoListContext'
 
-function App() {
+const App: React.FC = () => {
   return (
-    <TodoListProvider>
+    <TodoProvider>
       <ThemeProvider theme={darkTheme}>
         <TitleStyle>To Do</TitleStyle>
         <FormTodo />
         <TodoList />
         <GlobalStyles />
       </ThemeProvider>
-    </TodoListProvider>
+    </TodoProvider>
   )
 }
 

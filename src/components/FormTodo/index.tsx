@@ -1,22 +1,22 @@
-import { useRef, useState } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import { FaPlus } from 'react-icons/fa'
-import useTodo from '../../hooks/useTodo'
+import { TodoContext } from '../../context/TodoListContext'
+import { Types } from '../../functions/reducers'
 
 import * as s from './styles'
 
-function FormTodo() {
-  const inputEl = useRef()
-  const [name, setName] = useState('')
+const FormTodo: React.FC = () => {
+  const contextTodo = useContext(TodoContext)
+  const inputEl = useRef<HTMLInputElement>(null)
+  const [ name, setName ] = useState('')
 
-  const { dispatch, ACTIONS } = useTodo()
-
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim()) return
 
-    dispatch({ types: ACTIONS.ADD_TODO, payload: { name } })
+    contextTodo.dispatch({ type: Types.Add, payload: { name } })
     setName('')
-    inputEl.current.focus()
+    inputEl.current?.focus()
   }
 
   return (

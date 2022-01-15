@@ -1,9 +1,11 @@
 import { useContext } from 'react'
-import { TodoListContext } from '../context/TodoListContext'
+import { TodoContext } from '../context/TodoListContext'
 
 const useTodo = () => {
-  const contextObj = useContext(TodoListContext)
-  return contextObj
+  const contextTodo = useContext(TodoContext)
+  const { state, dispatch } = contextTodo
+
+  return [ state, dispatch ]
 }
 
 export default useTodo

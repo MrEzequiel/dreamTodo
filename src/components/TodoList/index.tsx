@@ -1,10 +1,12 @@
-import useTodo from '../../hooks/useTodo'
+import { useContext } from 'react'
+import { TodoContext } from '../../context/TodoListContext'
 import Todo from '../Todo'
 import EmptyTodo from './EmptyTodo'
 import * as s from './styles'
 
-function TodoList() {
-  const { todos } = useTodo()
+const TodoList: React.FC = () => {
+  const { state } = useContext(TodoContext)
+  const todos = state.todos
 
   if (!todos.length) return <EmptyTodo />
 

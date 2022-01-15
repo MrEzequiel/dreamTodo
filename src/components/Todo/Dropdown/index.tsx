@@ -1,12 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
-import useTodo from '../../../hooks/useTodo'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
 import * as s from './style'
+import { ITodo, TodoContext } from '../../../context/TodoListContext'
+import { Types } from '../../../functions/reducers'
 
-function Dropdown({ todo, setHasEdit }) {
-  const { dispatch, ACTIONS } = useTodo()
-  const DropdownEl = useRef()
+interface Props {
+  todo: ITodo
+  setHasEdit: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Dropdown: React.FC<Props> = ({ todo, setHasEdit }) => {
+  const DropdownEl = useRef<HTMLDivElement>(null)
+  const { dispatch } = useContext(TodoContext)
   const [open, setOpen] = useState(false)
 
   function handleClick() {
@@ -14,7 +20,7 @@ function Dropdown({ todo, setHasEdit }) {
   }
 
   useEffect(() => {
-    function handleOutsideClick({ target }) {
+    function handleOutsideClick({ target }: any) {
       if (!DropdownEl.current?.contains(target)) {
         setOpen(false)
       }
@@ -30,7 +36,7 @@ function Dropdown({ todo, setHasEdit }) {
   }, [open])
 
   function handleClickRemove() {
-    dispatch({ types: ACTIONS.REMOVE_TODO, payload: { id: todo.id } })
+    dispatch({ type: Types.Remove, payload: { id: todo.id } })
   }
 
   function handleClickEdit() {

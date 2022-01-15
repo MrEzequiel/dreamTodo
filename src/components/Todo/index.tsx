@@ -1,28 +1,34 @@
-import { memo, useEffect, useRef, useState } from 'react'
-import useTodo from '../../hooks/useTodo'
+import React, { memo, useEffect, useRef, useState, useContext } from 'react'
+import { ITodo, TodoContext } from '../../context/TodoListContext'
+import { Types } from '../../functions/reducers'
 import Dropdown from './Dropdown'
 
 import * as s from './style'
 
-function Todo({ todo }) {
-  const inputEl = useRef()
-  const { dispatch, ACTIONS } = useTodo()
+interface Props {
+  todo: ITodo
+}
+
+const Todo: React.FC<Props> = ({ todo }) => {
+  const inputEl = useRef<HTMLInputElement>(null)
+  const { dispatch } = useContext(TodoContext)
+
   const [toggle, setToggle] = useState(todo.complete)
 
   const [hasEdit, setHasEdit] = useState(false)
   const [edit, setEdit] = useState(todo.name)
 
   function handleChangeForComplete() {
-    dispatch({ types: ACTIONS.TOGGLE_TODO, payload: { id: todo.id } })
+    dispatch({ type: Types.Toggle, payload: { id: todo.id } })
     setToggle(prev => !prev)
   }
 
-  function handleChange(e) {
+  function handleChange(e: any) {
     setEdit(e.target.value)
   }
 
   function handleBlurInput() {
-    dispatch({ types: ACTIONS.EDIT_TODO, payload: { id: todo.id, name: edit } })
+    dispatch({ type: Types.Edit, payload: { id: todo.id, name: edit } })
     setHasEdit(false)
   }
 

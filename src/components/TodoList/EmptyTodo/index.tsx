@@ -1,7 +1,7 @@
 import * as s from './style'
 import { FaCheckCircle } from 'react-icons/fa'
 
-const EmptyTodo = () => {
+const EmptyTodo: React.FC = () => {
   return (
     <s.EmptyStyle>
       <FaCheckCircle size={30} />
