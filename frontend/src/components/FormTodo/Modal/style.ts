@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const ModalWrapper = styled.div`
   height: 100vh;
@@ -19,7 +19,7 @@ export const ModalContent = styled.div`
   padding: 30px 20px;
   width: calc(50% - 10px);
   background: ${props => props.theme.colors.g3};
-  border-radius:${props => props.theme.borderRadius};
+  border-radius: ${props => props.theme.borderRadius};
   box-shadow: 0 16px 16px 0 rgba(0, 0, 0, 0.1);
 
   @media (max-width: 900px) {
@@ -45,7 +45,7 @@ export const ModalContent = styled.div`
     font-size: 2.2rem;
 
     &::before {
-      content: "";
+      content: '';
       width: 10px;
       height: 10px;
       border-radius: 50%;
@@ -69,8 +69,8 @@ export const FormAddTodo = styled.form`
 
     transition: border-color 1s, box-shadow 1s;
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
-    &:focus { 
-      border-color: #11EEDD;
+    &:focus {
+      border-color: #11eedd;
       box-shadow: 0 0 0 4px #29b0a6;
     }
   }
@@ -104,8 +104,11 @@ export const ButtonsModal = styled.div`
     height: 40px;
     font-size: 1.6rem;
 
+    transition: all 700ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
     &:hover {
       filter: brightness(1.2);
+      transform: scale(1.05);
     }
   }
 
