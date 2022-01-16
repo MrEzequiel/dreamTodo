@@ -77,7 +77,10 @@ const Todo: React.FC<Props> = ({ todo }) => {
               className="extended"
               onClick={() => setExpended(prev => !prev)}
             >
-              <FaAngleDown size={16} />
+              <FaAngleDown
+                size={16}
+                style={{ transform: expended ? 'rotate(180deg)' : 'rotate(0)' }}
+              />
             </button>
           )}
         </s.ButtonsControl>
@@ -87,7 +90,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
         <s.ExpendedTodo>
           <p>{todo.description}</p>
 
-          {todo.expanded?.links && (
+          {!!todo.expanded?.links && (
             <s.LinksWrapper>
               {todo.expanded?.links.map(link => (
                 <a href={link} key={link}>

@@ -21,7 +21,7 @@ export const TodoWrapper = styled.li<ContainerProps>`
   box-shadow: ${({ expended }) =>
     expended
       ? '0 8px 8px -2px rgba(0, 0, 0, 0.2)'
-      : '0 8px 8px -2px rgba(0, 0, 0, 0.1)'};
+      : '0 4px 4px -2px rgba(0, 0, 0, 0.1)'};
 
   & + li {
     margin-top: 15px;
@@ -126,6 +126,10 @@ export const ButtonsControl = styled.div`
 
     transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
+    svg {
+      transition: transform 700ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
     &:hover {
       background: ${props => props.theme.colors.g2};
     }
@@ -134,7 +138,7 @@ export const ButtonsControl = styled.div`
 export const ExpendedTodo = styled.div`
   position: relative;
   margin-top: -15px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   border-top-left-radius: 0;

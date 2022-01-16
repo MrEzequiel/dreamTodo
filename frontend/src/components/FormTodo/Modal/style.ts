@@ -61,11 +61,14 @@ export const FormAddTodo = styled.form`
   flex-direction: column;
   gap: 15px;
 
-  input {
+  input,
+  textarea {
     padding: 10px;
     border: 2px solid ${props => props.theme.colors.g2};
     border-radius: 10px;
     font-size: 1.6rem;
+    font-weight: 300;
+    color: ${props => props.theme.colors.g7};
 
     transition: border-color 1s, box-shadow 1s;
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -77,6 +80,7 @@ export const FormAddTodo = styled.form`
 
   .description {
     height: 100px;
+    resize: vertical;
   }
 
   .links {

@@ -67,8 +67,7 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
           />
           {titleField.error && <p>{titleField.error}</p>}
 
-          <input
-            type="text"
+          <textarea
             placeholder="Description"
             className="description"
             onChange={descriptionField.handleChange}

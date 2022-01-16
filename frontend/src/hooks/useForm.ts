@@ -46,7 +46,9 @@ const useForm = (
     }
   }
 
-  function handleChange({ target }: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange({
+    target
+  }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     if (error) {
       if (customValidate) {
         const customError = customValidate(value)
