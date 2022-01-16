@@ -52,6 +52,7 @@ export const DropdownStyle = styled.div`
 `
 
 export const DropdownItens = styled.div`
+  position: relative;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -64,8 +65,15 @@ export const DropdownItens = styled.div`
   font-weight: 300;
   transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  & + div {
-    border-top: 1px solid ${props => props.theme.colors.colorPrimary2};
+  & + div::before {
+    /* border-top: 1px solid ${props => props.theme.colors.colorPrimary2}; */
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 85%;
+    height: 1px;
+    display: block;
+    background: ${props => props.theme.colors.colorPrimary2};
   }
 
   &:hover {

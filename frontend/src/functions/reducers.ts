@@ -64,14 +64,13 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
       todos.unshift(newTodo)
       return { ...state, todos }
 
-    case 'TOGGLE_TODO':
+    case Types.Toggle:
       // find todo complete and toggle complete
       let findTodo = todos.find(todo => action.payload.id === todo.id)
       if (findTodo === undefined) return state
 
       let todoToggle = {
-        name: findTodo.name,
-        id: findTodo.id,
+        ...findTodo,
         complete: !findTodo.complete
       }
 
@@ -83,10 +82,10 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
       todos.unshift(todoToggle)
       return { ...state, todos }
 
-    case 'REMOVE_TODO':
+    case Types.Remove:
       return { ...state, todos: removeTodoById(action.payload.id, todos) }
 
-    case 'EDIT_TODO':
+    case Types.Edit:
       const newTodos = todos.map(todo => {
         if (todo.id !== action.payload.id) return todo
 
