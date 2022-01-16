@@ -7,11 +7,9 @@ export class ListColletionController {
 
   async handle(request: Request, response: Response): Promise<Response>{
 
-    const { id } = request.params;
-
     const listColletionUseCase = new ListColletionUseCase();
 
-    const colletion = await listColletionUseCase.execute(id);
+    const colletion = await listColletionUseCase.execute();
 
     return response.json(colletion);
   }

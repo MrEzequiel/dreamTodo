@@ -4,14 +4,12 @@ import { client } from "../../../../database/client";
 
 export class ListColletionUseCase {
 
-  async execute(colletionId: string) {
+  async execute(){
 
     const colletions = await client.colletion.findMany({
-      where: {
-        id: colletionId
-      },
-      include: {
-        todo: true
+      select: {
+        id: true,
+        name: true
       }
     })
 
