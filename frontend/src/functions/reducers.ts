@@ -1,13 +1,14 @@
-import { InitialStateType, ITodo } from "../context/TodoListContext"
+import { InitialStateType, ITodo } from '../context/TodoListContext'
 
 type ActionMap<M extends { [index: string]: any }> = {
-  [Key in keyof M]: M[Key] extends undefined ? {
-    type: Key;
-  }
-  : {
-    type: Key;
-    payload: M[Key];
-  }
+  [Key in keyof M]: M[Key] extends undefined
+    ? {
+        type: Key
+      }
+    : {
+        type: Key
+        payload: M[Key]
+      }
 }
 
 export enum Types {
@@ -18,16 +19,20 @@ export enum Types {
 }
 
 type TodoPayload = {
-  [Types.Add] : {
+  [Types.Add]: {
     name: string
+    description?: string
+    expanded?: {
+      links?: string[]
+    }
   }
-  [Types.Toggle] : {
+  [Types.Toggle]: {
     id: number
   }
-  [Types.Remove] : {
+  [Types.Remove]: {
     id: number
   }
-  [Types.Edit] : {
+  [Types.Edit]: {
     name: string
     id: number
   }
@@ -35,8 +40,8 @@ type TodoPayload = {
 
 export type TodoActions = ActionMap<TodoPayload>[keyof ActionMap<TodoPayload>]
 
-function newTodo(name: string) {
-  return { id: Date.now(), name, complete: false }
+function newTodo(payload: TodoActions) {
+  return { id: Date.now(), payload, complete: false }
 }
 
 function removeTodoById(id: number, todos: ITodo[]) {
@@ -46,38 +51,48 @@ function removeTodoById(id: number, todos: ITodo[]) {
 export const todoReducer = (state: InitialStateType, action: TodoActions) => {
   let { todos } = state
 
-  switch(action.type) {
+  switch (action.type) {
     case Types.Add:
-      todos.unshift(newTodo(action.payload.name))
+      const newTodo: ITodo = {
+        id: Date.now(),
+        name: action.payload.name,
+        complete: false,
+        description: action.payload.description,
+        expanded: action.payload.expanded
+      }
+
+      todos.unshift(newTodo)
       return { ...state, todos }
 
-    case 'TOGGLE_TODO':
+    case Types.Toggle:
       // find todo complete and toggle complete
       let findTodo = todos.find(todo => action.payload.id === todo.id)
-      if(findTodo === undefined) return state
-  
-      let todoToggle = { name: findTodo.name, id: findTodo.id, complete: !findTodo.complete }
+      if (findTodo === undefined) return state
+
+      let todoToggle = {
+        ...findTodo,
+        complete: !findTodo.complete
+      }
 
       // if there is only one task, the other procedures are unnecessary.
-      if (todos.length === 1) return { ...state, todos: [todoToggle]}
+      if (todos.length === 1) return { ...state, todos: [todoToggle] }
 
       // removing to do you changed and adding to the first item in the array
       todos = removeTodoById(action.payload.id, todos)
       todos.unshift(todoToggle)
-      return {...state, todos}
+      return { ...state, todos }
 
-    case 'REMOVE_TODO':
+    case Types.Remove:
       return { ...state, todos: removeTodoById(action.payload.id, todos) }
 
-    case 'EDIT_TODO':
-       
+    case Types.Edit:
       const newTodos = todos.map(todo => {
         if (todo.id !== action.payload.id) return todo
 
         return { ...todo, name: action.payload.name }
       })
 
-      return {...state, todos: newTodos}
+      return { ...state, todos: newTodos }
 
     default:
       return state

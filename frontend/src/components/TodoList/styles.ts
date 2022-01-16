@@ -16,4 +16,8 @@ export const TodoWrapper = styled.div`
       color: ${props => props.theme.colors.g6};
     }
   }
+
+  ul {
+    position: relative;
+  }
 `

@@ -2,42 +2,47 @@ import styled from 'styled-components'
 
 interface ContainerProps {
   edit: boolean
+  expended: boolean
 }
 
 export const TodoWrapper = styled.li<ContainerProps>`
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   padding: 15px;
-  
-  border-color: ${({edit}) => edit ? "#11EEDD" : "transparent"};
+
+  border-color: ${({ edit }) => (edit ? '#11EEDD' : 'transparent')};
+  border-radius: ${({ expended }) => (expended ? '15px 15px 0 0' : '15px')};
 
   display: flex;
   gap: 15px;
 
   transition: box-shadow 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: ${({ expended }) =>
+    expended
+      ? '0 8px 8px -2px rgba(0, 0, 0, 0.2)'
+      : '0 4px 4px -2px rgba(0, 0, 0, 0.1)'};
 
   & + li {
     margin-top: 15px;
   }
 
-  @keyframes show-down-todo {
+  @keyframes show-right-todo {
     from {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateX(-30px);
     }
     to {
       opacity: initial;
-      transform: translateY(0);
+      transform: translateX(0);
     }
   }
 
-  animation: show-down-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation: show-right-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
   transition: all 500ms;
 
   &:hover {
-    box-shadow: 0 8px 8px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 16px 16px -12px rgba(0, 0, 0, 0.15);
   }
 
   p {
@@ -101,4 +106,83 @@ export const InputEditTodo = styled.input`
   font-size: 1.6rem;
   font-weight: 400;
   caret-color: ${props => props.theme.colors.colorPrimary};
+`
+
+export const ButtonsControl = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .extended {
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 25px;
+    height: 25px;
+
+    transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    svg {
+      transition: transform 700ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    &:hover {
+      background: ${props => props.theme.colors.g2};
+    }
+  }
+`
+export const ExpendedTodo = styled.div`
+  margin-bottom: 30px;
+  background: ${props => props.theme.colors.g3};
+  border-radius: ${props => props.theme.borderRadius};
+  box-shadow: inset 0px 12px 16px -4px rgb(0, 0, 0, 0.15);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border: 1px solid transparent;
+  padding: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @keyframes show-left {
+    from {
+      opacity: 0;
+      margin-top: -30px;
+    }
+    to {
+      opacity: initial;
+      margin-top: 0px;
+    }
+  }
+
+  animation: show-left 900ms cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+
+  p {
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: ${props => props.theme.colors.g7};
+  }
+`
+
+export const LinksWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: ${props => props.theme.colors.colorPrimary2};
+
+  a {
+    font-size: 1.4rem;
+    svg {
+      margin-right: 5px;
+    }
+    &:hover {
+      color: ${props => props.theme.colors.colorPrimary};
+      text-decoration: underline;
+    }
+  }
 `

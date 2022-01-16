@@ -9,15 +9,18 @@ import * as s from './styles'
 const FormTodo: React.FC = () => {
   const contextTodo = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
-  const [ name, setName ] = useState('')
-  const [ focus, setFocus ] = useState(false)
+  const [name, setName] = useState('')
+  const [focus, setFocus] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     if (!name.trim()) return
 
-    contextTodo.dispatch({ type: Types.Add, payload: { name } })
+    contextTodo.dispatch({
+      type: Types.Add,
+      payload: { name, description: undefined, expanded: undefined }
+    })
     setName('')
     inputEl.current?.focus()
   }
@@ -42,11 +45,12 @@ const FormTodo: React.FC = () => {
       </s.FormStyle>
 
       {focus && (
-      <s.MoreInformation onClick={() => setOpenModal(true)}>
-        More information
-      </s.MoreInformation>)}
+        <s.MoreInformation onClick={() => setOpenModal(true)}>
+          More information
+        </s.MoreInformation>
+      )}
 
-      {openModal && <Modal closeModal={setOpenModal}/>}
+      {openModal && <Modal closeModal={setOpenModal} />}
     </s.FormWrapper>
   )
 }

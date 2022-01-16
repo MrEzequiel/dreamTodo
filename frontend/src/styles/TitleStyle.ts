@@ -6,7 +6,22 @@ const TitleStyle = styled.h1`
   ${Container()}
   font-size: 3.2rem;
   font-weight: 700;
-  margin: 20px auto 10px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+
+  button {
+    margin-right: 15px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${props => props.theme.colors.g3};
+    border-radius: ${props => props.theme.borderRadius};
+    color: ${props => props.theme.colors.g7};
+  }
 `
 
 export default TitleStyle
