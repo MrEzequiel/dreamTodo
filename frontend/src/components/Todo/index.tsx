@@ -40,21 +40,15 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
   function formateLinks(links: string[]) {
     const htmlLink = links.map(link => {
-      if (link.match(/https?:\/\/www./g)) {
-        const name = link.split(/https?:\/\/www./g)[1].split('.')[0]
-        return { link, name }
-      } else {
-        let newLink: string[] | string = link.split(/https?:\/\//g)
+      let newLink: any = link.split(/https?:\/\//g)
+      newLink = newLink[0] === '' ? newLink[1] : newLink[0]
+      link = `https://${newLink}`
 
-        if (newLink[1]) {
-          newLink = newLink[1].split('www.')[0]
-        } else newLink = newLink[1]
+      newLink = newLink.split('www.')
+      newLink = newLink[0] === '' ? newLink[1] : newLink[0]
+      newLink = newLink.split('.')[0]
 
-        const name = newLink.split('.')[0]
-        newLink = `https://www.${newLink}`
-
-        return { link: newLink, name }
-      }
+      return { link, name: newLink }
     })
 
     return htmlLink.map(({ link, name }) => (
