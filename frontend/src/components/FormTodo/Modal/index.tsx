@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { TodoContext } from '../../../context/TodoListContext'
+import { Types } from '../../../functions/reducers'
 import useForm from '../../../hooks/useForm'
 
 import * as s from './style'
@@ -10,14 +12,13 @@ interface Props {
 const Modal: React.FC<Props> = ({ closeModal }) => {
   const titleField = useForm()
   const descriptionField = useForm(false)
+  const { dispatch } = useContext(TodoContext)
 
   function validateLink(value: string): string | null {
     const regex =
       /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
 
     const spliceValues = value.split(';').map(v => v.trim())
-
-    console.log(spliceValues)
 
     if (!spliceValues.length) {
       return 'Keep the pattern'
@@ -30,12 +31,34 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
 
   const linkField = useForm(false, 'link', validateLink)
 
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault()
+
+    if (
+      titleField.validate(titleField.value) &&
+      !validateLink(linkField.value)
+    ) {
+      dispatch({
+        type: Types.Add,
+        payload: {
+          name: titleField.value,
+          description: descriptionField.value,
+          expanded: {
+            links: linkField.value.split(';').map(v => v.trim())
+          }
+        }
+      })
+
+      closeModal(false)
+    }
+  }
+
   return (
     <s.ModalWrapper>
       <s.ModalContent>
         <h2>Add a task</h2>
 
-        <s.FormAddTodo>
+        <s.FormAddTodo onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Title *"

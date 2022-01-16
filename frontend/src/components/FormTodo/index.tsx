@@ -13,11 +13,14 @@ const FormTodo: React.FC = () => {
   const [focus, setFocus] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     if (!name.trim()) return
 
-    contextTodo.dispatch({ type: Types.Add, payload: { name } })
+    contextTodo.dispatch({
+      type: Types.Add,
+      payload: { name, description: undefined, expanded: undefined }
+    })
     setName('')
     inputEl.current?.focus()
   }

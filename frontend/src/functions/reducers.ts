@@ -21,6 +21,10 @@ export enum Types {
 type TodoPayload = {
   [Types.Add]: {
     name: string
+    description?: string
+    expanded?: {
+      links?: string[]
+    }
   }
   [Types.Toggle]: {
     id: number
@@ -36,8 +40,8 @@ type TodoPayload = {
 
 export type TodoActions = ActionMap<TodoPayload>[keyof ActionMap<TodoPayload>]
 
-function newTodo(name: string) {
-  return { id: Date.now(), name, complete: false }
+function newTodo(payload: TodoActions) {
+  return { id: Date.now(), payload, complete: false }
 }
 
 function removeTodoById(id: number, todos: ITodo[]) {
@@ -49,7 +53,15 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
 
   switch (action.type) {
     case Types.Add:
-      todos.unshift(newTodo(action.payload.name))
+      const newTodo: ITodo = {
+        id: Date.now(),
+        name: action.payload.name,
+        complete: false,
+        description: action.payload.description,
+        expanded: action.payload.expanded
+      }
+
+      todos.unshift(newTodo)
       return { ...state, todos }
 
     case 'TOGGLE_TODO':
