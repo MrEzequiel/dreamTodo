@@ -10,7 +10,7 @@ datasource db {
 model Todo {
   id          String      @unique @default(uuid())
   name        String
-  description String
+  description String?
   isChecked   Boolean     @default(false)
   colletion   String
   colletionId Colletion[] @relation("todo-colletion")
@@ -21,8 +21,8 @@ model Todo {
 model Colletion {
   id     String  @unique @default(uuid())
   name   String
-  todoId String
-  todo   Todo  @relation("todo-colletion", fields: [todoId], references: [id])
+  todoId String?
+  todo   Todo?   @relation("todo-colletion", fields: [todoId], references: [id])
 
   @@map("colletions")
 }

@@ -13,7 +13,8 @@ ALTER TABLE "colletions" DROP COLUMN "todo_id",
 ADD COLUMN     "todoId" TEXT;
 
 -- AlterTable
-ALTER TABLE "todo" ADD COLUMN     "colletion" TEXT NOT NULL;
+ALTER TABLE "todo" ADD COLUMN     "colletion" TEXT NOT NULL,
+ALTER COLUMN "description" DROP NOT NULL;
 
 -- AddForeignKey
 ALTER TABLE "colletions" ADD CONSTRAINT "colletions_todoId_fkey" FOREIGN KEY ("todoId") REFERENCES "todo"("id") ON DELETE SET NULL ON UPDATE CASCADE;
