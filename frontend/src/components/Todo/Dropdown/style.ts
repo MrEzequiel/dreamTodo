@@ -25,6 +25,7 @@ export const ButtonDropdown = styled.button`
 export const DropdownStyle = styled.div`
   position: absolute;
   z-index: 9999;
+  transform: perspective(100px);
   overflow: hidden;
   top: 30px;
   right: 10px;
@@ -33,9 +34,13 @@ export const DropdownStyle = styled.div`
   @keyframes show-down-dropdown {
     from {
       max-height: 0%;
+      transform: perspective(100px);
+      transform: translateZ(50px);
     }
     to {
       max-height: 400px;
+      transform: perspective(1000px);
+      transform: translateZ(150px);
     }
   }
 

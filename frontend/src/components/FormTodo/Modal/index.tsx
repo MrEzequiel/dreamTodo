@@ -22,7 +22,7 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
 
     if (!spliceValues.length) {
       return 'Keep the pattern'
-    } else if (!spliceValues.every(valueLink => !regex.test(valueLink))) {
+    } else if (!spliceValues.every(valueLink => valueLink.match(regex))) {
       return 'Link Invalid'
     } else {
       return null
@@ -44,7 +44,8 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
           name: titleField.value,
           description: descriptionField.value,
           expanded: {
-            links: linkField.value.split(';').map(v => v.trim())
+            links: linkField.value.split(';')
+            // .split(';').map(v => v.trim())
           }
         }
       })

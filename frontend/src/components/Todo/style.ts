@@ -12,7 +12,7 @@ export const TodoWrapper = styled.li<ContainerProps>`
   padding: 15px;
 
   border-color: ${({ edit }) => (edit ? '#11EEDD' : 'transparent')};
-  border-color: ${({ expended }) => (expended ? '#181818' : 'transparent')};
+  border-radius: ${({ expended }) => (expended ? '15px 15px 0 0' : '15px')};
 
   display: flex;
   gap: 15px;
@@ -27,18 +27,18 @@ export const TodoWrapper = styled.li<ContainerProps>`
     margin-top: 15px;
   }
 
-  @keyframes show-down-todo {
+  @keyframes show-right-todo {
     from {
       opacity: 0;
       transform: translateX(-30px);
     }
     to {
       opacity: initial;
-      transform: initial;
+      transform: translateX(0);
     }
   }
 
-  animation: show-down-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation: show-right-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
   transition: all 500ms;
 
   &:hover {
@@ -136,35 +136,53 @@ export const ButtonsControl = styled.div`
   }
 `
 export const ExpendedTodo = styled.div`
-  position: relative;
-  margin-top: -15px;
   margin-bottom: 30px;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
+  box-shadow: inset 0px 12px 16px -4px rgb(0, 0, 0, 0.15);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border: 1px solid transparent;
   padding: 15px;
-  padding-top: 30px;
-  z-index: -1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   @keyframes show-left {
     from {
       opacity: 0;
-      transform: translateY(-50px);
+      margin-top: -30px;
     }
     to {
       opacity: initial;
-      transform: initial;
+      margin-top: 0px;
     }
   }
 
-  animation: show-left 900ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation: show-left 900ms cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
 
   p {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+    font-weight: 300;
     color: ${props => props.theme.colors.g7};
   }
 `
 
-export const LinksWrapper = styled.div``
+export const LinksWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: ${props => props.theme.colors.colorPrimary2};
+
+  a {
+    font-size: 1.4rem;
+    svg {
+      margin-right: 5px;
+    }
+    &:hover {
+      color: ${props => props.theme.colors.colorPrimary};
+      text-decoration: underline;
+    }
+  }
+`

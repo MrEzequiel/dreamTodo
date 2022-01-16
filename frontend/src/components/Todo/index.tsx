@@ -1,11 +1,10 @@
 import React, { memo, useEffect, useRef, useState, useContext } from 'react'
 import { ITodo, TodoContext } from '../../context/TodoListContext'
-import { FaAngleDown } from 'react-icons/fa'
+import { FaAngleDown, FaLink } from 'react-icons/fa'
 import { Types } from '../../functions/reducers'
 import Dropdown from './Dropdown'
 
 import * as s from './style'
-import { link } from 'fs'
 
 interface Props {
   todo: ITodo
@@ -37,6 +36,33 @@ const Todo: React.FC<Props> = ({ todo }) => {
       dispatch({ type: Types.Edit, payload: { id: todo.id, name: edit } })
     }
     setHasEdit(false)
+  }
+
+  function formateLinks(links: string[]) {
+    const htmlLink = links.map(link => {
+      if (link.match(/https?:\/\/www./g)) {
+        const name = link.split(/https?:\/\/www./g)[1].split('.')[0]
+        return { link, name }
+      } else {
+        let newLink: string[] | string = link.split(/https?:\/\//g)
+
+        if (newLink[1]) {
+          newLink = newLink[1].split('www.')[0]
+        } else newLink = newLink[1]
+
+        const name = newLink.split('.')[0]
+        newLink = `https://www.${newLink}`
+
+        return { link: newLink, name }
+      }
+    })
+
+    return htmlLink.map(({ link, name }) => (
+      <a href={link} key={link} target="_blank" rel="noreferrer">
+        <FaLink />
+        {name}
+      </a>
+    ))
   }
 
   useEffect(() => {
@@ -91,13 +117,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
           <p>{todo.description}</p>
 
           {!!todo.expanded?.links && (
-            <s.LinksWrapper>
-              {todo.expanded?.links.map(link => (
-                <a href={link} key={link}>
-                  {link}
-                </a>
-              ))}
-            </s.LinksWrapper>
+            <s.LinksWrapper>{formateLinks(todo.expanded.links)}</s.LinksWrapper>
           )}
         </s.ExpendedTodo>
       )}

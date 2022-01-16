@@ -79,7 +79,8 @@ export const FormAddTodo = styled.form`
   }
 
   .description {
-    height: 100px;
+    min-height: 100px;
+    max-height: 250px;
     resize: vertical;
   }
 
