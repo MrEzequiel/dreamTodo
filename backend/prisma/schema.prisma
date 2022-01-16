@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Todo {
+  id          String      @unique @default(uuid())
+  name        String
+  description String
+  isChecked   Boolean     @default(false)
+  colletion   String
+  colletionId Colletion[] @relation("todo-colletion")
+
+  @@map("todo")
+}
+
+model Colletion {
+  id     String  @unique @default(uuid())
+  name   String
+  todoId String
+  todo   Todo  @relation("todo-colletion", fields: [todoId], references: [id])
+
+  @@map("colletions")
+}
