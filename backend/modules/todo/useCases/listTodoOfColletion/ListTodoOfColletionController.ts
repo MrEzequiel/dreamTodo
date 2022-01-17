@@ -5,7 +5,7 @@ import { ListTodoOfColletionUseCase } from "./ListTodoOfColletionUseCase";
 
 export class ListTodoOfColletionController {
 
-  async handle(request: Request, response: Response){
+  async handle(request: Request, response: Response): Promise<Response>{
     
     const { colletionid } = request.params
 

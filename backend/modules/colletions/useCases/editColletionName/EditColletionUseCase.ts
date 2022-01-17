@@ -1,3 +1,4 @@
+import { Colletion } from "@prisma/client";
 import { client } from "../../../../database/client";
 
 
@@ -8,7 +9,7 @@ interface IRequest {
 
 
 export class EditColletionUseCase {
-  async execute({ id, name }: IRequest){  
+  async execute({ id, name }: IRequest): Promise<Colletion>{  
 
     const verifyIfColletionExist = await client.colletion.findFirst({
       where: {
