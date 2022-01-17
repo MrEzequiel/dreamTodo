@@ -144,7 +144,14 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
       {expended && (
         <s.ExpendedTodo>
-          <p>{todo.description}</p>
+          <p>
+            {todo.description?.split('\n').map(description => (
+              <>
+                {description}
+                <br />
+              </>
+            ))}
+          </p>
 
           {!!todo.expanded?.links && (
             <s.LinksWrapper>{formateLinks(todo.expanded.links)}</s.LinksWrapper>
