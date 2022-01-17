@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Container } from '../../styles/LayoutComponents'
+import { Container } from '../../../../styles/LayoutComponents'
 
 export const FormWrapper = styled.div`
   position: relative;

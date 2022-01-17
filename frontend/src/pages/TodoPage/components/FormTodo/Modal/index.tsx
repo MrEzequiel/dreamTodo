@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react'
-import { ITodo, TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
-import useForm from '../../../hooks/useForm'
+import { ITodo, TodoContext } from '../../../../../context/TodoListContext'
+import { Types } from '../../../../../functions/reducers'
+import useForm from '../../../../../hooks/useForm'
 
 import * as s from './style'
 

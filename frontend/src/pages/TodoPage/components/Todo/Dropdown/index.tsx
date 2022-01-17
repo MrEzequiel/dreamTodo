@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
+import { ITodo, TodoContext } from '../../../../../context/TodoListContext'
+import { Types } from '../../../../../functions/reducers'
 import * as s from './style'
-import { ITodo, TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
 
 interface Props {
   todo: ITodo

@@ -1,8 +1,7 @@
 import styled from 'styled-components'
+import { Container } from '../../styles/LayoutComponents'
 
-import { Container } from './LayoutComponents'
-
-const TitleStyle = styled.h1`
+export const TitleStyle = styled.h1`
   ${Container()}
   font-size: 3.2rem;
   font-weight: 700;
@@ -23,5 +22,3 @@ const TitleStyle = styled.h1`
     color: ${props => props.theme.colors.g7};
   }
 `
-
-export default TitleStyle

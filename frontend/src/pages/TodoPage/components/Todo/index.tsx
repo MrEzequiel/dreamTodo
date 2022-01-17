@@ -6,13 +6,13 @@ import React, {
   useContext,
   useCallback
 } from 'react'
-import { ITodo, TodoContext } from '../../context/TodoListContext'
 import { FaAngleDown, FaLink } from 'react-icons/fa'
-import { Types } from '../../functions/reducers'
 import Dropdown from './Dropdown'
 
 import * as s from './style'
 import Modal from '../FormTodo/Modal'
+import { ITodo, TodoContext } from '../../../../context/TodoListContext'
+import { Types } from '../../../../functions/reducers'
 
 interface Props {
   todo: ITodo

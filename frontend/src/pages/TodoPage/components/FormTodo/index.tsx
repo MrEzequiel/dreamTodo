@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from 'react'
 import { FaPlus } from 'react-icons/fa'
-import { TodoContext } from '../../context/TodoListContext'
-import { Types } from '../../functions/reducers'
+import { TodoContext } from '../../../../context/TodoListContext'
+import { Types } from '../../../../functions/reducers'
 import Modal from './Modal'
 
 import * as s from './styles'
