@@ -14,9 +14,9 @@ interface Props {
 
 const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
   const titleField = useForm(true, todo?.name ?? '')
-  // titleField.value = todo?.name ?? ''
   const descriptionField = useForm(false, todo?.description ?? '')
 
+  // TODO: save to-do without link
   function validateLink(value: string): string | null {
     const regex =
       /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
@@ -77,6 +77,8 @@ const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
     closeModal(false)
   }
 
+  // TODO: style for fields with error
+  // https://www.bezkoder.com/wp-content/uploads/2021/10/react-form-validation-example-formik-yup.png
   return (
     <s.ModalWrapper>
       <s.ModalContent>

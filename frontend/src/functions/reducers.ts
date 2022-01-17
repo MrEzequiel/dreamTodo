@@ -55,6 +55,7 @@ function removeTodoById(id: number, todos: ITodo[]) {
 export const todoReducer = (state: InitialStateType, action: TodoActions) => {
   let { todos } = state
 
+  // TODO: Drag n drop todos
   switch (action.type) {
     case Types.Add:
       const newTodo: ITodo = {
