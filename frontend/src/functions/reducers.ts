@@ -35,6 +35,10 @@ type TodoPayload = {
   [Types.Edit]: {
     name: string
     id: number
+    description?: string
+    expanded?: {
+      links?: string[]
+    }
   }
 }
 
@@ -89,7 +93,7 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
       const newTodos = todos.map(todo => {
         if (todo.id !== action.payload.id) return todo
 
-        return { ...todo, name: action.payload.name }
+        return { ...todo, ...action.payload }
       })
 
       return { ...state, todos: newTodos }
