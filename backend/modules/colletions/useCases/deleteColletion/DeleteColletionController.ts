@@ -5,7 +5,7 @@ import { DeleteColletionUseCase } from "./DeleteColletionUseCase";
 
 
 export class DeleteColletionController {
-  async handle(request: Request, response: Response){
+  async handle(request: Request, response: Response): Promise<Response>{
     const { id } = request.params;
 
     const deleteColletionUseCase = new DeleteColletionUseCase();

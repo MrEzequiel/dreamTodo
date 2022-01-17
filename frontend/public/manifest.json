@@ -1,8 +1,0 @@
-{
-  "short_name": "To Do",
-  "name": "Simple application for list to do",
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
-}

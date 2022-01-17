@@ -1,3 +1,4 @@
+import { Todo } from "@prisma/client";
 import { client } from "../../../../database/client";
 
 
@@ -7,7 +8,7 @@ interface IRequestTodo {
 }
 
 export class ListTodoOfColletionUseCase {
-  async execute({ colletionid }: IRequestTodo) {
+  async execute({ colletionid }: IRequestTodo): Promise<Todo[]>{
     const todo = await client.todo.findMany({
       where: {
         colletion: colletionid
