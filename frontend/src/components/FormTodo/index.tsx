@@ -50,7 +50,7 @@ const FormTodo: React.FC = () => {
         </s.MoreInformation>
       )}
 
-      {openModal && <Modal closeModal={setOpenModal} />}
+      {openModal && <Modal closeModal={setOpenModal} type="add" />}
     </s.FormWrapper>
   )
 }
