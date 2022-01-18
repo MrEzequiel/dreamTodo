@@ -1,10 +1,18 @@
-import React, { memo, useEffect, useRef, useState, useContext } from 'react'
+import React, {
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  useCallback
+} from 'react'
 import { ITodo, TodoContext } from '../../context/TodoListContext'
 import { FaAngleDown, FaLink } from 'react-icons/fa'
 import { Types } from '../../functions/reducers'
 import Dropdown from './Dropdown'
 
 import * as s from './style'
+import Modal from '../FormTodo/Modal'
 
 interface Props {
   todo: ITodo
@@ -17,8 +25,13 @@ const Todo: React.FC<Props> = ({ todo }) => {
   const [toggle, setToggle] = useState(todo.complete)
 
   const [hasEdit, setHasEdit] = useState(false)
+  const [modal, setModal] = useState(false)
   const [edit, setEdit] = useState(todo.name)
   const [expended, setExpended] = useState(false)
+
+  const expendedTodo = useCallback(() => {
+    return !!todo.description || !!todo.expanded
+  }, [todo.description, todo.expanded])
 
   function handleChangeForComplete() {
     dispatch({ type: Types.Toggle, payload: { id: todo.id } })
@@ -33,7 +46,15 @@ const Todo: React.FC<Props> = ({ todo }) => {
     if (!edit.trim()) {
       setEdit(todo.name)
     } else {
-      dispatch({ type: Types.Edit, payload: { id: todo.id, name: edit } })
+      dispatch({
+        type: Types.Edit,
+        payload: {
+          id: todo.id,
+          name: edit,
+          description: undefined,
+          expanded: undefined
+        }
+      })
     }
     setHasEdit(false)
   }
@@ -60,12 +81,18 @@ const Todo: React.FC<Props> = ({ todo }) => {
   }
 
   useEffect(() => {
-    if (hasEdit) inputEl.current?.focus()
-  }, [hasEdit])
+    if (!hasEdit) return
+
+    if (expendedTodo()) {
+      setModal(true)
+    } else {
+      inputEl.current?.focus()
+    }
+  }, [hasEdit, expendedTodo])
 
   return (
     <>
-      <s.TodoWrapper edit={hasEdit} expended={expended}>
+      <s.TodoWrapper edit={hasEdit && !expendedTodo()} expended={expended}>
         <s.InputCheckboxTodo>
           <input
             type="checkbox"
@@ -74,7 +101,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
           />
         </s.InputCheckboxTodo>
 
-        {hasEdit ? (
+        {hasEdit && !expendedTodo() ? (
           <s.InputEditTodo
             type="text"
             value={edit}
@@ -88,10 +115,19 @@ const Todo: React.FC<Props> = ({ todo }) => {
           </p>
         )}
 
+        {modal && (
+          <Modal
+            closeModal={setModal}
+            type="edit"
+            todo={todo}
+            setEdit={setHasEdit}
+          />
+        )}
+
         <s.ButtonsControl>
           <Dropdown todo={todo} setHasEdit={setHasEdit} />
 
-          {(!!todo.description || !!todo.expanded) && (
+          {expendedTodo() && (
             <button
               type="button"
               className="extended"
@@ -108,7 +144,14 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
       {expended && (
         <s.ExpendedTodo>
-          <p>{todo.description}</p>
+          <p>
+            {todo.description?.split('\n').map(description => (
+              <>
+                {description}
+                <br />
+              </>
+            ))}
+          </p>
 
           {!!todo.expanded?.links && (
             <s.LinksWrapper>{formateLinks(todo.expanded.links)}</s.LinksWrapper>

@@ -103,6 +103,7 @@ export const ButtonsModal = styled.div`
   gap: 15px;
 
   button {
+    text-transform: capitalize;
     cursor: pointer;
     border-radius: ${props => props.theme.borderRadius};
     width: 100px;

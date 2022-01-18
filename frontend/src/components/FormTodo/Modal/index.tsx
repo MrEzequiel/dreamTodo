@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { TodoContext } from '../../../context/TodoListContext'
+import React, { useCallback, useContext, useEffect, useMemo } from 'react'
+import { ITodo, TodoContext } from '../../../context/TodoListContext'
 import { Types } from '../../../functions/reducers'
 import useForm from '../../../hooks/useForm'
 
@@ -7,12 +7,15 @@ import * as s from './style'
 
 interface Props {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
+  type: 'add' | 'edit'
+  todo?: ITodo
+  setEdit?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Modal: React.FC<Props> = ({ closeModal }) => {
-  const titleField = useForm()
-  const descriptionField = useForm(false)
-  const { dispatch } = useContext(TodoContext)
+const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
+  const titleField = useForm(true, todo?.name ?? '')
+  // titleField.value = todo?.name ?? ''
+  const descriptionField = useForm(false, todo?.description ?? '')
 
   function validateLink(value: string): string | null {
     const regex =
@@ -29,15 +32,23 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
     }
   }
 
-  const linkField = useForm(false, 'link', validateLink)
+  const initialValue = todo?.expanded?.links
+    ? todo?.expanded?.links.join(';')
+    : ''
+  const linkField = useForm(false, initialValue, 'link', validateLink)
+
+  const { dispatch } = useContext(TodoContext)
 
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
 
     if (
-      titleField.validate(titleField.value) &&
-      !validateLink(linkField.value)
+      !(titleField.validate(titleField.value) && !validateLink(linkField.value))
     ) {
+      return
+    }
+
+    if (type === 'add') {
       dispatch({
         type: Types.Add,
         payload: {
@@ -45,13 +56,25 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
           description: descriptionField.value,
           expanded: {
             links: linkField.value.split(';')
-            // .split(';').map(v => v.trim())
           }
         }
       })
-
-      closeModal(false)
+    } else if (todo?.id && setEdit) {
+      dispatch({
+        type: Types.Edit,
+        payload: {
+          id: todo.id,
+          name: titleField.value,
+          description: descriptionField.value,
+          expanded: {
+            links: linkField.value.split(';')
+          }
+        }
+      })
+      setEdit(false)
     }
+
+    closeModal(false)
   }
 
   return (
@@ -63,6 +86,7 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
           <input
             type="text"
             placeholder="Title *"
+            value={titleField.value}
             onChange={titleField.handleChange}
             onBlur={titleField.handleBlur}
           />
@@ -71,6 +95,7 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
           <textarea
             placeholder="Description"
             className="description"
+            value={descriptionField.value}
             onChange={descriptionField.handleChange}
           />
 
@@ -78,6 +103,7 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
             <input
               type="text"
               placeholder="Links"
+              value={linkField.value}
               onChange={linkField.handleChange}
               onBlur={linkField.handleBlur}
             />
@@ -88,7 +114,7 @@ const Modal: React.FC<Props> = ({ closeModal }) => {
 
           <s.ButtonsModal>
             <button type="submit" className="add">
-              Add
+              {type}
             </button>
             <button
               type="button"

@@ -17,18 +17,13 @@ const validations: IValidations = {
   }
 }
 
-interface Param {
-  required: boolean
-  type?: string | false
-  customValidate?: (x: string) => string | null
-}
-
 const useForm = (
   required = true,
+  initialValue?: string,
   type?: string | false,
   customValidate?: (value: string) => string | null
 ) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(initialValue ?? '')
   const [error, setError] = useState<string | null>('')
 
   function validate(value: string) {
