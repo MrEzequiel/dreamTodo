@@ -7,14 +7,14 @@ export class CreateTodoController {
 
   async handle(request: Request, response: Response): Promise<Response> {
     
-    const { name, description, isChecked, colletion } = request.body
+    const { name, description, complete, colletion } = request.body
 
     const createTodoUseCase = new CreateTodoUseCase()
 
     const todo = await createTodoUseCase.execute({
       name,
       description,
-      isChecked,
+      complete,
       colletion
     })
 

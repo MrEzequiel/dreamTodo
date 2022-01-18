@@ -11,8 +11,8 @@ model Todo {
   id          String      @unique @default(uuid())
   name        String
   description String?
-  isChecked   Boolean     @default(false)
   colletion   String
+  complete    Boolean     @default(false)
   colletionId Colletion[] @relation("todo-colletion")
 
   @@map("todo")
