@@ -19,7 +19,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
       0
     )
 
-    return (total * 100) / todos.length + '%'
+    return ((total * 100) / todos.length).toFixed() + '%'
   }
 
   return (

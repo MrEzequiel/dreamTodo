@@ -158,9 +158,11 @@ export const todoReducer = (
 
       let { collection, todos } = find
 
-      collection.todo = removeTodoById(action.payload.id, todos)
+      todos = removeTodoById(action.payload.id, todos)
 
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, todos)
+      }
     }
 
     case Types.Edit: {
