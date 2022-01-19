@@ -11,14 +11,17 @@ import Dropdown from './Dropdown'
 
 import * as s from './style'
 import Modal from '../FormTodo/Modal'
-import { ITodo, TodoContext } from '../../../../context/TodoListContext'
+import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
+import ITodo from '../../../../interfaces/Todo'
+import { useParams } from 'react-router-dom'
 
 interface Props {
   todo: ITodo
 }
 
 const Todo: React.FC<Props> = ({ todo }) => {
+  const { id } = useParams()
   const inputEl = useRef<HTMLInputElement>(null)
   const { dispatch } = useContext(TodoContext)
 
@@ -34,7 +37,11 @@ const Todo: React.FC<Props> = ({ todo }) => {
   }, [todo.description, todo.expanded])
 
   function handleChangeForComplete() {
-    dispatch({ type: Types.Toggle, payload: { id: todo.id } })
+    if (!id) return
+    dispatch({
+      type: Types.Toggle,
+      payload: { id_collection: id, id: todo.id }
+    })
     setToggle(prev => !prev)
   }
 
@@ -45,10 +52,11 @@ const Todo: React.FC<Props> = ({ todo }) => {
   function handleBlurInput() {
     if (!edit.trim()) {
       setEdit(todo.name)
-    } else {
+    } else if (id) {
       dispatch({
         type: Types.Edit,
         payload: {
+          id_collection: id,
           id: todo.id,
           name: edit,
           description: undefined,

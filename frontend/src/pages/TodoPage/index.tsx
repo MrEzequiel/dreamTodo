@@ -1,19 +1,20 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { FaAngleLeft } from 'react-icons/fa'
+import { NavLink } from 'react-router-dom'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
 
 import * as s from './style'
 
-interface Props {}
-
-const TodoPage = (props: Props) => {
+const TodoPage = () => {
   return (
     <>
       <s.TitleStyle>
-        <button type="button">
-          <FaAngleLeft size={20} />
-        </button>
+        <NavLink to="" end>
+          <button type="button">
+            <FaAngleLeft size={20} />
+          </button>
+        </NavLink>
         To Do
       </s.TitleStyle>
 

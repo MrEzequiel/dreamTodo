@@ -1,34 +1,25 @@
 import React, { createContext, Dispatch, useEffect, useReducer } from 'react'
-import { TodoActions, todoReducer } from '../functions/reducers'
-
-export type ITodo = {
-  id: number
-  name: string
-  complete: boolean
-  description?: string
-  expanded?: {
-    links?: string[]
-  }
-}
+import { CollectionsActions, todoReducer } from '../functions/reducers'
+import ICollection from '../interfaces/Collection'
 
 export type InitialStateType = {
-  todos: ITodo[]
+  collections: ICollection[]
 }
 
-const getTodosFromLocalStorage = (): ITodo[] => {
-  const storage = localStorage.getItem('todos')
+const getTodosFromLocalStorage = (): ICollection[] => {
+  const storage = localStorage.getItem('collections')
   if (storage) return JSON.parse(storage)
 
   return []
 }
 
 const initialState = {
-  todos: getTodosFromLocalStorage()
+  collections: getTodosFromLocalStorage()
 }
 
 export const TodoContext = createContext<{
   state: InitialStateType
-  dispatch: Dispatch<TodoActions>
+  dispatch: Dispatch<CollectionsActions>
 }>({
   state: initialState,
   dispatch: () => initialState
@@ -38,7 +29,7 @@ const TodoProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(state.todos))
+    localStorage.setItem('collections', JSON.stringify(state.collections))
   }, [state])
 
   return (
