@@ -1,11 +1,11 @@
-import { IEmojiData } from 'emoji-picker-react'
+import { BaseEmoji } from 'emoji-mart'
 import ITodo from './Todo'
 
 interface ICollection {
   id: string
   title: string
   todo: ITodo[]
-  emoji: IEmojiData
+  emoji: BaseEmoji
 }
 
 export default ICollection

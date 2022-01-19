@@ -25,7 +25,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
   return (
     <NavLink to={`/todo/${collection.id}`}>
       <s.CardWrapper>
-        <div className="upper">{collection.emoji.emoji}</div>
+        <div className="upper">{collection.emoji.native}</div>
 
         <div className="down">
           <h2>{collection.title}</h2>

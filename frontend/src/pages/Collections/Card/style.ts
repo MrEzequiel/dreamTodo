@@ -3,7 +3,8 @@ import patternCard from '../assets/pattern-card.png'
 
 export const CardWrapper = styled.div`
   flex-shrink: 0;
-  height: 260px;
+  min-height: 260px;
+  height: max-content;
   overflow: hidden;
 
   border-radius: ${props => props.theme.borderRadius};
