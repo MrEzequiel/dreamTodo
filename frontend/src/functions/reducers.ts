@@ -2,6 +2,7 @@ import { InitialStateType } from '../context/TodoListContext'
 import ICollection from '../interfaces/Collection'
 import ITodo from '../interfaces/Todo'
 import { v4 as uuidv4 } from 'uuid'
+import { IEmojiData } from 'emoji-picker-react'
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -25,6 +26,7 @@ export enum Types {
 type CollectionsPayload = {
   [Types.Add_Collection]: {
     title: string
+    emoji: IEmojiData
   }
   [Types.Add]: {
     id_collection: string
@@ -85,7 +87,8 @@ export const todoReducer = (
       const newCollection: ICollection = {
         id: uuidv4(),
         title: action.payload.title,
-        todo: []
+        todo: [],
+        emoji: action.payload.emoji
       }
 
       collections.unshift(newCollection)

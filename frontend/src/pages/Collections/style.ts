@@ -3,7 +3,7 @@ import { Container } from '../../styles/LayoutComponents'
 
 export const CollectionWrapper = styled.div`
   ${Container()}
-  margin-bottom: 40px;
+  padding-bottom: 130px;
 
   h1 {
     display: flex;
@@ -31,7 +31,7 @@ export const ButtonAddCollection = styled.button`
   margin-right: auto;
   left: 0;
   right: 0;
-  bottom: 100px;
+  bottom: 40px;
   text-align: center;
 
   display: flex;
