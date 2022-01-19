@@ -92,7 +92,7 @@ export const todoReducer = (
       }
 
       collections.unshift(newCollection)
-      return { ...state, collections }
+      return { collections }
 
     case Types.Add: {
       const find = findThisCollection(action.payload.id_collection, collections)
@@ -108,7 +108,17 @@ export const todoReducer = (
       }
 
       todos.unshift(newTodo)
-      return { ...state, collections: [...collections, collection] }
+      const updateCollections = collections.map(collection => {
+        if (action.payload.id_collection !== collection.id) return collection
+
+        const newCollection: ICollection = {
+          ...collection,
+          todo: todos
+        }
+
+        return newCollection
+      })
+      return { collections: updateCollections }
     }
 
     case Types.Toggle: {

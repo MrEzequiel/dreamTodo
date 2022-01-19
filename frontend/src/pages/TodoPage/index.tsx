@@ -1,21 +1,32 @@
 import React, { useContext, useEffect } from 'react'
 import { FaAngleLeft } from 'react-icons/fa'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
+import { TodoContext } from '../../context/TodoListContext'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
 
 import * as s from './style'
 
 const TodoPage = () => {
+  const { id } = useParams()
+  const { state } = useContext(TodoContext)
+  const thisCollection = state.collections.find(
+    collection => collection.id === id
+  )
+
   return (
     <>
       <s.TitleStyle>
-        <NavLink to="" end>
+        <NavLink to="/" end>
           <button type="button">
             <FaAngleLeft size={20} />
           </button>
         </NavLink>
-        To Do
+
+        <h1>
+          <span>{thisCollection?.emoji.native}</span>
+          {thisCollection?.title}
+        </h1>
       </s.TitleStyle>
 
       <FormTodo />
