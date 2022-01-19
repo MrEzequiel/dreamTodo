@@ -7,6 +7,7 @@ import Header from './components/Header'
 import TodoPage from './pages/TodoPage'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Collections from './pages/Collections'
+import NotFound from './pages/NotFound'
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Collections />} />
             <Route path="/todo/:id" element={<TodoPage />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
 
           <GlobalStyles />
