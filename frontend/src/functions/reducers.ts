@@ -177,7 +177,9 @@ export const todoReducer = (
         return { ...todo, ...action.payload }
       })
 
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, newTodos)
+      }
     }
 
     default:
