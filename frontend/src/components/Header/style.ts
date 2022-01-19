@@ -15,24 +15,6 @@ export const HeaderStyle = styled.div`
   height: 70px;
 `
 
-export const LogoDreamTodo = styled.h1`
-  font-size: 2.6rem;
-  font-weight: 300;
-  color: ${props => props.theme.colors.g7};
-
-  span {
-    font-weight: 700;
-    background: linear-gradient(
-      to right,
-      ${props => props.theme.colors.colorPrimary2},
-      ${props => props.theme.colors.colorPrimary}
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-`
-
 export const ButtonAccount = styled.button`
   cursor: pointer;
   border: 2px dotted ${props => props.theme.colors.colorPrimary};

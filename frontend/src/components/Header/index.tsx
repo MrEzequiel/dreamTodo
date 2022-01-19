@@ -1,16 +1,16 @@
 import React from 'react'
 import * as s from './style'
 
-interface Props {}
+import logo from '../../assets/logo.svg'
+import { NavLink } from 'react-router-dom'
 
-const Header = (props: Props) => {
+const Header = () => {
   return (
     <s.HeaderWrapper>
       <s.HeaderStyle>
-        <s.LogoDreamTodo>
-          dream<span>Todo</span>
-        </s.LogoDreamTodo>
-
+        <NavLink to="/">
+          <img src={logo} alt="dream to do logo" />
+        </NavLink>
         <s.ButtonAccount>Login</s.ButtonAccount>
       </s.HeaderStyle>
     </s.HeaderWrapper>
