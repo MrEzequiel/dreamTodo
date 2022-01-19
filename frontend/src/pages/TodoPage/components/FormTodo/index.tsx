@@ -1,12 +1,14 @@
 import React, { useRef, useState, useContext } from 'react'
 import { FaPlus } from 'react-icons/fa'
-import { TodoContext } from '../../context/TodoListContext'
-import { Types } from '../../functions/reducers'
+import { useParams } from 'react-router-dom'
+import { TodoContext } from '../../../../context/TodoListContext'
+import { Types } from '../../../../functions/reducers'
 import Modal from './Modal'
 
 import * as s from './styles'
 
 const FormTodo: React.FC = () => {
+  const { id } = useParams()
   const contextTodo = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const [name, setName] = useState('')
@@ -17,10 +19,19 @@ const FormTodo: React.FC = () => {
     e.preventDefault()
     if (!name.trim()) return
 
-    contextTodo.dispatch({
-      type: Types.Add,
-      payload: { name, description: undefined, expanded: undefined }
-    })
+    // i hate TS
+    if (id) {
+      contextTodo.dispatch({
+        type: Types.Add,
+        payload: {
+          id_collection: id,
+          name,
+          description: undefined,
+          expanded: undefined
+        }
+      })
+    }
+
     setName('')
     inputEl.current?.focus()
   }

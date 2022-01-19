@@ -1,4 +1,7 @@
-import { InitialStateType, ITodo } from '../context/TodoListContext'
+import { InitialStateType } from '../context/TodoListContext'
+import ICollection from '../interfaces/Collection'
+import ITodo from '../interfaces/Todo'
+import { v4 as uuidv4 } from 'uuid'
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -12,14 +15,19 @@ type ActionMap<M extends { [index: string]: any }> = {
 }
 
 export enum Types {
+  Add_Collection = 'ADD_COLLECTION',
   Add = 'ADD_TODO',
   Toggle = 'TOGGLE_TODO',
   Remove = 'REMOVE_TODO',
   Edit = 'EDIT_TODO'
 }
 
-type TodoPayload = {
+type CollectionsPayload = {
+  [Types.Add_Collection]: {
+    title: string
+  }
   [Types.Add]: {
+    id_collection: string
     name: string
     description?: string
     expanded?: {
@@ -27,12 +35,15 @@ type TodoPayload = {
     }
   }
   [Types.Toggle]: {
+    id_collection: string
     id: number
   }
   [Types.Remove]: {
+    id_collection: string
     id: number
   }
   [Types.Edit]: {
+    id_collection: string
     name: string
     id: number
     description?: string
@@ -42,21 +53,49 @@ type TodoPayload = {
   }
 }
 
-export type TodoActions = ActionMap<TodoPayload>[keyof ActionMap<TodoPayload>]
-
-function newTodo(payload: TodoActions) {
-  return { id: Date.now(), payload, complete: false }
-}
+export type CollectionsActions =
+  ActionMap<CollectionsPayload>[keyof ActionMap<CollectionsPayload>]
 
 function removeTodoById(id: number, todos: ITodo[]) {
   return todos.filter(todo => id !== todo.id)
 }
 
-export const todoReducer = (state: InitialStateType, action: TodoActions) => {
-  let { todos } = state
+interface IFindReturn {
+  collection: ICollection
+  todos: ITodo[]
+}
 
+function findThisCollection(
+  id: string,
+  collections: ICollection[]
+): IFindReturn | undefined {
+  const collection = collections.find(collection => collection.id === id)
+  if (collection) return { collection, todos: collection.todo }
+}
+
+export const todoReducer = (
+  state: InitialStateType,
+  action: CollectionsActions
+) => {
+  const { collections } = state
+
+  // TODO: Drag n drop todos
   switch (action.type) {
-    case Types.Add:
+    case Types.Add_Collection:
+      const newCollection: ICollection = {
+        id: uuidv4(),
+        title: action.payload.title,
+        todo: []
+      }
+
+      collections.unshift(newCollection)
+      return { ...state, collections }
+
+    case Types.Add: {
+      const find = findThisCollection(action.payload.id_collection, collections)
+      if (!find) return state
+
+      const { collection, todos } = find
       const newTodo: ITodo = {
         id: Date.now(),
         name: action.payload.name,
@@ -66,9 +105,14 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
       }
 
       todos.unshift(newTodo)
-      return { ...state, todos }
+      return { ...state, collections: [...collections, collection] }
+    }
 
-    case Types.Toggle:
+    case Types.Toggle: {
+      const find = findThisCollection(action.payload.id_collection, collections)
+      if (!find) return state
+
+      let { collection, todos } = find
       // find todo complete and toggle complete
       let findTodo = todos.find(todo => action.payload.id === todo.id)
       if (findTodo === undefined) return state
@@ -78,25 +122,37 @@ export const todoReducer = (state: InitialStateType, action: TodoActions) => {
         complete: !findTodo.complete
       }
 
-      // if there is only one task, the other procedures are unnecessary.
-      if (todos.length === 1) return { ...state, todos: [todoToggle] }
-
       // removing to do you changed and adding to the first item in the array
       todos = removeTodoById(action.payload.id, todos)
       todos.unshift(todoToggle)
-      return { ...state, todos }
+      return { ...state, collections: [...collections, collection] }
+    }
 
-    case Types.Remove:
-      return { ...state, todos: removeTodoById(action.payload.id, todos) }
+    case Types.Remove: {
+      const find = findThisCollection(action.payload.id_collection, collections)
+      if (!find) return state
 
-    case Types.Edit:
+      let { collection, todos } = find
+
+      collection.todo = removeTodoById(action.payload.id, todos)
+
+      return { ...state, collections: [...collections, collection] }
+    }
+
+    case Types.Edit: {
+      const find = findThisCollection(action.payload.id_collection, collections)
+      if (!find) return state
+
+      let { collection, todos } = find
+
       const newTodos = todos.map(todo => {
         if (todo.id !== action.payload.id) return todo
 
         return { ...todo, ...action.payload }
       })
 
-      return { ...state, todos: newTodos }
+      return { ...state, collections: [...collections, collection] }
+    }
 
     default:
       return state

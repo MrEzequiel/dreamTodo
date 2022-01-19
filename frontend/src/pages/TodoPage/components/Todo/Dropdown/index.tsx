@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
+import { useParams } from 'react-router-dom'
+import { TodoContext } from '../../../../../context/TodoListContext'
+import { Types } from '../../../../../functions/reducers'
+import ITodo from '../../../../../interfaces/Todo'
 import * as s from './style'
-import { ITodo, TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
 
 interface Props {
   todo: ITodo
@@ -11,6 +13,7 @@ interface Props {
 }
 
 const Dropdown: React.FC<Props> = ({ todo, setHasEdit }) => {
+  const { id } = useParams()
   const DropdownEl = useRef<HTMLDivElement>(null)
   const { dispatch } = useContext(TodoContext)
   const [open, setOpen] = useState(false)
@@ -36,7 +39,12 @@ const Dropdown: React.FC<Props> = ({ todo, setHasEdit }) => {
   }, [open])
 
   function handleClickRemove() {
-    dispatch({ type: Types.Remove, payload: { id: todo.id } })
+    if (!id) return
+
+    dispatch({
+      type: Types.Remove,
+      payload: { id_collection: id, id: todo.id }
+    })
   }
 
   function handleClickEdit() {

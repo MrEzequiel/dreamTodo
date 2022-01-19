@@ -1,30 +1,29 @@
 import { ThemeProvider } from 'styled-components'
-import FormTodo from './components/FormTodo/index'
-import TodoList from './components/TodoList'
-import { FaAngleLeft } from 'react-icons/fa'
 
 import GlobalStyles from './styles/GlobalStyles'
-import TitleStyle from './styles/TitleStyle'
 import darkTheme from './styles/theme/dark'
 import TodoProvider from './context/TodoListContext'
 import Header from './components/Header'
+import TodoPage from './pages/TodoPage'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Collections from './pages/Collections'
 
 const App: React.FC = () => {
   return (
-    <TodoProvider>
-      <ThemeProvider theme={darkTheme}>
-        <Header />
-        <TitleStyle>
-          <button type="button">
-            <FaAngleLeft size={20} />
-          </button>
-          To Do
-        </TitleStyle>
-        <FormTodo />
-        <TodoList />
-        <GlobalStyles />
-      </ThemeProvider>
-    </TodoProvider>
+    <BrowserRouter>
+      <TodoProvider>
+        <ThemeProvider theme={darkTheme}>
+          <Header />
+
+          <Routes>
+            <Route path="/" element={<Collections />} />
+            <Route path="/todo/:id" element={<TodoPage />} />
+          </Routes>
+
+          <GlobalStyles />
+        </ThemeProvider>
+      </TodoProvider>
+    </BrowserRouter>
   )
 }
 

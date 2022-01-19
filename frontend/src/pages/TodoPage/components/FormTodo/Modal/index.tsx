@@ -1,7 +1,9 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react'
-import { ITodo, TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
-import useForm from '../../../hooks/useForm'
+import React, { useContext } from 'react'
+import { useParams } from 'react-router-dom'
+import { TodoContext } from '../../../../../context/TodoListContext'
+import { Types } from '../../../../../functions/reducers'
+import useForm from '../../../../../hooks/useForm'
+import ITodo from '../../../../../interfaces/Todo'
 
 import * as s from './style'
 
@@ -13,10 +15,11 @@ interface Props {
 }
 
 const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
+  const { id } = useParams()
   const titleField = useForm(true, todo?.name ?? '')
-  // titleField.value = todo?.name ?? ''
   const descriptionField = useForm(false, todo?.description ?? '')
 
+  // TODO: save to-do without link
   function validateLink(value: string): string | null {
     const regex =
       /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
@@ -48,10 +51,11 @@ const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
       return
     }
 
-    if (type === 'add') {
+    if (type === 'add' && id) {
       dispatch({
         type: Types.Add,
         payload: {
+          id_collection: id,
           name: titleField.value,
           description: descriptionField.value,
           expanded: {
@@ -59,10 +63,11 @@ const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
           }
         }
       })
-    } else if (todo?.id && setEdit) {
+    } else if (todo?.id && setEdit && id) {
       dispatch({
         type: Types.Edit,
         payload: {
+          id_collection: id,
           id: todo.id,
           name: titleField.value,
           description: descriptionField.value,
@@ -77,6 +82,8 @@ const Modal: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
     closeModal(false)
   }
 
+  // TODO: style for fields with error
+  // https://www.bezkoder.com/wp-content/uploads/2021/10/react-form-validation-example-formik-yup.png
   return (
     <s.ModalWrapper>
       <s.ModalContent>
