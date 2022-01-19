@@ -75,6 +75,23 @@ function findThisCollection(
   if (collection) return { collection, todos: collection.todo }
 }
 
+function updateCollections(
+  collections: ICollection[],
+  id: string,
+  todos: ITodo[]
+) {
+  return collections.map(collection => {
+    if (id !== collection.id) return collection
+
+    const newCollection: ICollection = {
+      ...collection,
+      todo: todos
+    }
+
+    return newCollection
+  })
+}
+
 export const todoReducer = (
   state: InitialStateType,
   action: CollectionsActions
@@ -108,17 +125,9 @@ export const todoReducer = (
       }
 
       todos.unshift(newTodo)
-      const updateCollections = collections.map(collection => {
-        if (action.payload.id_collection !== collection.id) return collection
-
-        const newCollection: ICollection = {
-          ...collection,
-          todo: todos
-        }
-
-        return newCollection
-      })
-      return { collections: updateCollections }
+      return {
+        collections: updateCollections(collections, collection.id, todos)
+      }
     }
 
     case Types.Toggle: {
@@ -138,7 +147,9 @@ export const todoReducer = (
       // removing to do you changed and adding to the first item in the array
       todos = removeTodoById(action.payload.id, todos)
       todos.unshift(todoToggle)
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, todos)
+      }
     }
 
     case Types.Remove: {
