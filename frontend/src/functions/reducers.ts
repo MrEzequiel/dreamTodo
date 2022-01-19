@@ -2,6 +2,7 @@ import { InitialStateType } from '../context/TodoListContext'
 import ICollection from '../interfaces/Collection'
 import ITodo from '../interfaces/Todo'
 import { v4 as uuidv4 } from 'uuid'
+import { BaseEmoji } from 'emoji-mart'
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -25,6 +26,7 @@ export enum Types {
 type CollectionsPayload = {
   [Types.Add_Collection]: {
     title: string
+    emoji: BaseEmoji
   }
   [Types.Add]: {
     id_collection: string
@@ -73,6 +75,23 @@ function findThisCollection(
   if (collection) return { collection, todos: collection.todo }
 }
 
+function updateCollections(
+  collections: ICollection[],
+  id: string,
+  todos: ITodo[]
+) {
+  return collections.map(collection => {
+    if (id !== collection.id) return collection
+
+    const newCollection: ICollection = {
+      ...collection,
+      todo: todos
+    }
+
+    return newCollection
+  })
+}
+
 export const todoReducer = (
   state: InitialStateType,
   action: CollectionsActions
@@ -85,11 +104,12 @@ export const todoReducer = (
       const newCollection: ICollection = {
         id: uuidv4(),
         title: action.payload.title,
-        todo: []
+        todo: [],
+        emoji: action.payload.emoji
       }
 
       collections.unshift(newCollection)
-      return { ...state, collections }
+      return { collections }
 
     case Types.Add: {
       const find = findThisCollection(action.payload.id_collection, collections)
@@ -105,7 +125,9 @@ export const todoReducer = (
       }
 
       todos.unshift(newTodo)
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, todos)
+      }
     }
 
     case Types.Toggle: {
@@ -125,7 +147,9 @@ export const todoReducer = (
       // removing to do you changed and adding to the first item in the array
       todos = removeTodoById(action.payload.id, todos)
       todos.unshift(todoToggle)
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, todos)
+      }
     }
 
     case Types.Remove: {
@@ -134,9 +158,11 @@ export const todoReducer = (
 
       let { collection, todos } = find
 
-      collection.todo = removeTodoById(action.payload.id, todos)
+      todos = removeTodoById(action.payload.id, todos)
 
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, todos)
+      }
     }
 
     case Types.Edit: {
@@ -151,7 +177,9 @@ export const todoReducer = (
         return { ...todo, ...action.payload }
       })
 
-      return { ...state, collections: [...collections, collection] }
+      return {
+        collections: updateCollections(collections, collection.id, newTodos)
+      }
     }
 
     default:

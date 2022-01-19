@@ -24,6 +24,16 @@ export const FormStyled = styled.form`
   height: 70px;
   padding: 0 15px;
 
+  .select-emoji {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    background: ${props => props.theme.colors.g2};
+    border-radius: 5px;
+    box-shadow: 0 4px 4px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid ${props => props.theme.colors.g1};
+  }
+
   input {
     flex: 1;
     height: 100%;

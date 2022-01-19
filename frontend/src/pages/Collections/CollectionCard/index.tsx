@@ -13,31 +13,29 @@ interface IProps {
 const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
   const { state } = useContext(TodoContext)
 
-  return (
+  return state.collections.length === 0 ? (
+    <s.EmptyCollection>
+      <FaStickyNote size={30} />
+      <p>
+        You don&#8219;t have any collection
+        <br />
+        <a
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            setShowForm(true)
+          }}
+        >
+          click here
+        </a>{' '}
+        to add
+      </p>
+    </s.EmptyCollection>
+  ) : (
     <s.CollectionCardWrapper>
-      {state.collections.length === 0 ? (
-        <s.EmptyCollection>
-          <FaStickyNote size={30} />
-          <p>
-            You don&#8219;t have any collection
-            <br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                setShowForm(true)
-              }}
-            >
-              click here
-            </a>{' '}
-            to add
-          </p>
-        </s.EmptyCollection>
-      ) : (
-        state.collections.map(collection => (
-          <Card key={collection.id} collection={collection} />
-        ))
-      )}
+      {state.collections.map(collection => (
+        <Card key={collection.id} collection={collection} />
+      ))}
     </s.CollectionCardWrapper>
   )
 }

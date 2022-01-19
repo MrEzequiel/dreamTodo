@@ -19,13 +19,13 @@ const Card: React.FC<IProps> = ({ collection }) => {
       0
     )
 
-    return (total * 100) / todos.length + '%'
+    return ((total * 100) / todos.length).toFixed() + '%'
   }
 
   return (
     <NavLink to={`/todo/${collection.id}`}>
       <s.CardWrapper>
-        <div className="upper"></div>
+        <div className="upper">{collection.emoji.native}</div>
 
         <div className="down">
           <h2>{collection.title}</h2>
