@@ -13,12 +13,23 @@ export const HeaderStyle = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 70px;
+
+  .left {
+    display: flex;
+    align-items: center;
+
+    p {
+      font-weight: 300;
+      color: ${props => props.theme.colors.g7};
+    }
+  }
 `
 
 export const ButtonAccount = styled.button`
   cursor: pointer;
   border: 2px dotted ${props => props.theme.colors.colorPrimary};
   padding: 8px 16px;
+  margin-left: 20px;
   border-radius: ${props => props.theme.borderRadius};
   color: ${props => props.theme.colors.g7};
   font-weight: 300;
