@@ -115,3 +115,9 @@ export const Porcetage = styled.div<IProps>`
     }
   }
 `
+
+export const ControlsButton = styled.div`
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+`

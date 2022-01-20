@@ -3,10 +3,13 @@ import { NavLink } from 'react-router-dom'
 import { TodoContext } from '../../../context/TodoListContext'
 import { Types } from '../../../functions/reducers'
 import Dropdown from '../../../components/Dropdown'
+import Modal from '../../../components/Modal'
 import ICollection from '../../../interfaces/Collection'
 import FormCollection from '../FormCollection'
+import Button from '../../../styles/Button'
 
 import * as s from './style'
+import Title from '../../../styles/Title'
 
 interface IProps {
   collection: ICollection
@@ -15,6 +18,7 @@ interface IProps {
 const Card: React.FC<IProps> = ({ collection }) => {
   const { dispatch } = useContext(TodoContext)
   const [hasEdit, setHasEdit] = useState(false)
+  const [confirmed, setConfirmed] = useState(false)
 
   function getPercentageTodo() {
     const todos = collection.todo
@@ -31,10 +35,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
   function handleClickDropdown(types: 'edit' | 'remove') {
     if (types === 'remove') {
-      dispatch({
-        type: Types.Remove_Collection,
-        payload: { id: collection.id }
-      })
+      setConfirmed(true)
     }
 
     if (types === 'edit') {
@@ -44,6 +45,13 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
   function handleCollectionEdit(newCollection: ICollection) {
     dispatch({ type: Types.Edit_Collection, payload: { ...newCollection } })
+  }
+
+  function handleCollectionRemove() {
+    dispatch({
+      type: Types.Remove_Collection,
+      payload: { id: collection.id }
+    })
   }
 
   return (
@@ -75,6 +83,24 @@ const Card: React.FC<IProps> = ({ collection }) => {
           initial={collection}
           callback={handleCollectionEdit}
         />
+      )}
+
+      {confirmed && (
+        <Modal>
+          <Title size="2.8rem" weight="300" separator>
+            Want to delete collection
+            <strong style={{ marginLeft: '8px' }}>
+              {`"${collection.title}"`}?
+            </strong>
+          </Title>
+
+          <s.ControlsButton>
+            <Button onClick={handleCollectionRemove}>Yes</Button>
+            <Button outlined onClick={() => setConfirmed(false)}>
+              No
+            </Button>
+          </s.ControlsButton>
+        </Modal>
       )}
     </>
   )
