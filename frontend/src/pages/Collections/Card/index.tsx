@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { TodoContext } from '../../../context/TodoListContext'
+import { Types } from '../../../functions/reducers'
+import Dropdown from '../../../components/Dropdown'
 import ICollection from '../../../interfaces/Collection'
+import FormCollection from '../FormCollection'
 
 import * as s from './style'
 
@@ -9,6 +13,9 @@ interface IProps {
 }
 
 const Card: React.FC<IProps> = ({ collection }) => {
+  const { dispatch } = useContext(TodoContext)
+  const [hasEdit, setHasEdit] = useState(false)
+
   function getPercentageTodo() {
     const todos = collection.todo
 
@@ -22,13 +29,37 @@ const Card: React.FC<IProps> = ({ collection }) => {
     return ((total * 100) / todos.length).toFixed() + '%'
   }
 
+  function handleClickDropdown(types: 'edit' | 'remove') {
+    if (types === 'remove') {
+      dispatch({
+        type: Types.Remove_Collection,
+        payload: { id: collection.id }
+      })
+    }
+
+    if (types === 'edit') {
+      setHasEdit(true)
+    }
+  }
+
+  function handleCollectionEdit(newCollection: ICollection) {
+    dispatch({ type: Types.Edit_Collection, payload: { ...newCollection } })
+  }
+
   return (
-    <NavLink to={`/todo/${collection.id}`}>
+    <>
       <s.CardWrapper>
-        <div className="upper">{collection.emoji.native}</div>
+        <div className="upper">
+          {collection.emoji.native}
+
+          <Dropdown callbackClick={handleClickDropdown} />
+        </div>
 
         <div className="down">
-          <h2>{collection.title}</h2>
+          <h2>
+            <NavLink to={`/todo/${collection.id}`}>{collection.title}</NavLink>
+          </h2>
+
           <p>Tasks: {collection.todo.length}</p>
 
           <s.Porcetage quant={getPercentageTodo()}>
@@ -37,7 +68,15 @@ const Card: React.FC<IProps> = ({ collection }) => {
           </s.Porcetage>
         </div>
       </s.CardWrapper>
-    </NavLink>
+
+      {hasEdit && (
+        <FormCollection
+          setShowForm={setHasEdit}
+          initial={collection}
+          callback={handleCollectionEdit}
+        />
+      )}
+    </>
   )
 }
 

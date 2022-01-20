@@ -3,6 +3,7 @@ import ICollection from '../interfaces/Collection'
 import ITodo from '../interfaces/Todo'
 import { v4 as uuidv4 } from 'uuid'
 import { BaseEmoji } from 'emoji-mart'
+import { useCallback } from 'react'
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -17,6 +18,8 @@ type ActionMap<M extends { [index: string]: any }> = {
 
 export enum Types {
   Add_Collection = 'ADD_COLLECTION',
+  Edit_Collection = 'EDIT_COLLECTION',
+  Remove_Collection = 'REMOVE_COLLECTION',
   Add = 'ADD_TODO',
   Toggle = 'TOGGLE_TODO',
   Remove = 'REMOVE_TODO',
@@ -27,6 +30,14 @@ type CollectionsPayload = {
   [Types.Add_Collection]: {
     title: string
     emoji: BaseEmoji
+  }
+  [Types.Edit_Collection]: {
+    title: string
+    emoji: BaseEmoji
+    id: string
+  }
+  [Types.Remove_Collection]: {
+    id: string
   }
   [Types.Add]: {
     id_collection: string
@@ -100,7 +111,7 @@ export const todoReducer = (
 
   // TODO: Drag n drop todos
   switch (action.type) {
-    case Types.Add_Collection:
+    case Types.Add_Collection: {
       const newCollection: ICollection = {
         id: uuidv4(),
         title: action.payload.title,
@@ -110,6 +121,29 @@ export const todoReducer = (
 
       collections.unshift(newCollection)
       return { collections }
+    }
+
+    case Types.Remove_Collection: {
+      return {
+        collections: collections.filter(
+          collection => collection.id !== action.payload.id
+        )
+      }
+    }
+
+    case Types.Edit_Collection: {
+      return {
+        collections: collections.map(collection => {
+          if (collection.id !== action.payload.id) return collection
+
+          return {
+            ...collection,
+            title: action.payload.title,
+            emoji: action.payload.emoji
+          }
+        })
+      }
+    }
 
     case Types.Add: {
       const find = findThisCollection(action.payload.id_collection, collections)

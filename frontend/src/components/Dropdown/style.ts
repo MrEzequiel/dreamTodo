@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const DropdownWrapper = styled.div`
+export const DropdownWrapper = styled.aside`
   flex-shrink: 0;
   position: relative;
 `

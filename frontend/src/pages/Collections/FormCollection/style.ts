@@ -34,7 +34,7 @@ export const FormStyled = styled.form`
     border: 1px solid ${props => props.theme.colors.g1};
   }
 
-  input {
+  & > input {
     flex: 1;
     height: 100%;
     padding: 10px 0;

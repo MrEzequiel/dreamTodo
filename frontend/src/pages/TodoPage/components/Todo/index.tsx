@@ -7,7 +7,7 @@ import React, {
   useCallback
 } from 'react'
 import { FaAngleDown, FaLink } from 'react-icons/fa'
-import Dropdown from './Dropdown'
+import Dropdown from '../../../../components/Dropdown'
 
 import * as s from './style'
 import Modal from '../FormTodo/Modal'
@@ -88,6 +88,20 @@ const Todo: React.FC<Props> = ({ todo }) => {
     ))
   }
 
+  function handleClickDropdown(type: 'edit' | 'remove') {
+    // i hate TS
+    if (type === 'remove' && id) {
+      dispatch({
+        type: Types.Remove,
+        payload: { id_collection: id, id: todo.id }
+      })
+    }
+
+    if (type === 'edit') {
+      setHasEdit(true)
+    }
+  }
+
   useEffect(() => {
     if (!hasEdit) return
 
@@ -133,7 +147,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
         )}
 
         <s.ButtonsControl>
-          <Dropdown todo={todo} setHasEdit={setHasEdit} />
+          <Dropdown callbackClick={handleClickDropdown} />
 
           {expendedTodo() && (
             <button

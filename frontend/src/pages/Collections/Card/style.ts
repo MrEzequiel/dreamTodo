@@ -5,7 +5,6 @@ export const CardWrapper = styled.div`
   flex-shrink: 0;
   min-height: 260px;
   height: max-content;
-  overflow: hidden;
 
   border-radius: ${props => props.theme.borderRadius};
   border-bottom-left-radius: 0;
@@ -36,6 +35,7 @@ export const CardWrapper = styled.div`
   }
 
   .upper {
+    position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -43,9 +43,18 @@ export const CardWrapper = styled.div`
     padding-bottom: 20px;
 
     background: ${props => props.theme.colors.g4};
+    border-radius: ${props => props.theme.borderRadius};
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     height: 150px;
     background-image: url(${patternCard});
     box-shadow: inset 0px -33px 20px -15px ${props => props.theme.colors.g3};
+
+    aside {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
   }
 
   .down {
@@ -54,9 +63,16 @@ export const CardWrapper = styled.div`
     h2 {
       color: ${props => props.theme.colors.g5};
       font-size: 1.8rem;
-      font-weight: 500;
       max-width: 100%;
       text-overflow: ellipsis;
+
+      a {
+        font-weight: 500;
+        color: ${props => props.theme.colors.colorPrimary};
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
 
     & > p {
