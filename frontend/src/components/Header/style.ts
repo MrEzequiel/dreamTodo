@@ -44,18 +44,6 @@ export const ButtonAccount = styled.button`
     }
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 0%;
-    width: 0%;
-    background: ${props => props.theme.colors.colorPrimary};
-    transition: all 700ms;
-    z-index: 0;
-  }
-
   &:hover {
     border-style: solid;
     animation: pulse 1.5s cubic-bezier(0.075, 0.82, 0.165, 1);

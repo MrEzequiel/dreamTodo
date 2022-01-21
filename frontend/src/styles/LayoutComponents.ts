@@ -8,12 +8,18 @@ export const Container = () => css`
 `
 
 export const SeparatorTitle = () => css`
-  display: flex;
-  align-items: center;
+  position: relative;
+  padding-left: 20px;
 
   &::before {
     content: '';
-    margin-right: 10px;
+    position: absolute;
+    display: block;
+
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+
     width: 10px;
     height: 10px;
     border-radius: 50%;

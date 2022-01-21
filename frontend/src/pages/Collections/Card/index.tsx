@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, memo, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { TodoContext } from '../../../context/TodoListContext'
 import { Types } from '../../../functions/reducers'
@@ -20,7 +20,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
   const [hasEdit, setHasEdit] = useState(false)
   const [confirmed, setConfirmed] = useState(false)
 
-  function getPercentageTodo() {
+  const getPercentageTodo = useMemo(() => {
     const todos = collection.todo
 
     if (todos.length === 0) return '0%'
@@ -31,7 +31,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
     )
 
     return ((total * 100) / todos.length).toFixed() + '%'
-  }
+  }, [collection.todo])
 
   function handleClickDropdown(types: 'edit' | 'remove') {
     if (types === 'remove') {
@@ -70,8 +70,8 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
           <p>Tasks: {collection.todo.length}</p>
 
-          <s.Porcetage quant={getPercentageTodo()}>
-            <p>{getPercentageTodo()}</p>
+          <s.Porcetage quant={getPercentageTodo}>
+            <p>{getPercentageTodo}</p>
             <span></span>
           </s.Porcetage>
         </div>
@@ -86,12 +86,10 @@ const Card: React.FC<IProps> = ({ collection }) => {
       )}
 
       {confirmed && (
-        <Modal>
-          <Title size="2.8rem" weight="300" separator>
+        <Modal size="min(500px, 80%)" setCloseModal={setConfirmed}>
+          <Title size="2.2rem" weight="300" separator>
             Want to delete collection
-            <strong style={{ marginLeft: '8px' }}>
-              {`"${collection.title}"`}?
-            </strong>
+            <strong>{` "${collection.title}"`}?</strong>
           </Title>
 
           <s.ControlsButton>
@@ -106,4 +104,4 @@ const Card: React.FC<IProps> = ({ collection }) => {
   )
 }
 
-export default Card
+export default memo(Card)

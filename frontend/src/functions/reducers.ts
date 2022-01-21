@@ -3,7 +3,6 @@ import ICollection from '../interfaces/Collection'
 import ITodo from '../interfaces/Todo'
 import { v4 as uuidv4 } from 'uuid'
 import { BaseEmoji } from 'emoji-mart'
-import { useCallback } from 'react'
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
-import ITodo from '../../interfaces/Todo'
+
 import * as s from './style'
 
 interface Props {
@@ -10,7 +10,6 @@ interface Props {
 }
 
 const Dropdown: React.FC<Props> = ({ callbackClick }) => {
-  const { id } = useParams()
   const DropdownEl = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
 

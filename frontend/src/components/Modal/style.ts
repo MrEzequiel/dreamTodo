@@ -15,7 +15,12 @@ export const ModalWrapper = styled.div`
   justify-content: center;
 `
 
-export const ModalContent = styled.div`
+interface IModalContent {
+  size?: string
+}
+
+export const ModalContent = styled.div<IModalContent>`
+  width: ${props => props.size ?? 'auto'};
   max-height: 80%;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};

@@ -3,8 +3,11 @@ import * as s from './style'
 
 import logo from '../../assets/logo.svg'
 import { NavLink } from 'react-router-dom'
+import ModalEntry from './ModalEntry'
 
 const Header = () => {
+  const [openModal, setOpenModal] = useState<boolean>(false)
+
   const monthNames = [
     'January',
     'February',
@@ -33,22 +36,28 @@ const Header = () => {
   }, [])
 
   return (
-    <s.HeaderWrapper>
-      <s.HeaderStyle>
-        <NavLink to="/">
-          <img src={logo} alt="dream to do logo" />
-        </NavLink>
+    <>
+      <s.HeaderWrapper>
+        <s.HeaderStyle>
+          <NavLink to="/">
+            <img src={logo} alt="dream to do logo" />
+          </NavLink>
 
-        <div className="left">
-          <p>
-            {`${
-              monthNames[date.getMonth()]
-            } ${date.getDay()}, ${date.getFullYear()} · ${date.getHours()}:${date.getMinutes()}`}
-          </p>
-          <s.ButtonAccount>Login</s.ButtonAccount>
-        </div>
-      </s.HeaderStyle>
-    </s.HeaderWrapper>
+          <div className="left">
+            <p>
+              {`${
+                monthNames[date.getMonth()]
+              } ${date.getDay()}, ${date.getFullYear()} · ${date.getHours()}:${date.getMinutes()}`}
+            </p>
+            <s.ButtonAccount onClick={() => setOpenModal(true)}>
+              Login
+            </s.ButtonAccount>
+          </div>
+        </s.HeaderStyle>
+      </s.HeaderWrapper>
+
+      {openModal && <ModalEntry setModal={setOpenModal} />}
+    </>
   )
 }
 
