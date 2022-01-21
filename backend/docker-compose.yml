@@ -1,0 +1,21 @@
+version: "3.7"
+
+services: 
+    database_ignite:
+        image: postgres
+        container_name: database_todo
+        restart: always
+        ports: 
+            - 5432:5432
+        environment: 
+            - POSTGRES_USER=todo
+            - POSTGRES_PASSWORD=todo
+            - POSTGRES_DB=todo
+        volumes: 
+            - pgdata:/data/postgres  
+
+
+
+volumes: 
+    pgdata:
+       

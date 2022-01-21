@@ -1,5 +1,6 @@
 import { Todo } from "@prisma/client";
 import { client } from "../../../../database/client";
+import { AppError } from "../../../../infra/errors/AppError";
 
 
 interface IRequest {
@@ -20,7 +21,7 @@ export class EditTodoUseCase {
     })
 
     if(!todoExist) {
-      throw new Error('Todo não existente')
+      throw new AppError('Todo não existente')
     }
 
     const editedTodo = await client.todo.update({

@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "tsnd --transpile-only --ignore-watch node_modules server.ts"
+    "dev": "tsnd --transpile-only --ignore-watch node_modules src/server.ts"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@prisma/client": "^3.8.1",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "express-async-errors": "^3.1.1"
   },
   "repository": "https://github.com/MrEzequiel/simple-to-do.git",
   "author": "Italo Ferreira <grd788@gmail.com>"

@@ -22,7 +22,7 @@ const deleteTodoController = new DeleteTodoController()
 routes.post('/todo', createTodoController.handle)
 routes.get('/todo/:colletionid', listTodoOfColletionController.handle)
 routes.put('/todo', editTodoController.handle)
-routes.delete('/todo', deleteTodoController.handle)
+routes.delete('/todo/:id', deleteTodoController.handle)
 
 
 routes.post('/colletion', createColletionController.handle)
