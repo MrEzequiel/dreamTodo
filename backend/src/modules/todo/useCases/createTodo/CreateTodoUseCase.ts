@@ -1,5 +1,6 @@
 import { Todo } from '@prisma/client';
 import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError';
 import { ICreateTodoDTO } from '../../dtos/ICreateTodoDTO';
 
 
@@ -14,7 +15,7 @@ export class CreateTodoUseCase {
     })
 
     if(verifyTodoExist) {
-      throw new Error("Todo já existe!")
+      throw new AppError("Todo já existe!")
     }
 
     const todo = await client.todo.create({

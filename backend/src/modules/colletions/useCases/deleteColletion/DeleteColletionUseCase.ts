@@ -1,5 +1,6 @@
-import { Colletion } from "@prisma/client"
+
 import { client } from "../../../../database/client"
+import { AppError } from "../../../../infra/errors/AppError"
 
 
 interface IRequest {
@@ -17,7 +18,7 @@ export class DeleteColletionUseCase {
     })
 
     if(!verifyIfColletionExist) {
-      throw new Error("Colletion não encontrada!")
+      throw new AppError("Colletion não encontrada!")
     }
 
     await client.colletion.delete({

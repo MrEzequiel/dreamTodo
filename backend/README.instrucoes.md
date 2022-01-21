@@ -1,3 +1,29 @@
+
+<!-- Docker -->
+
+1 Passo: com o docker instalado na maquina, verifique se ele ta funcionando, abrindo o Docker Desktop, provavelmente ele irá funcionar.
+
+2 Passo: Tudo certo com o docker agora vc vai criar o container no seu PC, com o comando: docker compose up -d
+
+O env que o prisma pedir será esse 
+
+
+```bash
+  # Environment variables declared in this file are automatically made available to Prisma.
+  # See the documentation for more detail: https://pris.ly/d/prisma-schema#using-environment-variables
+
+  # Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server and MongoDB (Preview).
+  # See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+  DATABASE_URL="postgresql://todo:todo@localhost:5432/todo"
+```
+
+agora vc vai ter o container docker, e o prisma linkado, dai acredito que dará certo. qualquer coisa me chama no zap
+
+
+lembrando sempre verificar se o banco estará rodando, abrindo o Docker Desktop, se ele estiver verde tudo certo, senão, de o comando la de cima novamente.
+
+
 <!-- Colletions -->
 - Criação da Colletion: 
 
@@ -83,12 +109,3 @@ São os campos nescessarios para as mudança, o id sendo apenas p verificar se o
 	}
 ]
 ```
-
-
-<br></br>
-
-
-Ai está o insomnia, onde estão todas as rotas.
-
-<!-- Insomnia -->
-[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=todo-api&uri=)
