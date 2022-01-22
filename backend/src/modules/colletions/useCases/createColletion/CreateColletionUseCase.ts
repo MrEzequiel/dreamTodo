@@ -1,5 +1,6 @@
 import { Colletion } from "@prisma/client";
 import { client } from "../../../../database/client";
+import { AppError } from "../../../../infra/errors/AppError";
 
 
 export class CreateColletionUseCase {
@@ -13,7 +14,7 @@ export class CreateColletionUseCase {
     })
 
     if(verifyIfColletionExist) {
-      throw new Error("Colletion já existente")
+      throw new AppError("Colletion já existente")
     }
 
     const colletion = await client.colletion.create({

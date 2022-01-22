@@ -1,4 +1,5 @@
 import { client } from "../../../../database/client";
+import { AppError } from "../../../../infra/errors/AppError";
 
 
 
@@ -12,7 +13,7 @@ export class DeleteTodoUseCase {
     })
 
     if(!verifyIfTodoExist) {
-      throw new Error("Todo não encontrada.")
+      throw new AppError("Todo não encontrada.")
     }
 
     await client.todo.delete({
