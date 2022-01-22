@@ -47,7 +47,10 @@ const Header = () => {
             <p>
               {`${
                 monthNames[date.getMonth()]
-              } ${date.getDay()}, ${date.getFullYear()} · ${date.getHours()}:${date.getMinutes()}`}
+              } ${date.getDay()}, ${date.getFullYear()} · ${date.getHours()}:${date
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')}`}
             </p>
             <s.ButtonAccount onClick={() => setOpenModal(true)}>
               Login

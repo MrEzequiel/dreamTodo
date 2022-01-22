@@ -7,7 +7,7 @@ import { ModalWrapper } from '../../../styles/Form'
 import { FormStyled } from './style'
 
 import 'emoji-mart/css/emoji-mart.css'
-import { EmojiData, BaseEmoji, Picker } from 'emoji-mart'
+import { BaseEmoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
 
 interface IProps {
@@ -41,6 +41,7 @@ const FormCollection: React.FC<IProps> = ({
   const handleEmojiSelect = (emoji: BaseEmoji) => {
     setSelectEmoji(emoji)
   }
+
   useEffect(() => {
     setEmoji(false)
   }, [selectEmoji])
