@@ -3,7 +3,7 @@ import * as s from './style'
 
 import logo from '../../assets/logo.svg'
 import { NavLink } from 'react-router-dom'
-import ModalEntry from './ModalEntry'
+import Login from './ModalEntry'
 
 const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -59,7 +59,7 @@ const Header = () => {
         </s.HeaderStyle>
       </s.HeaderWrapper>
 
-      {openModal && <ModalEntry setModal={setOpenModal} />}
+      {openModal && <Login setModal={setOpenModal} />}
     </>
   )
 }

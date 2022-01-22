@@ -25,7 +25,8 @@ export const ModalContent = styled.div<IModalContent>`
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   padding: 15px;
-  overflow-y: auto;
+  overflow: hidden;
+  position: relative;
   padding: 30px 20px;
 
   @keyframes show-growing {

@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
-import Button from '../../../styles/Button'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 import Title from '../../../styles/Title'
 import Modal from '../../Modal'
+import SignIn from './SignIn'
+import SignOut from './SignUp'
 
 import * as s from './style'
 
@@ -10,58 +11,67 @@ interface IProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ModalEntry: React.FC<IProps> = ({ setModal }) => {
-  const [showPassword, setShowPassword] = useState(false)
+function formateLogin(text: string) {
+  return text.split('-')[1]
+}
+
+const Login: React.FC<IProps> = ({ setModal }) => {
+  const [login, setLogin] = useState<'sign-in' | 'sign-up'>('sign-in')
+
+  const signInRef = useRef<HTMLDivElement>(null)
+  const signOutRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<any>(null)
+
+  const [menuHeight, setMenuHeight] = useState<any>()
+
+  useEffect(() => {
+    setMenuHeight(containerRef.current?.firstChild?.offsetHeight)
+  }, [])
+
+  useEffect(() => {
+    if (login === 'sign-in') {
+      setMenuHeight(signInRef.current?.offsetHeight)
+    } else {
+      setMenuHeight(signOutRef.current?.offsetHeight)
+    }
+  }, [login])
 
   return (
     <Modal size="min(380px, 90%)" setCloseModal={setModal}>
-      <s.Container>
-        <Title size="2.8rem" separator>
-          Sign in to dreamTodo
-        </Title>
+      <Title size="2.8rem" separator style={{ marginBottom: '20px' }}>
+        Sign {formateLogin(login)}
+      </Title>
 
-        <s.FormStyle>
-          <s.InputStyle type="text" placeholder="Email" />
-          <label>
-            <s.InputStyle
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(prev => !prev)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </label>
+      <s.Container style={{ height: menuHeight ?? 'auto' }} ref={containerRef}>
+        <CSSTransition
+          nodeRef={signInRef}
+          in={login === 'sign-in'}
+          timeout={700}
+          classNames="sign-in"
+          unmountOnExit
+        >
+          <div className="sign-in" ref={signInRef}>
+            <SignIn setLogin={setLogin} />
+          </div>
+        </CSSTransition>
 
-          <Button outlined={false} type="submit">
-            Sign in
-          </Button>
-        </s.FormStyle>
-
-        <s.Separator>or</s.Separator>
-
-        <Button type="button" className="sign-google">
-          <FaGoogle />
-          Sign in with Google
-        </Button>
-
-        <div className="actions">
-          <p>
-            <a href="#">
-              Dont have an <strong>account?</strong>
+        <CSSTransition
+          nodeRef={signOutRef}
+          in={login === 'sign-up'}
+          timeout={700}
+          classNames="sign-up"
+          unmountOnExit
+        >
+          <div className="sign-up" ref={signOutRef}>
+            <SignOut />
+            <a href="#" onClick={() => setLogin('sign-in')}>
+              Change
             </a>
-          </p>
-          <p>
-            <a href="#">
-              I <strong>forgot</strong> my password
-            </a>
-          </p>
-        </div>
+          </div>
+        </CSSTransition>
       </s.Container>
     </Modal>
   )
 }
 
-export default ModalEntry
+export default Login
