@@ -63,10 +63,7 @@ const Login: React.FC<IProps> = ({ setModal }) => {
           unmountOnExit
         >
           <div className="sign-up" ref={signOutRef}>
-            <SignOut />
-            <a href="#" onClick={() => setLogin('sign-in')}>
-              Change
-            </a>
+            <SignOut setLogin={setLogin} />
           </div>
         </CSSTransition>
       </s.Container>

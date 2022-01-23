@@ -27,7 +27,7 @@ export const FormStyle = styled.form`
   label {
     position: relative;
 
-    > input {
+    > input[type='password'] {
       padding-right: 40px;
     }
 
