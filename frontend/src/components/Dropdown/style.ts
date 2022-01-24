@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const DropdownWrapper = styled.aside`
   flex-shrink: 0;
@@ -24,7 +24,11 @@ export const DropdownWrapper = styled.aside`
   }
 `
 
-export const ButtonDropdown = styled.button`
+interface IButton {
+  active?: boolean
+}
+
+export const ButtonDropdown = styled.button<IButton>`
   cursor: pointer;
   border-radius: 50%;
   display: flex;
@@ -35,6 +39,12 @@ export const ButtonDropdown = styled.button`
   height: 25px;
 
   transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  ${({ active }) =>
+    active &&
+    css`
+      background: ${props => props.theme.colors.g2};
+    `}
 
   &:hover {
     background: ${props => props.theme.colors.g2};

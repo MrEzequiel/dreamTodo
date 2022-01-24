@@ -46,7 +46,7 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
 
   return (
     <s.DropdownWrapper ref={DropdownEl}>
-      <s.ButtonDropdown onClick={handleClick}>
+      <s.ButtonDropdown onClick={handleClick} active={open}>
         <FaEllipsisV />
       </s.ButtonDropdown>
 
