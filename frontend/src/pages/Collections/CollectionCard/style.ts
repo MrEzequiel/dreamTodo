@@ -15,6 +15,19 @@ export const EmptyCollection = styled.div`
   flex-direction: column;
   gap: 10px;
 
+  @keyframes anime-up {
+    from {
+      opacity: 0;
+      transform: translateY(-40px);
+    }
+    to {
+      opacity: initial;
+      transform: initial;
+    }
+  }
+
+  animation: anime-up 1.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
   svg {
     color: ${props => props.theme.colors.colorPrimary};
   }

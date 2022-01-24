@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
-import { useParams } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import * as s from './style'
 
@@ -10,6 +10,7 @@ interface Props {
 }
 
 const Dropdown: React.FC<Props> = ({ callbackClick }) => {
+  const DropdownItemEl = useRef<HTMLDivElement>(null)
   const DropdownEl = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
 
@@ -45,12 +46,18 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
 
   return (
     <s.DropdownWrapper ref={DropdownEl}>
-      <s.ButtonDropdown onClick={handleClick}>
+      <s.ButtonDropdown onClick={handleClick} active={open}>
         <FaEllipsisV />
       </s.ButtonDropdown>
 
-      {!!open && (
-        <s.DropdownStyle>
+      <CSSTransition
+        nodeRef={DropdownItemEl}
+        in={open}
+        timeout={300}
+        classNames="DropdownStyle"
+        unmountOnExit
+      >
+        <s.DropdownStyle ref={DropdownItemEl}>
           <s.DropdownItens onClick={handleClickEdit}>
             <FaEdit />
             edit
@@ -61,7 +68,7 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
             remove
           </s.DropdownItens>
         </s.DropdownStyle>
-      )}
+      </CSSTransition>
     </s.DropdownWrapper>
   )
 }
