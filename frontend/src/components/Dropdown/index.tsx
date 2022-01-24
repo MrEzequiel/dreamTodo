@@ -10,6 +10,7 @@ interface Props {
 }
 
 const Dropdown: React.FC<Props> = ({ callbackClick }) => {
+  const DropdownItemEl = useRef<HTMLDivElement>(null)
   const DropdownEl = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
 
@@ -50,12 +51,13 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
       </s.ButtonDropdown>
 
       <CSSTransition
+        nodeRef={DropdownItemEl}
         in={open}
         timeout={300}
         classNames="DropdownStyle"
         unmountOnExit
       >
-        <s.DropdownStyle>
+        <s.DropdownStyle ref={DropdownItemEl}>
           <s.DropdownItens onClick={handleClickEdit}>
             <FaEdit />
             edit

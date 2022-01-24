@@ -32,7 +32,7 @@ export const ModalContent = styled.div<IModalContent>`
   @keyframes show-growing {
     from {
       opacity: 0;
-      transform: scale(0.4);
+      transform: scale(0.8);
     }
     to {
       opacity: initial;
