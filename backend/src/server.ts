@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import { AppError } from './infra/errors/AppError';
 import 'express-async-errors'
 import { routes } from './routes/routes';
+import 'dotenv'
 
 
 const app = express();
