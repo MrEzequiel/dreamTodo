@@ -18,9 +18,7 @@ const Modal: React.FC<IModalProps> = ({ size, children, setCloseModal }) => {
 
   return (
     <s.ModalWrapper onClick={handleClickModal}>
-      <s.ModalContent size={size} ref={contentRef}>
-        {children}
-      </s.ModalContent>
+      <s.ModalContent size={size}>{children}</s.ModalContent>
     </s.ModalWrapper>
   )
 }

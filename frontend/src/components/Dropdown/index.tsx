@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
-import { useParams } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import * as s from './style'
 
@@ -49,7 +49,12 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
         <FaEllipsisV />
       </s.ButtonDropdown>
 
-      {!!open && (
+      <CSSTransition
+        in={open}
+        timeout={300}
+        classNames="DropdownStyle"
+        unmountOnExit
+      >
         <s.DropdownStyle>
           <s.DropdownItens onClick={handleClickEdit}>
             <FaEdit />
@@ -61,7 +66,7 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
             remove
           </s.DropdownItens>
         </s.DropdownStyle>
-      )}
+      </CSSTransition>
     </s.DropdownWrapper>
   )
 }

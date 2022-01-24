@@ -23,6 +23,7 @@ const SignOut: React.FC<ISignOut> = ({ setLogin }) => {
   return (
     <s.SignUp>
       <FormStyle>
+        <InputStyle type="text" placeholder="Name (optional)" />
         <InputStyle type="text" placeholder="Email" />
 
         <label>

@@ -3,6 +3,25 @@ import styled from 'styled-components'
 export const DropdownWrapper = styled.aside`
   flex-shrink: 0;
   position: relative;
+
+  .DropdownStyle-enter {
+    opacity: 0.5;
+    transform: rotateX(-90deg);
+    transition: all 300ms;
+  }
+  .DropdownStyle-enter-active {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+  .DropdownStyle-exit {
+    opacity: 1;
+    transform: rotateX(0);
+    transition: all 300ms;
+  }
+  .DropdownStyle-exit-active {
+    opacity: 0.5;
+    transform: rotateX(-90deg);
+  }
 `
 
 export const ButtonDropdown = styled.button`
@@ -25,26 +44,12 @@ export const ButtonDropdown = styled.button`
 export const DropdownStyle = styled.div`
   position: absolute;
   z-index: 9999;
-  transform: perspective(100px);
   overflow: hidden;
   top: 22px;
   right: 10px;
   box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.1);
 
-  animation: rotateMenu 450ms ease-in-out forwards;
   transform-origin: top center;
-
-  @keyframes rotateMenu {
-    0% {
-      transform: rotateX(-90deg);
-    }
-    70% {
-      transform: rotateX(20deg);
-    }
-    100% {
-      transform: rotateX(0deg);
-    }
-  }
 
   width: 100px;
   border-radius: ${props => props.theme.borderRadius};
