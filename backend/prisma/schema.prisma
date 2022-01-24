@@ -7,6 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         String   @unique @default(uuid())
+  name       String
+  email      String
+  password   String
+  imageURL   String?
+  created_at DateTime @default(now())
+
+  @@map("users")
+  TokenUser TokenUser[]
+}
+
+model TokenUser {
+  id         String   @unique @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  userToken  String
+  tokenGoogle String?
+  created_at DateTime @default(now())
+
+  @@map("token_user")
+}
+
 model Todo {
   id          String      @unique @default(uuid())
   name        String
