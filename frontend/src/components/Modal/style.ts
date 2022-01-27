@@ -21,7 +21,7 @@ interface IModalContent {
 
 export const ModalContent = styled.div<IModalContent>`
   width: ${props => props.size ?? 'auto'};
-  max-height: 80%;
+  max-height: 90%;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   padding: 15px;

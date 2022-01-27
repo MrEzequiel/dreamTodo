@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 interface ContainerProps {
   edit: boolean
@@ -39,7 +39,7 @@ export const TodoWrapper = styled.li<ContainerProps>`
   }
 
   animation: show-right-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: all 500ms;
+  transition: box-shadow 500ms ease;
 
   &:hover {
     box-shadow: 0 16px 16px -12px rgba(0, 0, 0, 0.15);
@@ -113,28 +113,34 @@ export const ButtonsControl = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
 
-  .extended {
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+export const ExpendedButton = styled.button<{ expended: boolean }>`
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
 
-    transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
-    svg {
-      transition: transform 700ms cubic-bezier(0.075, 0.82, 0.165, 1);
-    }
-
-    &:hover {
+  svg {
+    transition: transform 700ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  ${({ expended }) =>
+    expended &&
+    css`
       background: ${props => props.theme.colors.g2};
-    }
+    `}
+
+  &:hover {
+    background: ${props => props.theme.colors.g2};
   }
 `
+
 export const ExpendedTodo = styled.div`
   margin-bottom: 30px;
   background: ${props => props.theme.colors.g3};
@@ -166,6 +172,7 @@ export const ExpendedTodo = styled.div`
     font-size: 1.6rem;
     font-weight: 300;
     color: ${props => props.theme.colors.g7};
+    white-space: break-spaces;
   }
 `
 

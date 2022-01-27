@@ -150,30 +150,23 @@ const Todo: React.FC<Props> = ({ todo }) => {
           <Dropdown callbackClick={handleClickDropdown} />
 
           {expendedTodo() && (
-            <button
+            <s.ExpendedButton
               type="button"
-              className="extended"
               onClick={() => setExpended(prev => !prev)}
+              expended={expended}
             >
               <FaAngleDown
                 size={16}
                 style={{ transform: expended ? 'rotate(180deg)' : 'rotate(0)' }}
               />
-            </button>
+            </s.ExpendedButton>
           )}
         </s.ButtonsControl>
       </s.TodoWrapper>
 
       {expended && (
         <s.ExpendedTodo>
-          <p>
-            {todo.description?.split('\n').map(description => (
-              <>
-                {description}
-                <br />
-              </>
-            ))}
-          </p>
+          {todo.description && <p>{todo.description}</p>}
 
           {!!todo.expanded?.links && (
             <s.LinksWrapper>{formateLinks(todo.expanded.links)}</s.LinksWrapper>

@@ -1,11 +1,14 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { FilledButton, OutlinedButton } from './LayoutComponents'
 
 interface IButtonProps {
   outlined: boolean
+  wave?: boolean
 }
 
 const ButtonStyle = styled.button<IButtonProps>`
+  position: relative;
+
   text-transform: capitalize;
   cursor: pointer;
   border-radius: ${props => props.theme.borderRadius};
@@ -22,19 +25,30 @@ const ButtonStyle = styled.button<IButtonProps>`
     transform: scale(1.05);
   }
 
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 ${props => props.theme.colors.colorPrimary};
-    }
-  }
-
-  &:active {
-    transform: scale(0.95);
-    animation: pulse 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
-    box-shadow: 0 0 0 1.2em rgba(255, 255, 255, 0);
-  }
-
   ${props => (props.outlined ? OutlinedButton() : FilledButton())}
+
+  .wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    border-radius: ${props => props.theme.borderRadius};
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 ${props => props.theme.colors.colorPrimary};
+      }
+    }
+
+    ${({ wave }) =>
+      wave &&
+      css`
+        animation: pulse 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+        box-shadow: 0 0 0 1.2em rgba(255, 255, 255, 0);
+      `}
+  }
 `
 
 export default ButtonStyle
