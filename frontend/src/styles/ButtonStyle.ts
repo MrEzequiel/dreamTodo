@@ -46,7 +46,7 @@ const ButtonStyle = styled.button<IButtonProps>`
       wave &&
       css`
         animation: pulse 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
-        box-shadow: 0 0 0 1.2em rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 1.3em rgba(255, 255, 255, 0);
       `}
   }
 `

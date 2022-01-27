@@ -3,7 +3,7 @@ import { FaPlus } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
-import ModalForm from './Modal'
+import ModalForm from './ModalForm'
 
 import * as s from './styles'
 

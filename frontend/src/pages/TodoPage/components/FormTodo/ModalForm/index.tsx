@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../../context/TodoListContext'
-import { Types } from '../../../../../functions/reducers'
+import { CollectionsActions, Types } from '../../../../../functions/reducers'
 import useForm from '../../../../../hooks/useForm'
 import ITodo from '../../../../../interfaces/Todo'
 import Modal from '../../../../../components/Modal'
@@ -24,6 +24,10 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
 
   // TODO: save to-do without link
   function validateLink(value: string): string | null {
+    if (!value.trim()) {
+      return null
+    }
+
     const regex =
       /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
 
@@ -54,6 +58,8 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
       return
     }
 
+    const links = linkField.value.split(';')
+
     if (type === 'add' && id) {
       dispatch({
         type: Types.Add,
@@ -61,9 +67,7 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
           id_collection: id,
           name: titleField.value,
           description: descriptionField.value,
-          expanded: {
-            links: linkField.value.split(';')
-          }
+          expanded: !linkField.value ? undefined : { links }
         }
       })
     } else if (todo?.id && setEdit && id) {
@@ -74,21 +78,24 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
           id: todo.id,
           name: titleField.value,
           description: descriptionField.value,
-          expanded: {
-            links: linkField.value.split(';')
-          }
+          expanded: !linkField.value ? undefined : { links }
         }
       })
+
       setEdit(false)
     }
 
     closeModal(false)
   }
 
+  useEffect(() => {
+    if (setEdit) return () => setEdit(false)
+  }, [setEdit])
+
   // TODO: style for fields with error
   // https://www.bezkoder.com/wp-content/uploads/2021/10/react-form-validation-example-formik-yup.png
   return (
-    <Modal size="min(500px, 80%)" setCloseModal={closeModal}>
+    <Modal size="min(500px, 90%)" setCloseModal={closeModal}>
       <Title size="2.2rem" separator>
         Add a task
       </Title>

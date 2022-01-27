@@ -4,6 +4,7 @@ import * as s from './style'
 import logo from '../../assets/logo.svg'
 import { NavLink } from 'react-router-dom'
 import Login from './ModalEntry'
+import Button from '../../styles/Button'
 
 const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -52,9 +53,14 @@ const Header = () => {
                 .toString()
                 .padStart(2, '0')}`}
             </p>
-            <s.ButtonAccount onClick={() => setOpenModal(true)}>
+
+            <Button
+              onClick={() => setOpenModal(true)}
+              outlined
+              className="button-login"
+            >
               Login
-            </s.ButtonAccount>
+            </Button>
           </div>
         </s.HeaderStyle>
       </s.HeaderWrapper>

@@ -10,7 +10,7 @@ import { FaAngleDown, FaLink } from 'react-icons/fa'
 import Dropdown from '../../../../components/Dropdown'
 
 import * as s from './style'
-import Modal from '../FormTodo/Modal'
+import Modal from '../FormTodo/ModalForm'
 import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
 import ITodo from '../../../../interfaces/Todo'
@@ -32,9 +32,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   const [edit, setEdit] = useState(todo.name)
   const [expended, setExpended] = useState(false)
 
-  const expendedTodo = useCallback(() => {
-    return !!todo.description || !!todo.expanded
-  }, [todo.description, todo.expanded])
+  const expendedTodo = !!todo.description || !!todo.expanded
 
   function handleChangeForComplete() {
     if (!id) return
@@ -105,7 +103,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   useEffect(() => {
     if (!hasEdit) return
 
-    if (expendedTodo()) {
+    if (expendedTodo) {
       setModal(true)
     } else {
       inputEl.current?.focus()
@@ -114,7 +112,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
   return (
     <>
-      <s.TodoWrapper edit={hasEdit && !expendedTodo()} expended={expended}>
+      <s.TodoWrapper edit={hasEdit && !expendedTodo} expended={expended}>
         <s.InputCheckboxTodo>
           <input
             type="checkbox"
@@ -123,7 +121,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
           />
         </s.InputCheckboxTodo>
 
-        {hasEdit && !expendedTodo() ? (
+        {hasEdit && !expendedTodo ? (
           <s.InputEditTodo
             type="text"
             value={edit}
@@ -149,7 +147,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
         <s.ButtonsControl>
           <Dropdown callbackClick={handleClickDropdown} />
 
-          {expendedTodo() && (
+          {expendedTodo && (
             <s.ExpendedButton
               type="button"
               onClick={() => setExpended(prev => !prev)}
