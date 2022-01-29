@@ -71,11 +71,9 @@ const Todo: React.FC<Props> = ({ todo }) => {
       newLink = newLink[0] === '' ? newLink[1] : newLink[0]
       link = `https://${newLink}`
 
-      newLink = newLink.split('www.')
-      newLink = newLink[0] === '' ? newLink[1] : newLink[0]
-      newLink = newLink.split('.')[0]
+      const nameLink = new URL(link).hostname
 
-      return { link, name: newLink }
+      return { link, name: nameLink }
     })
 
     return htmlLink.map(({ link, name }) => (
