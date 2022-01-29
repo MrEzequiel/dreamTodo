@@ -10,7 +10,7 @@ import { FaAngleDown, FaLink } from 'react-icons/fa'
 import Dropdown from '../../../../components/Dropdown'
 
 import * as s from './style'
-import Modal from '../FormTodo/Modal'
+import Modal from '../FormTodo/ModalForm'
 import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
 import ITodo from '../../../../interfaces/Todo'
@@ -32,9 +32,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   const [edit, setEdit] = useState(todo.name)
   const [expended, setExpended] = useState(false)
 
-  const expendedTodo = useCallback(() => {
-    return !!todo.description || !!todo.expanded
-  }, [todo.description, todo.expanded])
+  const expendedTodo = !!todo.description || !!todo.expanded
 
   function handleChangeForComplete() {
     if (!id) return
@@ -73,11 +71,9 @@ const Todo: React.FC<Props> = ({ todo }) => {
       newLink = newLink[0] === '' ? newLink[1] : newLink[0]
       link = `https://${newLink}`
 
-      newLink = newLink.split('www.')
-      newLink = newLink[0] === '' ? newLink[1] : newLink[0]
-      newLink = newLink.split('.')[0]
+      const nameLink = new URL(link).hostname
 
-      return { link, name: newLink }
+      return { link, name: nameLink }
     })
 
     return htmlLink.map(({ link, name }) => (
@@ -105,7 +101,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   useEffect(() => {
     if (!hasEdit) return
 
-    if (expendedTodo()) {
+    if (expendedTodo) {
       setModal(true)
     } else {
       inputEl.current?.focus()
@@ -114,7 +110,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
   return (
     <>
-      <s.TodoWrapper edit={hasEdit && !expendedTodo()} expended={expended}>
+      <s.TodoWrapper edit={hasEdit && !expendedTodo} expended={expended}>
         <s.InputCheckboxTodo>
           <input
             type="checkbox"
@@ -123,7 +119,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
           />
         </s.InputCheckboxTodo>
 
-        {hasEdit && !expendedTodo() ? (
+        {hasEdit && !expendedTodo ? (
           <s.InputEditTodo
             type="text"
             value={edit}
@@ -149,31 +145,24 @@ const Todo: React.FC<Props> = ({ todo }) => {
         <s.ButtonsControl>
           <Dropdown callbackClick={handleClickDropdown} />
 
-          {expendedTodo() && (
-            <button
+          {expendedTodo && (
+            <s.ExpendedButton
               type="button"
-              className="extended"
               onClick={() => setExpended(prev => !prev)}
+              expended={expended}
             >
               <FaAngleDown
                 size={16}
                 style={{ transform: expended ? 'rotate(180deg)' : 'rotate(0)' }}
               />
-            </button>
+            </s.ExpendedButton>
           )}
         </s.ButtonsControl>
       </s.TodoWrapper>
 
       {expended && (
         <s.ExpendedTodo>
-          <p>
-            {todo.description?.split('\n').map(description => (
-              <>
-                {description}
-                <br />
-              </>
-            ))}
-          </p>
+          {todo.description && <p>{todo.description}</p>}
 
           {!!todo.expanded?.links && (
             <s.LinksWrapper>{formateLinks(todo.expanded.links)}</s.LinksWrapper>

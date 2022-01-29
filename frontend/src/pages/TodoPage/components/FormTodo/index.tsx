@@ -3,7 +3,7 @@ import { FaPlus } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
-import Modal from './Modal'
+import ModalForm from './ModalForm'
 
 import * as s from './styles'
 
@@ -61,7 +61,7 @@ const FormTodo: React.FC = () => {
         </s.MoreInformation>
       )}
 
-      {openModal && <Modal closeModal={setOpenModal} type="add" />}
+      {openModal && <ModalForm closeModal={setOpenModal} type="add" />}
     </s.FormWrapper>
   )
 }
