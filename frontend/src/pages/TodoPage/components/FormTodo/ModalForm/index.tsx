@@ -9,6 +9,7 @@ import Modal from '../../../../../components/Modal'
 import * as s from './style'
 import Button from '../../../../../styles/Button'
 import Title from '../../../../../styles/Title'
+import TodoPageContext from '../../../../../context/TodoPageContext'
 
 interface Props {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -18,11 +19,10 @@ interface Props {
 }
 
 const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
-  const { id } = useParams()
+  const { id } = useContext(TodoPageContext)
   const titleField = useForm(true, todo?.name ?? '')
   const descriptionField = useForm(false, todo?.description ?? '')
 
-  // TODO: save to-do without link
   function validateLink(value: string): string | null {
     if (!value.trim()) {
       return null
@@ -60,7 +60,7 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
 
     const links = linkField.value.split(';')
 
-    if (type === 'add' && id) {
+    if (type === 'add') {
       dispatch({
         type: Types.Add,
         payload: {
@@ -70,7 +70,7 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
           expanded: !linkField.value ? undefined : { links }
         }
       })
-    } else if (todo?.id && setEdit && id) {
+    } else if (todo?.id && setEdit) {
       dispatch({
         type: Types.Edit,
         payload: {

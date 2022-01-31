@@ -15,13 +15,14 @@ import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
 import ITodo from '../../../../interfaces/Todo'
 import { useParams } from 'react-router-dom'
+import TodoPageContext from '../../../../context/TodoPageContext'
 
 interface Props {
   todo: ITodo
 }
 
 const Todo: React.FC<Props> = ({ todo }) => {
-  const { id } = useParams()
+  const { id } = useContext(TodoPageContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const { dispatch } = useContext(TodoContext)
 
@@ -35,7 +36,6 @@ const Todo: React.FC<Props> = ({ todo }) => {
   const expendedTodo = !!todo.description || !!todo.expanded
 
   function handleChangeForComplete() {
-    if (!id) return
     dispatch({
       type: Types.Toggle,
       payload: { id_collection: id, id: todo.id }
@@ -50,7 +50,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   function handleBlurInput() {
     if (!edit.trim()) {
       setEdit(todo.name)
-    } else if (id) {
+    } else {
       dispatch({
         type: Types.Edit,
         payload: {
@@ -85,8 +85,7 @@ const Todo: React.FC<Props> = ({ todo }) => {
   }
 
   function handleClickDropdown(type: 'edit' | 'remove') {
-    // i hate TS
-    if (type === 'remove' && id) {
+    if (type === 'remove') {
       dispatch({
         type: Types.Remove,
         payload: { id_collection: id, id: todo.id }

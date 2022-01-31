@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { FaAngleLeft } from 'react-icons/fa'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { TodoContext } from '../../context/TodoListContext'
+import TodoPageContext from '../../context/TodoPageContext'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
 
@@ -16,11 +17,22 @@ const TodoPage = () => {
   )
 
   useEffect(() => {
-    if (!thisCollection) navigate('/')
-  }, [thisCollection, navigate])
+    if (!thisCollection && id) navigate('/')
+  }, [thisCollection, navigate, id])
+
+  let contextTodoPage
+  if (thisCollection && id) {
+    contextTodoPage = {
+      id,
+      thisCollection
+    }
+  } else {
+    navigate('/')
+    return null
+  }
 
   return (
-    <>
+    <TodoPageContext.Provider value={contextTodoPage}>
       <s.TitleStyle>
         <NavLink to="/" end>
           <button type="button">
@@ -36,7 +48,7 @@ const TodoPage = () => {
 
       <FormTodo />
       <TodoList />
-    </>
+    </TodoPageContext.Provider>
   )
 }
 
