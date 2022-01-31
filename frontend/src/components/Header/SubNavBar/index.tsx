@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import React, { useContext, useEffect, useRef } from 'react'
+import { FaStickyNote, FaTimes } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
 import { TodoContext } from '../../../context/TodoListContext'
 import Title from '../../../styles/Title'
@@ -13,10 +13,17 @@ interface IProps {
 
 const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
   const { state } = useContext(TodoContext)
+  const subNavBarRef = useRef<HTMLDivElement>(null)
+
+  const handleClickOutside = ({ target }: React.MouseEvent) => {
+    if (!subNavBarRef.current?.contains(target as Node)) {
+      props.setNavBar(false)
+    }
+  }
 
   return (
-    <s.SubNavBarWrapper ref={ref}>
-      <s.SubNavBar className="nav">
+    <s.SubNavBarWrapper ref={ref} onClick={handleClickOutside}>
+      <s.SubNavBar className="nav" ref={subNavBarRef}>
         <s.SubNavBarHeader>
           <Title size="2.8rem" weight="500">
             Collections
@@ -28,19 +35,26 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
         </s.SubNavBarHeader>
 
         <s.SubNavBarContent>
-          {state.collections.map(collection => (
-            <NavLink
-              key={collection.id}
-              to={`/todo/${collection.id}`}
-              className={({ isActive }) => (isActive ? 'active' : 'inactive')}
-              onClick={() => props.setNavBar(false)}
-            >
-              <s.CollectionsItems>
-                <span>{collection.emoji.native}</span>
-                {collection.title}
-              </s.CollectionsItems>
-            </NavLink>
-          ))}
+          {state.collections.length ? (
+            state.collections.map(collection => (
+              <NavLink
+                key={collection.id}
+                to={`/todo/${collection.id}`}
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+                onClick={() => props.setNavBar(false)}
+              >
+                <s.CollectionsItems>
+                  <span>{collection.emoji.native}</span>
+                  {collection.title}
+                </s.CollectionsItems>
+              </NavLink>
+            ))
+          ) : (
+            <s.EmptyCollections>
+              <FaStickyNote size={30} />
+              <p>You don&#8219;t have any collection</p>
+            </s.EmptyCollections>
+          )}
         </s.SubNavBarContent>
       </s.SubNavBar>
     </s.SubNavBarWrapper>

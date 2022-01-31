@@ -106,3 +106,21 @@ export const CollectionsItems = styled.div`
     font-size: 1.8rem;
   }
 `
+
+export const EmptyCollections = styled.div`
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  svg {
+    color: ${props => props.theme.colors.colorPrimary};
+  }
+
+  p {
+    color: ${props => props.theme.colors.g7};
+    margin-top: 5px;
+    font-weight: 300;
+  }
+`
