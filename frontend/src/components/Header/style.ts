@@ -23,6 +23,13 @@ export const HeaderStyle = styled.div`
   justify-content: space-between;
   height: 70px;
 
+  .right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+  }
+
   .left {
     display: flex;
     align-items: center;
@@ -31,5 +38,21 @@ export const HeaderStyle = styled.div`
       font-weight: 300;
       color: ${props => props.theme.colors.g7};
     }
+  }
+`
+
+export const ButtonCollections = styled.button`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid ${props => props.theme.colors.g3};
+  border-radius: 3px;
+  padding: 5px;
+  box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1);
+
+  svg {
+    color: ${props => props.theme.colors.g6};
   }
 `

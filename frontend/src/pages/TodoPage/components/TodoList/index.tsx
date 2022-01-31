@@ -1,18 +1,15 @@
 import { useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../context/TodoListContext'
+import TodoPageContext from '../../../../context/TodoPageContext'
 import Todo from '../Todo'
 import EmptyTodo from './EmptyTodo'
 import * as s from './styles'
 
 const TodoList: React.FC = () => {
-  const { id } = useParams()
-  const { state } = useContext(TodoContext)
-  const todos = state.collections.find(
-    colleection => colleection.id === id
-  )?.todo
+  const { thisCollection } = useContext(TodoPageContext)
+  const todos = thisCollection.todo
 
-  if (!todos) return null
   if (!todos.length) return <EmptyTodo />
 
   const todosCompleted = todos.filter(todo => todo.complete)

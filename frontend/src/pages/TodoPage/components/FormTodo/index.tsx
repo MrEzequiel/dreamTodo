@@ -1,14 +1,15 @@
-import React, { useRef, useState, useContext } from 'react'
+import React, { useRef, useState, useContext, useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../context/TodoListContext'
+import TodoPageContext from '../../../../context/TodoPageContext'
 import { Types } from '../../../../functions/reducers'
 import ModalForm from './ModalForm'
 
 import * as s from './styles'
 
 const FormTodo: React.FC = () => {
-  const { id } = useParams()
+  const { id } = useContext(TodoPageContext)
   const contextTodo = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const [name, setName] = useState('')
@@ -19,22 +20,21 @@ const FormTodo: React.FC = () => {
     e.preventDefault()
     if (!name.trim()) return
 
-    // i hate TS
-    if (id) {
-      contextTodo.dispatch({
-        type: Types.Add,
-        payload: {
-          id_collection: id,
-          name,
-          description: undefined,
-          expanded: undefined
-        }
-      })
-    }
+    contextTodo.dispatch({
+      type: Types.Add,
+      payload: {
+        id_collection: id,
+        name,
+        description: undefined,
+        expanded: undefined
+      }
+    })
 
     setName('')
     inputEl.current?.focus()
   }
+
+  useEffect(() => () => setOpenModal(false), [])
 
   return (
     <s.FormWrapper>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
+import Button from '../../styles/Button'
 import CollectionCard from './CollectionCard'
 import FormCollection from './FormCollection'
 
@@ -13,9 +14,9 @@ const Collections: React.FC = () => {
 
       <CollectionCard setShowForm={setShowForm} />
 
-      <s.ButtonAddCollection onClick={() => setShowForm(true)}>
-        <FaPlus size={25} />
-      </s.ButtonAddCollection>
+      <Button onClick={() => setShowForm(true)} className="add-collection">
+        <FaPlus size={22} />
+      </Button>
 
       {showForm && <FormCollection setShowForm={setShowForm} />}
     </s.CollectionWrapper>
