@@ -8,7 +8,12 @@ export type InitialStateType = {
 
 const getTodosFromLocalStorage = (): ICollection[] => {
   const storage = localStorage.getItem('collections')
-  if (storage) return JSON.parse(storage)
+  if (storage) {
+    const parsedStorage = JSON.parse(storage)
+    if (!parsedStorage?.collections?.todos?.complete) {
+      localStorage.removeItem('collections')
+    }
+  }
 
   return []
 }
