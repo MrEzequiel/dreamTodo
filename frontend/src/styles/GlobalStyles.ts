@@ -18,6 +18,7 @@ export default createGlobalStyle`
     width: 1rem;
     background-color: #1b1919;
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
   }
 
   ::-webkit-scrollbar-thumb {

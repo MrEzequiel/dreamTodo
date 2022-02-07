@@ -38,7 +38,7 @@ const FormTodo: React.FC = () => {
 
   return (
     <s.FormWrapper>
-      <s.FormStyle onSubmit={handleSubmit}>
+      <s.FormStyle onSubmit={handleSubmit} inFocus={focus}>
         <s.InputStyle
           ref={inputEl}
           type="text"

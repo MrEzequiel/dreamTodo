@@ -3,13 +3,16 @@ import styled, { css } from 'styled-components'
 interface ContainerProps {
   edit: boolean
   expended: boolean
+  isDragging: boolean
 }
 
 export const TodoWrapper = styled.li<ContainerProps>`
+  position: relative;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   border: 2px solid transparent;
   padding: 15px;
+  padding-left: 30px;
 
   border-color: ${({ edit }) => (edit ? '#11EEDD' : 'transparent')};
   border-radius: ${({ expended }) => (expended ? '15px 15px 0 0' : '15px')};
@@ -50,6 +53,49 @@ export const TodoWrapper = styled.li<ContainerProps>`
     line-height: 1.5em;
     width: 100%;
   }
+
+  ${({ isDragging }) =>
+    isDragging &&
+    css`
+      transition: all 0.3s ease;
+      cursor: grabbing;
+      box-shadow: none;
+      background: none;
+      border-color: ${props => props.theme.colors.colorPrimary2};
+      border-style: dashed;
+
+      & > * {
+        opacity: 0;
+      }
+    `}
+`
+
+// <{ isDragging: boolean }>
+export const ButtonDrag = styled.button`
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  /* ${isDragging =>
+    isDragging &&
+    css`
+      cursor: grabbing;
+      color: ${props => props.theme.colors.g6};
+    `} */
+
+  background: transparent;
+  height: 100%;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 0;
+  left: 0px;
+  color: ${props => props.theme.colors.g4};
 `
 
 export const InputCheckboxTodo = styled.label`

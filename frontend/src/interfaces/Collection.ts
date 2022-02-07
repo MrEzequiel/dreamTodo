@@ -1,10 +1,10 @@
 import { BaseEmoji } from 'emoji-mart'
-import ITodo from './Todo'
+import IFieldTodo from './IFieldTodo'
 
 interface ICollection {
   id: string
   title: string
-  todo: ITodo[]
+  todo: IFieldTodo
   emoji: BaseEmoji
 }
 

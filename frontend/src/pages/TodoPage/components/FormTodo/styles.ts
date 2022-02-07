@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Container } from '../../../../styles/LayoutComponents'
 
 export const FormWrapper = styled.div`
@@ -6,7 +6,7 @@ export const FormWrapper = styled.div`
   ${Container()}
 `
 
-export const FormStyle = styled.form`
+export const FormStyle = styled.form<{ inFocus: boolean }>`
   display: flex;
   gap: 15px;
   align-items: center;
@@ -18,10 +18,12 @@ export const FormStyle = styled.form`
   transition: border-color 500ms, box-shadow 700ms;
   transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  &:hover {
-    border-color: ${props => props.theme.colors.colorPrimary};
-    box-shadow: 0 0 0 4px ${props => props.theme.colors.colorPrimary2};
-  }
+  ${({ inFocus }) =>
+    inFocus &&
+    css`
+      border-color: ${props => props.theme.colors.colorPrimary};
+      box-shadow: 0 0 0 4px ${props => props.theme.colors.colorPrimary2};
+    `}
 
   background: ${props => props.theme.colors.g2};
 `

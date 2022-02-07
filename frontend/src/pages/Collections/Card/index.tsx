@@ -23,14 +23,11 @@ const Card: React.FC<IProps> = ({ collection }) => {
   const getPercentageTodo = useMemo(() => {
     const todos = collection.todo
 
-    if (todos.length === 0) return '0%'
+    if (todos.complete.length === 0) return '0%'
 
-    const total = todos.reduce(
-      (acc, item) => (item.complete ? acc + 1 : acc),
-      0
-    )
+    const todosTotal = todos.complete.length + todos.incomplete.length
 
-    return ((total * 100) / todos.length).toFixed() + '%'
+    return ((todos.complete.length * 100) / todosTotal).toFixed() + '%'
   }, [collection.todo])
 
   function handleClickDropdown(types: 'edit' | 'remove') {
@@ -68,7 +65,11 @@ const Card: React.FC<IProps> = ({ collection }) => {
             <NavLink to={`/todo/${collection.id}`}>{collection.title}</NavLink>
           </h2>
 
-          <p>Tasks: {collection.todo.length}</p>
+          <p>
+            Tasks:{' '}
+            {collection.todo.complete.length +
+              collection.todo.incomplete.length}
+          </p>
 
           <s.Porcetage quant={getPercentageTodo}>
             <p>{getPercentageTodo}</p>

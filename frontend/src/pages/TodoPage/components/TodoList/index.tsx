@@ -10,37 +10,34 @@ const TodoList: React.FC = () => {
   const { thisCollection } = useContext(TodoPageContext)
   const todos = thisCollection.todo
 
-  if (!todos.length) return <EmptyTodo />
-
-  const todosCompleted = todos.filter(todo => todo.complete)
-  const todosNotCompleted = todos.filter(todo => !todo.complete)
+  if (!todos.complete.length && !todos.incomplete.length) return <EmptyTodo />
 
   return (
     <s.TodoWrapper>
-      {!!todosNotCompleted.length && (
+      {!!todos.incomplete.length && (
         <>
           <h2>
-            {todosNotCompleted.length > 1 ? 'Tasks' : 'Task'} -{' '}
-            <strong>{todosNotCompleted.length}</strong>
+            {todos.incomplete.length > 1 ? 'Tasks' : 'Task'} -{' '}
+            <strong>{todos.incomplete.length}</strong>
           </h2>
 
           <ul>
-            {todosNotCompleted.map(todo => (
-              <Todo key={todo.id} todo={todo} />
+            {todos.incomplete.map((todo, index) => (
+              <Todo key={todo.id} todo={todo} index={index} />
             ))}
           </ul>
         </>
       )}
 
-      {!!todosCompleted.length && (
+      {!!todos.complete.length && (
         <>
           <h2>
-            Completed - <strong>{todosCompleted.length}</strong>
+            Completed - <strong>{todos.complete.length}</strong>
           </h2>
 
           <ul>
-            {todosCompleted.map(todo => (
-              <Todo key={todo.id} todo={todo} />
+            {todos.complete.map((todo, index) => (
+              <Todo key={todo.id} todo={todo} index={index} />
             ))}
           </ul>
         </>

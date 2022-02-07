@@ -1,4 +1,6 @@
 import React, { useContext, useEffect } from 'react'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import { FaAngleLeft } from 'react-icons/fa'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { TodoContext } from '../../context/TodoListContext'
@@ -32,23 +34,25 @@ const TodoPage = () => {
   }
 
   return (
-    <TodoPageContext.Provider value={contextTodoPage}>
-      <s.TitleStyle>
-        <NavLink to="/" end>
-          <button type="button">
-            <FaAngleLeft size={20} />
-          </button>
-        </NavLink>
+    <DndProvider backend={HTML5Backend}>
+      <TodoPageContext.Provider value={contextTodoPage}>
+        <s.TitleStyle>
+          <NavLink to="/" end>
+            <button type="button">
+              <FaAngleLeft size={20} />
+            </button>
+          </NavLink>
 
-        <h1>
-          <span>{thisCollection?.emoji.native}</span>
-          {thisCollection?.title}
-        </h1>
-      </s.TitleStyle>
+          <h1>
+            <span>{thisCollection?.emoji.native}</span>
+            {thisCollection?.title}
+          </h1>
+        </s.TitleStyle>
 
-      <FormTodo />
-      <TodoList />
-    </TodoPageContext.Provider>
+        <FormTodo />
+        <TodoList />
+      </TodoPageContext.Provider>
+    </DndProvider>
   )
 }
 

@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  useCallback
-} from 'react'
+import React, { memo, useEffect, useRef, useState, useContext } from 'react'
 import { FaAngleDown, FaLink } from 'react-icons/fa'
 import Dropdown from '../../../../components/Dropdown'
 
@@ -14,16 +7,26 @@ import Modal from '../FormTodo/ModalForm'
 import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
 import ITodo from '../../../../interfaces/Todo'
-import { useParams } from 'react-router-dom'
 import TodoPageContext from '../../../../context/TodoPageContext'
+import { MdDragIndicator } from 'react-icons/md'
+import { useDrag, useDrop } from 'react-dnd'
+import type { Identifier } from 'dnd-core'
 
 interface Props {
   todo: ITodo
+  index: number
 }
 
-const Todo: React.FC<Props> = ({ todo }) => {
+interface DragItem {
+  id: number
+  index: number
+}
+
+const Todo: React.FC<Props> = ({ todo, index }) => {
   const { id } = useContext(TodoPageContext)
   const inputEl = useRef<HTMLInputElement>(null)
+  const dropRef = useRef<HTMLLIElement | null>(null)
+  const dragRef = useRef<HTMLButtonElement | null>(null)
   const { dispatch } = useContext(TodoContext)
 
   const [toggle, setToggle] = useState(todo.complete)
@@ -97,6 +100,67 @@ const Todo: React.FC<Props> = ({ todo }) => {
     }
   }
 
+  // drag and drop todo
+  const [{ handlerId }, drop] = useDrop<
+    DragItem,
+    void,
+    { handlerId: Identifier | null }
+  >({
+    accept: todo.complete ? 'TODO_COMPLETED' : 'TODO',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId()
+      }
+    },
+    hover(item: DragItem, monitor) {
+      if (!dropRef.current) return
+
+      const dragIndex = item.index
+      const hoverIndex = index
+      if (dragIndex === hoverIndex) return
+
+      const hoverBoundingRect = dropRef.current.getBoundingClientRect()
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+      const clientOffset: any = monitor.getClientOffset()
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return
+
+      dispatch({
+        type: Types.Move,
+        payload: {
+          id_collection: id,
+          dragIndex,
+          hoverIndex,
+          type: todo.complete ? 'complete' : 'incomplete'
+        }
+      })
+
+      item.index = hoverIndex
+    }
+  })
+
+  const [{ isDragging }, drag, preview] = useDrag({
+    type: todo.complete ? 'TODO_COMPLETED' : 'TODO',
+    item: () => {
+      return { id: todo.id, index }
+    },
+    collect: monitor => ({
+      isDragging: monitor.isDragging()
+    })
+  })
+
+  preview(drop(dropRef))
+  drag(dragRef)
+
+  useEffect(() => {
+    if (isDragging && expendedTodo) {
+      setExpended(false)
+    }
+  }, [isDragging, expendedTodo])
+
   useEffect(() => {
     if (!hasEdit) return
 
@@ -109,7 +173,17 @@ const Todo: React.FC<Props> = ({ todo }) => {
 
   return (
     <>
-      <s.TodoWrapper edit={hasEdit && !expendedTodo} expended={expended}>
+      <s.TodoWrapper
+        edit={hasEdit && !expendedTodo}
+        expended={expended}
+        isDragging={isDragging}
+        ref={dropRef}
+        data-handler-id={handlerId}
+      >
+        <s.ButtonDrag type="button" ref={dragRef}>
+          <MdDragIndicator size={25} />
+        </s.ButtonDrag>
+
         <s.InputCheckboxTodo>
           <input
             type="checkbox"
