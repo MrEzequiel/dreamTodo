@@ -10,7 +10,7 @@ const getTodosFromLocalStorage = (): ICollection[] => {
   const storage = localStorage.getItem('collections')
   if (storage) {
     const parsedStorage = JSON.parse(storage)
-    if (!parsedStorage?.collections?.todos?.complete) {
+    if (!parsedStorage?.collections?.todo?.complete) {
       localStorage.removeItem('collections')
     }
   }
