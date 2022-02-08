@@ -1,26 +1,13 @@
 import styled from 'styled-components'
 
 export const FormStyled = styled.form`
-  @keyframes animeGrowing {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: initial;
-      transform: initial;
-    }
-  }
-
-  animation: animeGrowing 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
-
   position: relative;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   display: flex;
   gap: 10px;
   align-items: center;
-  width: min(480px, 80%);
+  width: 100%;
   height: 70px;
   padding: 0 15px;
 

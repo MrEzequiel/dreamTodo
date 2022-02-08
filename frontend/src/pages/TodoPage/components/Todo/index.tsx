@@ -11,6 +11,7 @@ import TodoPageContext from '../../../../context/TodoPageContext'
 import { MdDragIndicator } from 'react-icons/md'
 import { useDrag, useDrop } from 'react-dnd'
 import type { Identifier } from 'dnd-core'
+import ModalForm from '../FormTodo/ModalForm'
 
 interface Props {
   todo: ITodo
@@ -96,6 +97,7 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
     }
 
     if (type === 'edit') {
+      setModal(true)
       setHasEdit(true)
     }
   }
@@ -206,14 +208,13 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
           </p>
         )}
 
-        {modal && (
-          <Modal
-            closeModal={setModal}
-            type="edit"
-            todo={todo}
-            setEdit={setHasEdit}
-          />
-        )}
+        <ModalForm
+          closeModal={setModal}
+          modalIsOpen={modal}
+          type="edit"
+          todo={todo}
+          setEdit={setHasEdit}
+        />
 
         <s.ButtonsControl>
           <Dropdown callbackClick={handleClickDropdown} />

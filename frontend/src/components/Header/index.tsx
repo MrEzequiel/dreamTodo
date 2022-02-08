@@ -76,7 +76,7 @@ const Header = () => {
         </s.HeaderStyle>
       </s.HeaderWrapper>
 
-      {openModal && <Login setModal={setOpenModal} />}
+      <Login setModal={setOpenModal} modalIsOpen={openModal} />
 
       <CSSTransition
         in={navBar === true}

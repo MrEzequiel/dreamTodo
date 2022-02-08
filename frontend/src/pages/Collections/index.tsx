@@ -18,7 +18,7 @@ const Collections: React.FC = () => {
         <FaPlus size={22} />
       </Button>
 
-      {showForm && <FormCollection setShowForm={setShowForm} />}
+      <FormCollection setShowForm={setShowForm} showForm={showForm} />
     </s.CollectionWrapper>
   )
 }

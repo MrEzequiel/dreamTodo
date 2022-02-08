@@ -1,33 +1,33 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { FaEdit, FaPlus, FaTimes } from 'react-icons/fa'
 import { TodoContext } from '../../../context/TodoListContext'
 import { Types } from '../../../functions/reducers'
 import useForm from '../../../hooks/useForm'
-import { ModalWrapper } from '../../../styles/Form'
 import { FormStyled } from './style'
 
 import 'emoji-mart/css/emoji-mart.css'
 import { BaseEmoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
+import Modal from '../../../components/Modal'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
+  showForm: boolean
   initial?: ICollection
   callback?: (editedCollection: ICollection) => void
 }
 
 const FormCollection: React.FC<IProps> = ({
   setShowForm,
+  showForm,
   initial,
   callback
 }) => {
   const { dispatch } = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const collectionName = useForm(true, initial?.title ?? '')
-
-  const [emoji, setEmoji] = useState(false)
-  const [selectEmoji, setSelectEmoji] = useState<BaseEmoji>(
-    initial?.emoji ?? {
+  const initialEmoji: BaseEmoji = useMemo(
+    () => ({
       id: 'muscle',
       name: 'Flexed Biceps',
       colons: ':muscle::skin-tone-4:',
@@ -35,7 +35,13 @@ const FormCollection: React.FC<IProps> = ({
       unified: '1f4aa-1f3fd',
       skin: 4,
       native: '💪🏽'
-    }
+    }),
+    []
+  )
+
+  const [emoji, setEmoji] = useState(false)
+  const [selectEmoji, setSelectEmoji] = useState<BaseEmoji>(
+    initial?.emoji ?? initialEmoji
   )
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
@@ -72,11 +78,28 @@ const FormCollection: React.FC<IProps> = ({
   }
 
   useEffect(() => {
-    inputEl.current?.focus()
+    if (!showForm && !initial) {
+      collectionName.setValue('')
+      setSelectEmoji(initialEmoji)
+    }
+  }, [showForm, collectionName, initialEmoji, initial])
+
+  useEffect(() => {
+    const interval = setInterval(() => inputEl.current?.focus(), 300)
+
+    return () => clearInterval(interval)
   }, [])
 
   return (
-    <ModalWrapper>
+    <Modal
+      size="min(480px, 80%)"
+      setCloseModal={setShowForm}
+      modalIsOpen={showForm}
+      styleModalContent={{
+        background: 'transparent',
+        overflow: 'visible'
+      }}
+    >
       <FormStyled onSubmit={handleSubmit}>
         <button
           type="button"
@@ -123,7 +146,7 @@ const FormCollection: React.FC<IProps> = ({
           {initial ? <FaEdit /> : <FaPlus />}
         </button>
       </FormStyled>
-    </ModalWrapper>
+    </Modal>
   )
 }
 

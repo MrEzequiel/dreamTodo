@@ -78,29 +78,30 @@ const Card: React.FC<IProps> = ({ collection }) => {
         </div>
       </s.CardWrapper>
 
-      {hasEdit && (
-        <FormCollection
-          setShowForm={setHasEdit}
-          initial={collection}
-          callback={handleCollectionEdit}
-        />
-      )}
+      <FormCollection
+        setShowForm={setHasEdit}
+        showForm={hasEdit}
+        initial={collection}
+        callback={handleCollectionEdit}
+      />
 
-      {confirmed && (
-        <Modal size="min(500px, 80%)" setCloseModal={setConfirmed}>
-          <Title size="2.2rem" weight="300" separator>
-            Want to delete collection
-            <strong>{` "${collection.title}"`}?</strong>
-          </Title>
+      <Modal
+        size="min(500px, 80%)"
+        setCloseModal={setConfirmed}
+        modalIsOpen={confirmed}
+      >
+        <Title size="2.2rem" weight="300" separator>
+          Want to delete collection
+          <strong>{` "${collection.title}"`}?</strong>
+        </Title>
 
-          <s.ControlsButton>
-            <Button onClick={handleCollectionRemove}>Yes</Button>
-            <Button outlined onClick={() => setConfirmed(false)}>
-              No
-            </Button>
-          </s.ControlsButton>
-        </Modal>
-      )}
+        <s.ControlsButton>
+          <Button onClick={handleCollectionRemove}>Yes</Button>
+          <Button outlined onClick={() => setConfirmed(false)}>
+            No
+          </Button>
+        </s.ControlsButton>
+      </Modal>
     </>
   )
 }
