@@ -158,10 +158,7 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
 
   drop(drag(dropRef))
   drag(dragRef)
-
-  useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true })
-  }, [])
+  preview(getEmptyImage(), { captureDraggingState: true })
 
   useEffect(() => {
     if (isDragging) {
