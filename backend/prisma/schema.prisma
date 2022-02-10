@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id         String   @unique @default(uuid())
-  name       String
+  name       String?
   email      String
   password   String
   imageURL   String?
