@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ensureAuthenticareUser from "../middleware/ensureAuthenticateUser";
 import { AuthenticateUserController } from "../modules/accounts/useCases/authenticateUser/AuthenticateUserController";
-import { AuthenticateUserGoogleController } from "../modules/accounts/useCases/authenticateUserGoogle/authenticateUserGoogleController";
+import { AuthenticateUserGoogleController } from "../modules/accounts/useCases/authenticateUserGoogle/AuthenticateUserGoogleController";
 import { CreateUserController } from "../modules/accounts/useCases/createUser/CreateUserController";
 import { EditUserController } from "../modules/accounts/useCases/editUser/EditUserController";
 
