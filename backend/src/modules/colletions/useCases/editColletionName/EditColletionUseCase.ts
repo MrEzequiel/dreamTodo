@@ -24,11 +24,11 @@ export class EditColletionUseCase {
 
     const editedColletion = await client.colletion.update({
       where: {
-        id
+        id,
       },
       data: {
-        name
-      }
+        name 
+      },
     })
 
     return editedColletion

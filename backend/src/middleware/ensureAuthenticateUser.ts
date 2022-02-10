@@ -24,7 +24,7 @@ export default function ensureAuthenticareUser(request: Request, response: Respo
     ) as IpayLoad
 
     request.user = {
-        id: user_id,
+      id: user_id,
     }
 
     next()

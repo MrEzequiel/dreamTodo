@@ -32,7 +32,7 @@ export class EditTodoUseCase {
       },
       where: {
         id: todoExist.id
-      }
+      },
     })
 
     return editedTodo;
