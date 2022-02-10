@@ -158,7 +158,10 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
 
   drop(drag(dropRef))
   drag(dragRef)
-  preview(getEmptyImage(), { captureDraggingState: true })
+
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true })
+  }, []) // eslint-disable-line
 
   useEffect(() => {
     if (isDragging) {
