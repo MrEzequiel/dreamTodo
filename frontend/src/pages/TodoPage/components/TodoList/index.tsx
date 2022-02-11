@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../context/TodoListContext'
 import TodoPageContext from '../../../../context/TodoPageContext'
 import Todo from '../Todo'
+import TodoDragLayer from '../Todo/TodoDragLayer'
 import EmptyTodo from './EmptyTodo'
 import * as s from './styles'
 
@@ -42,6 +43,9 @@ const TodoList: React.FC = () => {
           </ul>
         </>
       )}
+
+      {/* Drag n drop layer */}
+      <TodoDragLayer />
     </s.TodoWrapper>
   )
 }

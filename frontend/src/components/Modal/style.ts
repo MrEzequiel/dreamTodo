@@ -13,6 +13,47 @@ export const ModalWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  // enter animation
+  &.modal-enter {
+    opacity: 0;
+
+    .modal-content {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+  &.modal-enter-active {
+    opacity: 1;
+    transition: opacity 400ms ease;
+
+    .modal-content {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 400ms, transform 400ms;
+      transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+  }
+
+  // exit animation
+  &.modal-exit {
+    opacity: 1;
+
+    .modal-content {
+      opacity: 1;
+    }
+  }
+  &.modal-exit-active {
+    opacity: 0;
+    transition: opacity 400ms ease;
+
+    .modal-content {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 400ms, transform 400ms;
+      transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+  }
 `
 
 interface IModalContent {
@@ -28,17 +69,4 @@ export const ModalContent = styled.div<IModalContent>`
   overflow: hidden;
   position: relative;
   padding: 30px 20px;
-
-  @keyframes show-growing {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: initial;
-      transform: initial;
-    }
-  }
-
-  animation: show-growing 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 `

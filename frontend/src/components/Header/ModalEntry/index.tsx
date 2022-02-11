@@ -9,13 +9,14 @@ import * as s from './style'
 
 interface IProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>
+  modalIsOpen: boolean
 }
 
 function formateLogin(text: string) {
   return text.split('-')[1]
 }
 
-const Login: React.FC<IProps> = ({ setModal }) => {
+const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
   const [login, setLogin] = useState<'sign-in' | 'sign-up'>('sign-in')
 
   const signInRef = useRef<HTMLDivElement>(null)
@@ -37,7 +38,11 @@ const Login: React.FC<IProps> = ({ setModal }) => {
   }, [login])
 
   return (
-    <Modal size="min(380px, 90%)" setCloseModal={setModal}>
+    <Modal
+      size="min(380px, 90%)"
+      setCloseModal={setModal}
+      modalIsOpen={modalIsOpen}
+    >
       <Title size="2.8rem" separator style={{ marginBottom: '20px' }}>
         Sign {formateLogin(login)}
       </Title>

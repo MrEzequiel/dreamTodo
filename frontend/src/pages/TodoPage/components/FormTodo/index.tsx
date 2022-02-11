@@ -1,6 +1,8 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
+import Modal from '../../../../components/Modal'
 import { TodoContext } from '../../../../context/TodoListContext'
 import TodoPageContext from '../../../../context/TodoPageContext'
 import { Types } from '../../../../functions/reducers'
@@ -11,7 +13,9 @@ import * as s from './styles'
 const FormTodo: React.FC = () => {
   const { id } = useContext(TodoPageContext)
   const contextTodo = useContext(TodoContext)
+
   const inputEl = useRef<HTMLInputElement>(null)
+
   const [name, setName] = useState('')
   const [focus, setFocus] = useState(false)
   const [openModal, setOpenModal] = useState(false)
@@ -61,7 +65,7 @@ const FormTodo: React.FC = () => {
         </s.MoreInformation>
       )}
 
-      {openModal && <ModalForm closeModal={setOpenModal} type="add" />}
+      <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" />
     </s.FormWrapper>
   )
 }

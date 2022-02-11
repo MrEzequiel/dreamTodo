@@ -3,7 +3,6 @@ import { FaAngleDown, FaLink } from 'react-icons/fa'
 import Dropdown from '../../../../components/Dropdown'
 
 import * as s from './style'
-import Modal from '../FormTodo/ModalForm'
 import { TodoContext } from '../../../../context/TodoListContext'
 import { Types } from '../../../../functions/reducers'
 import ITodo from '../../../../interfaces/Todo'
@@ -11,6 +10,8 @@ import TodoPageContext from '../../../../context/TodoPageContext'
 import { MdDragIndicator } from 'react-icons/md'
 import { useDrag, useDrop } from 'react-dnd'
 import type { Identifier } from 'dnd-core'
+import ModalForm from '../FormTodo/ModalForm'
+import { getEmptyImage } from 'react-dnd-html5-backend'
 
 interface Props {
   todo: ITodo
@@ -20,6 +21,8 @@ interface Props {
 interface DragItem {
   id: number
   index: number
+  todo: ITodo
+  ref: HTMLLIElement
 }
 
 const Todo: React.FC<Props> = ({ todo, index }) => {
@@ -96,6 +99,7 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
     }
 
     if (type === 'edit') {
+      setModal(true)
       setHasEdit(true)
     }
   }
@@ -145,18 +149,22 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
   const [{ isDragging }, drag, preview] = useDrag({
     type: todo.complete ? 'TODO_COMPLETED' : 'TODO',
     item: () => {
-      return { id: todo.id, index }
+      return { id: todo.id, index, todo, ref: dropRef.current }
     },
     collect: monitor => ({
       isDragging: monitor.isDragging()
     })
   })
 
-  preview(drop(dropRef))
+  drop(drag(dropRef))
   drag(dragRef)
 
   useEffect(() => {
-    if (isDragging && expendedTodo) {
+    preview(getEmptyImage(), { captureDraggingState: true })
+  }, []) // eslint-disable-line
+
+  useEffect(() => {
+    if (isDragging) {
       setExpended(false)
     }
   }, [isDragging, expendedTodo])
@@ -206,14 +214,13 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
           </p>
         )}
 
-        {modal && (
-          <Modal
-            closeModal={setModal}
-            type="edit"
-            todo={todo}
-            setEdit={setHasEdit}
-          />
-        )}
+        <ModalForm
+          closeModal={setModal}
+          modalIsOpen={modal}
+          type="edit"
+          todo={todo}
+          setEdit={setHasEdit}
+        />
 
         <s.ButtonsControl>
           <Dropdown callbackClick={handleClickDropdown} />

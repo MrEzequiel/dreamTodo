@@ -8,6 +8,7 @@ interface ContainerProps {
 
 export const TodoWrapper = styled.li<ContainerProps>`
   position: relative;
+  width: 100%;
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   border: 2px solid transparent;
@@ -20,7 +21,9 @@ export const TodoWrapper = styled.li<ContainerProps>`
   display: flex;
   gap: 15px;
 
-  transition: box-shadow 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: box-shadow 500ms, transform 500ms;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+
   box-shadow: ${({ expended }) =>
     expended
       ? '0 8px 8px -2px rgba(0, 0, 0, 0.2)'
@@ -30,20 +33,6 @@ export const TodoWrapper = styled.li<ContainerProps>`
     margin-top: 15px;
   }
 
-  @keyframes show-right-todo {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: initial;
-      transform: translateX(0);
-    }
-  }
-
-  animation: show-right-todo 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: box-shadow 500ms ease;
-
   &:hover {
     box-shadow: 0 16px 16px -12px rgba(0, 0, 0, 0.15);
   }
@@ -52,6 +41,7 @@ export const TodoWrapper = styled.li<ContainerProps>`
     align-self: center;
     line-height: 1.5em;
     width: 100%;
+    word-break: break-word;
   }
 
   ${({ isDragging }) =>
@@ -66,24 +56,31 @@ export const TodoWrapper = styled.li<ContainerProps>`
 
       & > * {
         opacity: 0;
+        transition: all 150ms ease;
       }
     `}
+
+  @keyframes show-todo-left {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: initial;
+
+      transform: initial;
+    }
+  }
+
+  animation: show-todo-left 400ms ease;
 `
 
-// <{ isDragging: boolean }>
 export const ButtonDrag = styled.button`
   cursor: grab;
 
   &:active {
     cursor: grabbing;
   }
-
-  /* ${isDragging =>
-    isDragging &&
-    css`
-      cursor: grabbing;
-      color: ${props => props.theme.colors.g6};
-    `} */
 
   background: transparent;
   height: 100%;
@@ -101,6 +98,7 @@ export const ButtonDrag = styled.button`
 export const InputCheckboxTodo = styled.label`
   flex-shrink: 0;
   user-select: none;
+  height: fit-content;
 
   input {
     cursor: pointer;

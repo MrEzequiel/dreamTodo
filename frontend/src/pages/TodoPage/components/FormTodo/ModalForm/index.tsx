@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import { TodoContext } from '../../../../../context/TodoListContext'
-import { CollectionsActions, Types } from '../../../../../functions/reducers'
+import { Types } from '../../../../../functions/reducers'
 import useForm from '../../../../../hooks/useForm'
 import ITodo from '../../../../../interfaces/Todo'
 import Modal from '../../../../../components/Modal'
@@ -13,12 +12,19 @@ import TodoPageContext from '../../../../../context/TodoPageContext'
 
 interface Props {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
+  modalIsOpen: boolean
   type: 'add' | 'edit'
   todo?: ITodo
   setEdit?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
+const ModalForm: React.FC<Props> = ({
+  closeModal,
+  modalIsOpen,
+  type,
+  todo,
+  setEdit
+}) => {
   const { id } = useContext(TodoPageContext)
   const titleField = useForm(true, todo?.name ?? '')
   const descriptionField = useForm(false, todo?.description ?? '')
@@ -90,12 +96,22 @@ const ModalForm: React.FC<Props> = ({ closeModal, type, todo, setEdit }) => {
 
   useEffect(() => {
     if (setEdit) return () => setEdit(false)
-  }, [setEdit])
+
+    if (!modalIsOpen && !todo) {
+      descriptionField.setValue('')
+      titleField.setValue('')
+      linkField.setValue('')
+    }
+  }, [setEdit, modalIsOpen, todo, descriptionField, titleField, linkField])
 
   // TODO: style for fields with error
   // https://www.bezkoder.com/wp-content/uploads/2021/10/react-form-validation-example-formik-yup.png
   return (
-    <Modal size="min(500px, 90%)" setCloseModal={closeModal}>
+    <Modal
+      size="min(500px, 90%)"
+      setCloseModal={closeModal}
+      modalIsOpen={modalIsOpen}
+    >
       <Title size="2.2rem" separator>
         Add a task
       </Title>
