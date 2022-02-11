@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id         String   @unique @default(uuid())
+  id         String   @id @default(uuid())
   name       String?
   email      String
   password   String
@@ -16,22 +16,10 @@ model User {
   created_at DateTime @default(now())
 
   @@map("users")
-  TokenUser TokenUser[]
-}
-
-model TokenUser {
-  id         String   @unique @default(uuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  userToken  String
-  tokenGoogle String?
-  created_at DateTime @default(now())
-
-  @@map("token_user")
 }
 
 model Todo {
-  id          String      @unique @default(uuid())
+  id          String  @id  @unique @default(uuid())
   name        String
   description String?
   colletion   String
@@ -42,10 +30,10 @@ model Todo {
 }
 
 model Colletion {
-  id     String  @unique @default(uuid())
+  id     String @id @unique @default(uuid())
   name   String
-  todoId String?
-  todo   Todo?   @relation("todo-colletion", fields: [todoId], references: [id])
+  todoId String
+  todo   Todo[]   @relation("todo-colletion", fields: [todoId], references: [id])
 
   @@map("colletions")
 }

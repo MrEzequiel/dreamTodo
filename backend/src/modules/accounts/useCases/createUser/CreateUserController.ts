@@ -7,12 +7,8 @@ export class CreateUserController {
 
   async handle(request: Request, response: Response): Promise<Response>{
 
-    const { 
-      name,
-      email,
-      imageURL,
-      password 
-    } = request.body;
+    const { name, email, password } = request.body;
+    const { originalname: imageURL } = request.file;
 
     const createUserUseCase = new CreateUserUseCase();
 
