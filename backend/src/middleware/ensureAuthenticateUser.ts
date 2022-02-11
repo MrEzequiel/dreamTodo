@@ -12,7 +12,7 @@ export default function ensureAuthenticareUser(request: Request, response: Respo
   const authHeader = request.headers.authorization
 
   if(!authHeader){
-      throw new AppError("Token não valido ou faltando.", 401)
+    throw new AppError("Token não valido ou faltando.", 401)
   }
 
   const [, token] = authHeader.split(" ")
