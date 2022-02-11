@@ -1,6 +1,6 @@
 
 import nodemailer from 'nodemailer'
-
+import { createCode } from '../../../../utils/createCode';
 
 export class SendMailForgotPasswordUseCase {
 
@@ -9,8 +9,6 @@ export class SendMailForgotPasswordUseCase {
 
     const user = process.env.EMAIL_SECRET_GMAIL
     const pass = process.env.EMAIL_SECRET_PASSWD
-
-
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -23,14 +21,13 @@ export class SendMailForgotPasswordUseCase {
       }
     }) 
 
+    const code = await createCode();
 
-    const mail = await transporter.sendMail({
+    await transporter.sendMail({
       from: 'Equipe todo <dreamtodoapp@gmail.com>',
       to: email,
-      subject: 'Hello aqui está seu email',
-      text: 'Ola tudo bem?'
+      subject: 'Recuperação de senha do DreamApp',
+      text: `Boa tarde, para recuperar sua senha, use esse codigo: ${code}`
     })
-
-    return mail;
   }
 }
