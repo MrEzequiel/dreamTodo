@@ -19,5 +19,9 @@ export const TodoWrapper = styled.div`
 
   ul {
     position: relative;
+
+    .todo-container + .todo-container {
+      margin-top: 15px;
+    }
   }
 `
