@@ -29,10 +29,6 @@ export const TodoWrapper = styled.li<ContainerProps>`
       ? '0 8px 8px -2px rgba(0, 0, 0, 0.2)'
       : '0 4px 4px -2px rgba(0, 0, 0, 0.1)'};
 
-  & + li {
-    margin-top: 15px;
-  }
-
   &:hover {
     box-shadow: 0 16px 16px -12px rgba(0, 0, 0, 0.15);
   }
@@ -59,20 +55,6 @@ export const TodoWrapper = styled.li<ContainerProps>`
         transition: all 150ms ease;
       }
     `}
-
-  @keyframes show-todo-left {
-    from {
-      opacity: 0;
-      transform: translateX(-10px);
-    }
-    to {
-      opacity: initial;
-
-      transform: initial;
-    }
-  }
-
-  animation: show-todo-left 400ms ease;
 `
 
 export const ButtonDrag = styled.button`
