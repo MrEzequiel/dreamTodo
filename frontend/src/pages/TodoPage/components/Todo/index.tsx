@@ -1,4 +1,11 @@
-import React, { memo, useEffect, useRef, useState, useContext } from 'react'
+import React, {
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  forwardRef
+} from 'react'
 import { FaAngleDown, FaLink } from 'react-icons/fa'
 import Dropdown from '../../../../components/Dropdown'
 
@@ -25,7 +32,7 @@ interface DragItem {
   ref: HTMLLIElement
 }
 
-const Todo: React.FC<Props> = ({ todo, index }) => {
+const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
   const { id } = useContext(TodoPageContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const dropRef = useRef<HTMLLIElement | null>(null)
@@ -180,7 +187,7 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
   }, [hasEdit, expendedTodo])
 
   return (
-    <>
+    <div ref={ref} className="todo-container">
       <s.TodoWrapper
         edit={hasEdit && !expendedTodo}
         expended={expended}
@@ -233,7 +240,9 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
             >
               <FaAngleDown
                 size={16}
-                style={{ transform: expended ? 'rotate(180deg)' : 'rotate(0)' }}
+                style={{
+                  transform: expended ? 'rotate(180deg)' : 'rotate(0)'
+                }}
               />
             </s.ExpendedButton>
           )}
@@ -249,8 +258,9 @@ const Todo: React.FC<Props> = ({ todo, index }) => {
           )}
         </s.ExpendedTodo>
       )}
-    </>
+    </div>
   )
-}
+})
 
+Todo.displayName = 'Todo'
 export default memo(Todo)
