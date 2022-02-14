@@ -6,7 +6,7 @@ import { ICreateTodoDTO } from '../../dtos/ICreateTodoDTO';
 
 export class CreateTodoUseCase {
 
-  async execute({ name, complete, description, colletion} : ICreateTodoDTO): Promise<Todo> {
+  async execute({ name, complete, description, id_colletion } : ICreateTodoDTO): Promise<Todo> {
 
     const verifyTodoExist = await client.todo.findFirst({
       where: {
@@ -23,7 +23,7 @@ export class CreateTodoUseCase {
         name,
         complete,
         description,
-        colletion
+        id_colletion,
       }
     })
 

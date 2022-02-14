@@ -19,7 +19,7 @@ export class CreateColletionUseCase {
 
     const colletion = await client.colletion.create({
       data: {
-        name
+        name,
       },
     })
 
