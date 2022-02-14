@@ -9,16 +9,16 @@ import { ListColletionController } from '../modules/colletions/useCases/listColl
 
 const colletionRoutes = Router();
 
-const createColletionController = new CreateColletionController()
-const listColletionController = new ListColletionController()
-const editColletionController = new EditColletionController()
-const deleteColletionController = new DeleteColletionController()
-
+const createColletionController = new CreateColletionController();
+const listColletionController = new ListColletionController();
+const editColletionController = new EditColletionController();
+const deleteColletionController = new DeleteColletionController();
 
 colletionRoutes.post('/colletion', ensureAuthenticareUser, createColletionController.handle)
 colletionRoutes.get('/colletion', ensureAuthenticareUser, listColletionController.handle)
 colletionRoutes.put('/colletion/:id', ensureAuthenticareUser, editColletionController.handle)
 colletionRoutes.delete('/colletion/:id', ensureAuthenticareUser, deleteColletionController.handle)
+
 
 
 export { colletionRoutes };

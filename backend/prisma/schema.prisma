@@ -19,21 +19,25 @@ model User {
 }
 
 model Todo {
-  id          String  @id  @unique @default(uuid())
-  name        String
-  description String?
-  colletion   String
-  complete    Boolean     @default(false)
-  colletionId Colletion[] @relation("todo-colletion")
+  id           String    @id @unique @default(uuid())
+  name         String
+  description  String?
+  complete     Boolean   @default(false)
+  id_colletion String
+  colletion    Colletion @relation(name: "DAUMTEMPO", fields: [id_colletion], references: [id])
 
+  Colletion Colletion[]
   @@map("todo")
 }
 
 model Colletion {
-  id     String @id @unique @default(uuid())
-  name   String
-  todoId String
-  todo   Todo[]   @relation("todo-colletion", fields: [todoId], references: [id])
+
+  id      String @id @unique @default(uuid())
+  name    String
+  id_todo String?
+  todo    Todo?   @relation(fields: [id_todo], references: [id])
+
 
   @@map("colletions")
+  Todo Todo[] @relation("DAUMTEMPO")
 }

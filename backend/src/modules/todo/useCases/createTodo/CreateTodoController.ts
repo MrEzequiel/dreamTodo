@@ -7,7 +7,7 @@ export class CreateTodoController {
 
   async handle(request: Request, response: Response): Promise<Response> {
     
-    const { name, description, complete, colletion } = request.body
+    const { name, description, complete, id_colletion } = request.body
 
     const createTodoUseCase = new CreateTodoUseCase()
 
@@ -15,7 +15,7 @@ export class CreateTodoController {
       name,
       description,
       complete,
-      colletion
+      id_colletion
     })
 
     return response.status(201).json(todo);
