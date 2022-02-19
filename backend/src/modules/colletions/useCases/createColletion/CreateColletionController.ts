@@ -7,11 +7,14 @@ export class CreateColletionController {
 
   async handle(request: Request, response: Response): Promise<Response>{
 
-    const { name } = request.body;
+    const { id: userId } = request.user;
+    const { name  } = request.body;
+
+    console.log(name)
 
     const createColletionUseCase = new CreateColletionUseCase();
 
-    const colletion = await createColletionUseCase.execute(name);
+    const colletion = await createColletionUseCase.execute(userId, name);
 
     return response.json(colletion);
   }

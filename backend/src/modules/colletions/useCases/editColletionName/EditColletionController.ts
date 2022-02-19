@@ -4,6 +4,7 @@ import { EditColletionUseCase } from "./EditColletionUseCase";
 
 
 export class EditColletionController {
+  
   async handle(request: Request, response: Response): Promise<Response>{
     const { id } = request.params;
     const { name } = request.body;

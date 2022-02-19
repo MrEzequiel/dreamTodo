@@ -5,7 +5,7 @@ import { AppError } from "../../../../infra/errors/AppError";
 
 export class CreateColletionUseCase {
 
-  async execute(name: string): Promise<Colletion>{
+  async execute(userId: string, name: string): Promise<Colletion>{
 
     const verifyIfColletionExist = await client.colletion.findFirst({
       where: {
@@ -19,8 +19,9 @@ export class CreateColletionUseCase {
 
     const colletion = await client.colletion.create({
       data: {
-        name,
-      },
+        userId,
+        name
+      }
     })
 
     return colletion
