@@ -11,7 +11,7 @@ export class ListTodoOfColletionUseCase {
   async execute({ colletionid }: IRequestTodo): Promise<Todo[]>{
     const todo = await client.todo.findMany({
       where: {
-        
+        id_colletion: colletionid
       },
     })
 

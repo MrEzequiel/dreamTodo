@@ -7,9 +7,7 @@ export class DragDropTodoUseCase {
   async execute() {
     
     const todo = await client.todo.findMany({
-      where: {
-        
-      }
+      
     })
   }
 }

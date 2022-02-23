@@ -20,7 +20,5 @@ export class DeleteColletionUseCase {
         id,
       }
     })
-
-    console.log(verify)
   }
 }
