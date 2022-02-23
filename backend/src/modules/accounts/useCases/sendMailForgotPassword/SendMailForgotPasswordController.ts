@@ -12,10 +12,8 @@ export class SendMailForgotPasswordController {
 
     const sendMailForgotPasswordUseCase = new SendMailForgotPasswordUseCase();
 
-    await sendMailForgotPasswordUseCase.execute(email)
+    const token = await sendMailForgotPasswordUseCase.execute(email)
 
-    return response.json({
-      message: 'Email enviado! Verifique sua caixa de entrada.'
-    })
+    return response.json(token)
   }
 }
