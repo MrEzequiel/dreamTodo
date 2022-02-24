@@ -7,12 +7,11 @@ interface IRequest {
   id: string
   name: string
   description: string
-  complete: boolean
 }
 
 export class EditTodoUseCase {
 
-  async execute({ id, name, description, complete }: IRequest): Promise<Todo> {
+  async execute({ id, name, description }: IRequest): Promise<Todo> {
 
     const todoExist = await client.todo.findFirst({
       where: {
@@ -28,7 +27,6 @@ export class EditTodoUseCase {
       data: {
         name,
         description,
-        complete
       },
       where: {
         id: todoExist.id

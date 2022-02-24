@@ -7,15 +7,14 @@ export class EditTodoController {
   async handle(request: Request, response: Response): Promise<Response>{
 
     const { id } = request.params;
-    const { name, description, complete } = request.body;
+    const { name, description } = request.body;
 
     const editTodoUseCase = new EditTodoUseCase();
 
     const editedTodo = await editTodoUseCase.execute({
       id,
       name,
-      description,
-      complete
+      description
     });
 
     return response.json(editedTodo);
