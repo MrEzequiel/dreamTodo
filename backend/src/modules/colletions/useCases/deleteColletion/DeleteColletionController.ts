@@ -7,7 +7,7 @@ import { DeleteColletionUseCase } from "./DeleteColletionUseCase";
 export class DeleteColletionController {
   
   async handle(request: Request, response: Response): Promise<Response>{
-    
+  
     const { id } = request.params;
 
     const deleteColletionUseCase = new DeleteColletionUseCase();
@@ -15,7 +15,7 @@ export class DeleteColletionController {
     await deleteColletionUseCase.execute(id);
 
     return response.status(204).json({
-      message: 'Colletion deletada com sucesso'
+      message: 'Colletion deletada com sucessooo'
     });
   }
 }
