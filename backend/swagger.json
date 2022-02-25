@@ -1,0 +1,28 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Api de listagem de Todo",
+    "description": "API onde você pode criar, editar e excluir seus todos no seu dia a dia",
+    "contact": {
+      "name": "Italo Ferreira Lopes",
+      "email": "italofl.dex@gmail.com"
+    },
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/user": {
+      "post": {
+        "summary": "Cria um usuario",
+        "description": "Cria um usuario com os dados colocados",
+        "responses": {
+          "201": {
+            "description": "Usuario criado com sucesso"
+          },
+          "400": {
+            "description": "Esse usuário já existe"
+          }
+        }
+      }
+    }
+  }
+}
