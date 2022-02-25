@@ -5,7 +5,7 @@ import { AuthenticateUserGoogleUseCase } from "./AuthenticateUserGoogleUseCase";
 
 export class AuthenticateUserGoogleController {
 
-  async handle(request: Request, response: Response) {
+  async handle(request: Request, response: Response): Promise<Response>{
     
     const { CLIENT_ID, token } = request.params
 

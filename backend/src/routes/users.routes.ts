@@ -6,7 +6,7 @@ import newPasswordUser from "../middleware/newPasswordUser";
 import { CompareCodeController } from "../modules/accounts/useCases/compareCode/CompareCodeController";
 import { CreateUserController } from "../modules/accounts/useCases/createUser/CreateUserController";
 import { EditUserController } from "../modules/accounts/useCases/editUser/EditUserController";
-import { NewPasswordUserController } from "../modules/accounts/useCases/NewPasswordUser/NewPasswordUserController";
+import { NewPasswordUserController } from "../modules/accounts/useCases/alterPasswordUser/NewPasswordUserController";
 import { SendMailForgotPasswordController } from "../modules/accounts/useCases/sendMailForgotPassword/SendMailForgotPasswordController";
 
 const usersRoutes = Router()

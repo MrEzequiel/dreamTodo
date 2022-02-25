@@ -1,12 +1,9 @@
 import { Request, Response } from "express";
 import { NewPasswordUserUseCase } from "./NewPasswordUserUseCase";
 
-
-
-
 export class NewPasswordUserController {
 
-  async handle(request: Request, response: Response){
+  async handle(request: Request, response: Response): Promise<Response>{
 
     const { password, confirmPassword } = request.body
     const { sub } = request.user;
