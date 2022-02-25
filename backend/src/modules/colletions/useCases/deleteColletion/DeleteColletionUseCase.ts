@@ -15,7 +15,7 @@ export class DeleteColletionUseCase {
       throw new AppError("Colletion não encontrada!")
     }
 
-    const verify = await client.colletion.delete({
+    await client.colletion.delete({
       where: {
         id,
       }

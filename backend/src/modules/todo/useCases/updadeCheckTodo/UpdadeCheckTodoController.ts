@@ -5,7 +5,7 @@ import { UpdadeCheckTodoUseCase } from "./UpdadeCheckTodoUseCase";
 
 export class UpdadeCheckTodoController {
 
-  async handle(request: Request, response: Response){
+  async handle(request: Request, response: Response): Promise<Response>{
     
     const { id } = request.params;
     const { complete } = request.body;

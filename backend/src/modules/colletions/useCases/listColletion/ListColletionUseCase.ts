@@ -1,10 +1,11 @@
+import { Colletion } from "@prisma/client";
 import { client } from "../../../../database/client";
 
 
 
 export class ListColletionUseCase {
 
-  async execute(user_id: string){
+  async execute(user_id: string): Promise<Object>{
 
     const colletions = await client.colletion.findMany({
       where: {

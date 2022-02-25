@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { hash } from "bcryptjs";
 import { client } from "../../../../database/client";
 import { AppError } from "../../../../infra/errors/AppError";
@@ -5,7 +6,7 @@ import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 
 export class CreateUserUseCase {
 
-  async execute({name, email, imageURL, password, }: ICreateUserDTO){
+  async execute({name, email, imageURL, password, }: ICreateUserDTO): Promise<User>{
 
     const passwordHash = await hash(password, 8)
 

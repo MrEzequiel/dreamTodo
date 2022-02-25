@@ -11,7 +11,7 @@ interface IRequestLogin {
 
 export class AuthenticateUserUseCase {
 
-  async execute({ email, password }: IRequestLogin){
+  async execute({ email, password }: IRequestLogin): Promise<String>{
 
     const user = await client.user.findFirst({
       where: {

@@ -1,3 +1,4 @@
+import { Todo } from "@prisma/client";
 import { client } from "../../../../database/client";
 import { AppError } from "../../../../infra/errors/AppError";
 
@@ -5,7 +6,7 @@ import { AppError } from "../../../../infra/errors/AppError";
 
 export class UpdadeCheckTodoUseCase {
 
-  async execute(id: string, complete: boolean){
+  async execute(id: string, complete: boolean): Promise<Todo>{
 
     const verifyIfTodoExist = await client.todo.findFirst({
       where: {

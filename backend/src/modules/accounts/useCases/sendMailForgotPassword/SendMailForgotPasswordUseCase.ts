@@ -8,7 +8,7 @@ import { createCode } from '../../../../utils/createCode';
 export class SendMailForgotPasswordUseCase {
 
 
-  async execute(email: string) {
+  async execute(email: string): Promise<Object>{
 
     const verifyUserExist = await client.user.findFirst({
       where: {

@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { client } from "../../../../database/client";
 
 
@@ -9,7 +10,7 @@ interface IRequestEdit {
 
 export class EditUserUseCase {
 
-  async execute({id, name, imageURL}: IRequestEdit){
+  async execute({id, name, imageURL}: IRequestEdit): Promise<User>{
 
     const user = await client.user.findFirst({
       where: {
