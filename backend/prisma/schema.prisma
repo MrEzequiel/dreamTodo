@@ -26,6 +26,8 @@ model Todo {
   complete     Boolean   @default(false)
   id_colletion String
   colletion    Colletion @relation(name: "DAUMTEMPO", fields: [id_colletion], references: [id], onDelete: Cascade)
+  created_at  DateTime @default(now())
+
 
   Colletion Colletion[]
   @@map("todo")
@@ -38,10 +40,11 @@ model Colletion {
   id_todo String?
   todo    Todo?   @relation(fields: [id_todo], references: [id], onDelete: Cascade)
   user    User    @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Todo Todo[] @relation("DAUMTEMPO")
+  created_at  DateTime @default(now())
 
   
 
-  Todo Todo[] @relation("DAUMTEMPO")
   @@map("colletions")
   userId String
 }
