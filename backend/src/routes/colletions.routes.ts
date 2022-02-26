@@ -18,8 +18,10 @@ const listColletionByDateController = new ListColletionByDateController();
 
 colletionRoutes.post('/colletion', ensureAuthenticareUser, createColletionController.handle)
 colletionRoutes.get('/colletion', ensureAuthenticareUser, listColletionController.handle)
+
 colletionRoutes.put('/colletion/:id', ensureAuthenticareUser, editColletionController.handle)
 colletionRoutes.delete('/colletion/:id', ensureAuthenticareUser, deleteColletionController.handle)
+
 colletionRoutes.get('/colletion/ByDate', ensureAuthenticareUser, listColletionByDateController.handle)
 
 

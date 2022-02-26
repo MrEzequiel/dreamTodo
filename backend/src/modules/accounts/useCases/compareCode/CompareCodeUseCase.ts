@@ -14,6 +14,6 @@ export class CompareCodeUseCase {
 
     const isValidCode = await CompareCode(code, token);
 
-    if(!isValidCode) throw new AppError('Codigo incorreto')
+    if(!isValidCode) throw new AppError('Codigo Incorreto')
   }
 }

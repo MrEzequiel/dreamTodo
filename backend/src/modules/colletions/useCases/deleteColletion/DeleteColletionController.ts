@@ -15,7 +15,7 @@ export class DeleteColletionController {
     await deleteColletionUseCase.execute(id);
 
     return response.status(204).json({
-      message: 'Colletion deletada com sucessooo'
+      message: 'Colletion deletada com sucesso'
     });
   }
 }

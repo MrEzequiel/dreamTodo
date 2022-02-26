@@ -9,14 +9,12 @@ export class EditUserController {
 
     const { id } = request.user
 
-    const { 
-      name,
-      imageURL 
-    } = request.body
+    const { name } = request.body
+    const { originalname: imageURL } = request.file;
 
     const editUserUseCase = new EditUserUseCase();
 
-    const edit = editUserUseCase.execute({
+    const edit = await editUserUseCase.execute({
       id,
       name,
       imageURL

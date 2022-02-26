@@ -10,7 +10,7 @@ interface IRequestEdit {
 
 export class EditUserUseCase {
 
-  async execute({id, name, imageURL}: IRequestEdit): Promise<User>{
+  async execute({ id, name, imageURL }: IRequestEdit){
 
     const user = await client.user.findFirst({
       where: {
@@ -25,6 +25,13 @@ export class EditUserUseCase {
       data: {
         name,
         imageURL
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        imageURL: true,
+        created_at: true,
       }
     })
 
