@@ -7,21 +7,932 @@
       "name": "Italo Ferreira Lopes",
       "email": "italofl.dex@gmail.com"
     },
-    "version": "0.0.1"
+    "version": "1.0.0"
   },
   "paths": {
     "/user": {
       "post": {
+        "tags": ["User"],
         "summary": "Cria um usuario",
         "description": "Cria um usuario com os dados colocados",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "imageURL": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": "Usuario criado com sucesso"
+            "description": "Usuario criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           },
           "400": {
             "description": "Esse usuário já existe"
           }
         }
+      },
+
+      "put": {
+        "tags": ["User"],
+        "summary": "Modifica informações do Usuário",
+        "description": "Usuário escolhe algumas informações que deseja mudar.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "efe04502-e5ae-4356-9b27-ffe43aab55e4",
+                  "name": "NameUserEdited",
+                  "email": "Edit@test.com",
+                  "image": "ImageURLEdit"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Login usuário",
+        "description": "Usuário pode fazer login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário logado com sucesso"
+          },
+          "400": {
+            "description": "Email ou senha incorretos"
+          }
+        }
+      }
+    },
+
+    "/forgotPassword": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Envia email para o usuario",
+        "description": "Envia o email para o usuario mudar sua senha",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email enviado com sucesso",
+            "content": {
+              "schema": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "token": "Token"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuario não encontrado, tente novamente."
+          }
+        }
+      }
+    },
+
+    "/compareCode": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Comparar codigo para mudança de senha",
+        "description": "Comparar codigo para mudança de senha do usuario",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "code": "000000"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Codigo correto"
+          },
+          "400": {
+            "description": "Codigo Incorreto"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/newPassword": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Troca de senha",
+        "description": "Usuário escolhe sua nova senha",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }, 
+                  "confirmPassword": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "password": "NovaSenha",
+                "confirmPassword": "NovaSenha"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha Atualizada com sucesso"
+          },
+          "400": {
+            "description": "Senhas fornecidas não conhecidem"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/todo": {
+      "post": {
+        "tags": ["Todo"],
+        "summary": "Criar uma todo",
+        "description": "Usuário criará uma todo dentro de uma colletion",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Todo" 
+              },
+              "example": {
+                "id": "0",
+                "name": "colletionName",
+                "id_todo": "0",
+                "created_at": "Date",
+                "userID": 0
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Todo criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                },
+                "example": {
+                  "id": "0",
+                  "name": "todoName",
+                  "description": "todoDescription",
+                  "complete": false,
+                  "id_colletion": "0"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Todo já existe!"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }  
+    },
+
+    "/todo/{id}": {
+      "put": {
+        "tags": ["Todo"],
+        "summary": "Edita Todo",
+        "description": "Edita algumas informaçoes da todo",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "id": "0",
+                "name": "NovoNomeTodo",
+                "description": "NovaDescrição",
+                "complete": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Editado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                },
+                "example": {
+                  "id": "0",
+                  "name": "NovoNomeTodo",
+                  "description": "NovaDescrição",
+                  "complete": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Todo não existente"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      },
+
+      "delete": {
+        "tags": ["Todo"],
+        "summary": "Deleta uma todo",
+        "description": "Deleta uma todo pelo seu id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todo deletada com sucessoo"
+          },
+          "400": {
+            "description": "Todo não encontrada"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/todo/check/{id}": {
+      "put": {
+        "tags": ["Todo"],
+        "summary": "Edita todo Complete",
+        "description": "Edita se a Todo está completa ou não",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "complete": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "complete": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Editado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                },
+                "example": {
+                  "id": "0",
+                  "name": "NovoNomeTodo",
+                  "description": "NovaDescrição",
+                  "complete": true,
+                  "id_colletion": "0"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Todo não existente"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+    
+    "/todo/{colletionid}": {
+      "get": {
+        "tags": ["Todo"],
+        "summary": "Listagem de Todo",
+        "description": "Listagem de todo pelo id da Colletion",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "colletionid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listagem feita com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "complete": {
+                        "type": "boolean"
+                      },
+                      "id_colletion": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": "0",
+                    "name": "Todo1Name",
+                    "description": "Todo1Description",
+                    "complete": false,
+                    "id_colletion": "0"
+                  },
+                  {
+                    "id": "0",
+                    "name": "Todo2Name",
+                    "description": "Todo2Description",
+                    "complete": false,
+                    "id_colletion": "0"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/todo/listDate/{id}": {
+      "get": {
+        "tags": ["Todo"],
+        "summary": "Lista todo pela data",
+        "description": "Lista as todos de uma colletion pela data de criação",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listagem feita",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "complete": {
+                        "type": "boolean"
+                      },
+                      "id_colletion": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": "0",
+                    "name": "TodoName",
+                    "description": "TodoDescription",
+                    "complete": false,
+                    "id_colletion": "0",
+                    "created_at": "0"
+                  },
+                  {
+                    "id": "1",
+                    "name": "TodoName2",
+                    "description": "TodoDescription2",
+                    "complete": false,
+                    "id_colletion": "1",
+                    "created_at": "1"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/colletion": {
+      "post": {
+        "tags": ["Colletion"],
+        "summary": "Criar uma colletion",
+        "description": "Criar uma colletion que terá todos dentro",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Colletion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Categoria criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Colletion"
+                },
+                "example": {
+                  "id": "0",
+                  "name": "NomeColletion",
+                  "id_todo": null,
+                  "created_at": "Date",
+                  "userId": "0"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Colletion já existente"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      },
+
+      "get": {
+        "tags": ["Colletion"],
+        "summary": "Listagem de Colletion",
+        "description": "Lista todas as colletions do Usuario",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listagem feita",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                },
+                "example": [
+                  [
+                    {
+                      "id": "0",
+                      "name": "ColletionName",
+                      "Todo": [
+                        {
+                          "id": "0",
+                          "name": "TodoName",
+                          "description": "TodoDescription",
+                          "complete": false,
+                          "id_colletion": "0"
+                        },
+                        {
+                          "id": "1",
+                          "name": "TodoName2",
+                          "description": "TodoDescription2",
+                          "complete": false,
+                          "id_colletion": "1"
+                        }
+                      ]
+                    }
+                  ]
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/colletion/{id}": {
+      "put": {
+        "tags": ["Colletion"],
+        "summary": "Edita uma colletion",
+        "description": "Edita a coletion que colocar o id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "name": "NovoNameColletion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mudança Realizada"
+          },
+          "400": {
+            "description": "Colletion não encontrada!"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      },
+
+      "delete": {
+        "tags": ["Colletion"],
+        "summary": "Deleta uma Colletion",
+        "description": "Deleta a colletion que o usuario colocar",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Colletion deletada com sucesso"
+          },
+          "400": {
+            "description": "Colletion não encontrada!"
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    },
+
+    "/colletion/ByDate": {
+      "get": {
+        "tags": ["Colletion"],
+        "summary": "Lista Colletion pela data",
+        "description": "Lista todas as colletions pela data de criação",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listagem feita",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                },
+                "example": [
+                  [
+                    {
+                      "id": "0",
+                      "name": "ColletionName",
+                      "id_todo": null,
+                      "created_at": "0",
+                      "userId": "0"
+                    },
+                    {
+                      "id": "1",
+                      "name": "ColletioName1",
+                      "id_todo": null,
+                      "created_at": "1",
+                      "userId": "1"
+                    }
+                  ]
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Token não valido ou faltando"
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "imageURL": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "0",
+          "name": "TestUser",
+          "email": "Test@test.com",
+          "image": "testImageURL"
+        }
+      },
+      
+      "Todo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "id_colletion": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "0",
+          "name": "todoName",
+          "description": "todoDescription",
+          "complete": false,
+          "id_colletion": "0"
+        }
+      },
+
+      "Colletion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "id_todo": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "colletionName"
+        }
+      }
+    },
+    
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
