@@ -4,11 +4,12 @@
 $ git commit -m "prefix: :emoji: commit description"
 ```
 
-| prefix   | emoji                     | description                        |
-|----------|---------------------------|------------------------------------|
-| feat     | :sparkles: `:sparkles:`   | implementation of a new feature    |
-| refactor | :recycle: `:recycle:`     | code refactoring                   |
-| style    | :nail_care: `:nail_care:` | style changes                      |
-| fix      | :bug: `:bug:`             | bug fix                            |
-| build    | :rocket: `:rocket:`       | dependency update                  |
-| doc      | :books: `:books:`         | creating or changing documentation |
+| prefix   | emoji                     | description                                    |
+|----------|---------------------------|------------------------------------------------|
+| feat     | :sparkles: `:sparkles:`   | implementation of a new feature                |
+| refactor | :recycle: `:recycle:`     | code refactoring                               |
+| style    | :nail_care: `:nail_care:` | style changes                                  |
+| fix      | :bug: `:bug:`             | bug fix                                        |
+| build    | :rocket: `:rocket:`       | dependency update                              |
+| doc      | :books: `:books:`         | creating or changing documentation             |
+| settings | :gear: `:gear:`           | settings files. Like prettierrc, eslintrc, etc |
