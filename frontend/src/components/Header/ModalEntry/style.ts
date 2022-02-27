@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   --speed: 700ms;
-  transition: height var(--speed) ease;
 
   .sign-in-enter {
     width: 90%;
@@ -35,4 +34,6 @@ export const Container = styled.div`
     transform: translateX(130%);
     transition: all var(--speed) ease;
   }
+
+  transition: max-height var(--speed) ease;
 `

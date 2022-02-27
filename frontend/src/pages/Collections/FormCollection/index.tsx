@@ -25,7 +25,7 @@ const FormCollection: React.FC<IProps> = ({
 }) => {
   const { dispatch } = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
-  const collectionName = useForm(true, initial?.title ?? '')
+  const collectionName = useForm({ initialValue: initial?.title })
   const initialEmoji: BaseEmoji = useMemo(
     () => ({
       id: 'muscle',

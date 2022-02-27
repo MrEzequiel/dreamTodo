@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react'
+import { createRef, useCallback, useEffect, useState } from 'react'
 import * as s from './style'
 
 import logo from '../../assets/logo.svg'
@@ -9,36 +9,45 @@ import { FaBars } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
 import { CSSTransition } from 'react-transition-group'
 
+const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
 const Header = () => {
   const navBarRef = createRef<HTMLDivElement>()
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [navBar, setNavBar] = useState<boolean>(false)
 
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ]
   const [date, setDate] = useState(new Date())
 
   function refreshClock() {
     setDate(new Date())
   }
 
+  const formateDate = (date: Date) => {
+    const month = monthNames[date.getMonth()]
+    const day = date.getDate()
+    const year = date.getFullYear()
+    const hours = date.getHours()
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+
+    return `${month} ${day}, ${year} · ${hours}:${minutes}`
+  }
+
   useEffect(() => {
     const timerId = setInterval(refreshClock, 1000)
-    return function cleanup() {
-      clearInterval(timerId)
-    }
+    return () => clearInterval(timerId)
   }, [])
 
   return (
@@ -56,14 +65,7 @@ const Header = () => {
           </div>
 
           <div className="left">
-            <p>
-              {`${
-                monthNames[date.getMonth()]
-              } ${date.getDate()}, ${date.getFullYear()} · ${date.getHours()}:${date
-                .getMinutes()
-                .toString()
-                .padStart(2, '0')}`}
-            </p>
+            <p>{formateDate(date)}</p>
 
             <Button
               onClick={() => setOpenModal(true)}

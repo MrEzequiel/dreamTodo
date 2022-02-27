@@ -6,23 +6,6 @@ export const FormAddTodo = styled.form`
   flex-direction: column;
   gap: 15px;
 
-  input,
-  textarea {
-    padding: 10px;
-    border: 2px solid ${props => props.theme.colors.g2};
-    border-radius: 10px;
-    font-size: 1.6rem;
-    font-weight: 300;
-    color: ${props => props.theme.colors.g7};
-
-    transition: border-color 1s, box-shadow 1s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
-    &:focus {
-      border-color: #11eedd;
-      box-shadow: 0 0 0 4px #29b0a6;
-    }
-  }
-
   .description {
     min-height: 100px;
     max-height: 250px;
@@ -35,7 +18,8 @@ export const FormAddTodo = styled.form`
       margin-bottom: 5px;
     }
 
-    p {
+    p:last-child {
+      margin-top: 5px;
       color: ${props => props.theme.colors.g7};
       font-size: 1.4rem;
     }
@@ -73,4 +57,11 @@ export const ButtonsModal = styled.div`
     border: 2px solid ${props => props.theme.colors.colorPrimary2};
     color: ${props => props.theme.colors.g7};
   }
+`
+
+export const MessageError = styled.p`
+  color: ${props => props.theme.colors.colorError};
+  font-size: 1.4rem;
+  font-weight: 300;
+  margin-top: 4px;
 `

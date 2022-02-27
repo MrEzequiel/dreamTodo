@@ -9,6 +9,7 @@ import * as s from './style'
 import Button from '../../../../../styles/Button'
 import Title from '../../../../../styles/Title'
 import TodoPageContext from '../../../../../context/TodoPageContext'
+import InputStyle, { TextAreaStyle } from '../../../../../styles/Input'
 
 interface Props {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -26,8 +27,11 @@ const ModalForm: React.FC<Props> = ({
   setEdit
 }) => {
   const { id } = useContext(TodoPageContext)
-  const titleField = useForm(true, todo?.name ?? '')
-  const descriptionField = useForm(false, todo?.description ?? '')
+  const titleField = useForm({ required: true, initialValue: todo?.name })
+  const descriptionField = useForm({
+    required: false,
+    initialValue: todo?.description
+  })
 
   function validateLink(value: string): string | null {
     if (!value.trim()) {
@@ -51,7 +55,12 @@ const ModalForm: React.FC<Props> = ({
   const initialValue = todo?.expanded?.links
     ? todo?.expanded?.links.join(';')
     : ''
-  const linkField = useForm(false, initialValue, 'link', validateLink)
+  const linkField = useForm({
+    required: false,
+    initialValue: initialValue,
+    type: 'link',
+    customValidate: validateLink
+  })
 
   const { dispatch } = useContext(TodoContext)
 
@@ -104,8 +113,6 @@ const ModalForm: React.FC<Props> = ({
     }
   }, [setEdit, modalIsOpen, todo, descriptionField, titleField, linkField])
 
-  // TODO: style for fields with error
-  // https://www.bezkoder.com/wp-content/uploads/2021/10/react-form-validation-example-formik-yup.png
   return (
     <Modal
       size="min(500px, 90%)"
@@ -117,16 +124,21 @@ const ModalForm: React.FC<Props> = ({
       </Title>
 
       <s.FormAddTodo onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title *"
-          value={titleField.value}
-          onChange={titleField.handleChange}
-          onBlur={titleField.handleBlur}
-        />
-        {titleField.error && <p>{titleField.error}</p>}
+        <div>
+          <InputStyle
+            type="text"
+            placeholder="Title *"
+            value={titleField.value}
+            onChange={titleField.handleChange}
+            onBlur={titleField.handleBlur}
+            isValid={titleField.isValid}
+          />
+          {titleField.error && (
+            <s.MessageError>{titleField.error}</s.MessageError>
+          )}
+        </div>
 
-        <textarea
+        <TextAreaStyle
           placeholder="Description"
           className="description"
           value={descriptionField.value}
@@ -134,14 +146,18 @@ const ModalForm: React.FC<Props> = ({
         />
 
         <div className="links">
-          <input
+          <InputStyle
             type="text"
             placeholder="Links"
             value={linkField.value}
             onChange={linkField.handleChange}
             onBlur={linkField.handleBlur}
+            isValid={linkField.isValid}
           />
-          {linkField.error && <p>{linkField.error}</p>}
+
+          {linkField.error && (
+            <s.MessageError>{linkField.error}</s.MessageError>
+          )}
 
           <p>Separate links with ; (semicolon)</p>
         </div>

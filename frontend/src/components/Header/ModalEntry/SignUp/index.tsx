@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import createUser from '../../../../functions/User/createUser'
+import useForm from '../../../../hooks/useForm'
 import Button from '../../../../styles/Button'
 import CheckboxStyle from '../../../../styles/CheckboxStyle'
 import InputStyle from '../../../../styles/Input'
@@ -8,34 +10,135 @@ import { Actions, FormStyle, Separator } from '../SignIn/style'
 
 import * as s from './style'
 
-interface ISignOut {
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
+const passwordValidation = (value: string) => {
+  if (!value.trim()) return 'Password is required'
+
+  if (value.length < 6) {
+    return 'Password must be at least 6 characters'
+  } else if (value.length > 20) {
+    return 'Password must be less than 20 characters'
+  }
+
+  return null
 }
 
-const SignOut: React.FC<ISignOut> = ({ setLogin }) => {
+const confirmPasswordValidation = (value: string, password: string) => {
+  if (passwordValidation(password)) return null
+  if (!value.trim()) return 'Confirm password is required'
+
+  if (value !== password) {
+    return 'Confirm password must match password'
+  }
+
+  return null
+}
+
+interface ISignOut {
+  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
+  setRefreshHeight: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
+
+  const emailField = useForm({ type: 'email' })
+  const nameField = useForm({ required: false })
+  const passwordField = useForm({ customValidate: passwordValidation })
+  const confirmPasswordField = useForm({
+    customValidate: (value: string) => {
+      return confirmPasswordValidation(value, passwordField.value)
+    }
+  })
+
+  useEffect(() => {
+    setRefreshHeight(true)
+  }, [
+    setRefreshHeight,
+    passwordField.isValid,
+    confirmPasswordField.isValid,
+    emailField.isValid
+  ])
 
   const handleSuccess = (response: any) => {
     console.log(response)
   }
 
+  const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (
+      !emailField.isValid ||
+      !passwordField.isValid ||
+      !confirmPasswordField.isValid
+    )
+      return
+
+    createUser({
+      email: emailField.value,
+      name: nameField.value,
+      password: passwordField.value
+    }).then(res => {
+      console.log(res)
+    })
+  }
+
   return (
     <s.SignUp>
-      <FormStyle>
-        <InputStyle type="text" placeholder="Name (optional)" />
-        <InputStyle type="text" placeholder="Email" />
+      <FormStyle onSubmit={handleSubmitSignUp}>
+        <InputStyle
+          type="text"
+          placeholder="Name (optional)"
+          onChange={nameField.handleChange}
+          value={nameField.value}
+        />
+
+        <div>
+          <InputStyle
+            type="text"
+            placeholder="Email"
+            onChange={emailField.handleChange}
+            onBlur={emailField.handleBlur}
+            value={emailField.value}
+            isValid={emailField.isValid}
+          />
+          {emailField.error && (
+            <s.MessageError>{emailField.error}</s.MessageError>
+          )}
+        </div>
 
         <label>
           <InputStyle
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
+            onChange={passwordField.handleChange}
+            onBlur={passwordField.handleBlur}
+            value={passwordField.value}
+            isValid={passwordField.isValid}
           />
           <button type="button" onClick={() => setShowPassword(prev => !prev)}>
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
+
+          {passwordField.error && (
+            <s.MessageError>{passwordField.error}</s.MessageError>
+          )}
         </label>
-        <InputStyle placeholder="Confirm password" type="password" />
+
+        <div>
+          <InputStyle
+            placeholder="Confirm password"
+            type="password"
+            onChange={confirmPasswordField.handleChange}
+            onBlur={confirmPasswordField.handleBlur}
+            value={confirmPasswordField.value}
+            isValid={confirmPasswordField.isValid}
+          />
+
+          {confirmPasswordField.error && (
+            <s.MessageError>{confirmPasswordField.error}</s.MessageError>
+          )}
+        </div>
 
         <div className="terms">
           <CheckboxStyle>
