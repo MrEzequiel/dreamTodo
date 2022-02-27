@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import React, { memo, useEffect, useRef, useState } from 'react'
+import { CSSTransition, Transition } from 'react-transition-group'
 import Title from '../../../styles/Title'
 import Modal from '../../Modal'
 import SignIn from './SignIn'
@@ -18,24 +18,40 @@ function formateLogin(text: string) {
 
 const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
   const [login, setLogin] = useState<'sign-in' | 'sign-up'>('sign-in')
+  const [menuHeight, setMenuHeight] = useState<number | undefined>(undefined)
+  const [refreshHeight, setRefreshHeight] = useState<boolean>(false)
 
-  const signInRef = useRef<HTMLDivElement>(null)
-  const signOutRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<any>(null)
+  const signInRef = useRef<HTMLDivElement | null>(null)
+  const signOutRef = useRef<HTMLDivElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
-  const [menuHeight, setMenuHeight] = useState<any>()
-
+  /*
+    refreshHeight is used to force the height of the menu to be recalculated
+    why is this necessary?
+    because the height of the menu is calculated based on the height of the
+    sign-in and sign-up forms, and the height of the sign-in and sign-up forms
+    is dependent on the height of the menu.
+    if the height of the menu is not recalculated, the height of the menu will
+    be the same as the height of the sign-in and sign-up forms, and the height
+    of the sign-in and sign-up forms will be dependent on the height of the menu.
+  */
   useEffect(() => {
-    setMenuHeight(containerRef.current?.firstChild?.offsetHeight)
-  }, [])
-
-  useEffect(() => {
-    if (login === 'sign-in') {
-      setMenuHeight(signInRef.current?.offsetHeight)
-    } else {
-      setMenuHeight(signOutRef.current?.offsetHeight)
+    if (refreshHeight) {
+      if (login === 'sign-in') {
+        setMenuHeight(signInRef.current?.offsetHeight)
+      } else {
+        setMenuHeight(signOutRef.current?.offsetHeight)
+      }
+      setRefreshHeight(false)
     }
-  }, [login])
+  }, [refreshHeight, login])
+
+  useEffect(() => {
+    if (!modalIsOpen) return
+
+    const firstChild = containerRef.current?.firstChild as HTMLDivElement
+    setMenuHeight(firstChild.offsetHeight)
+  }, [modalIsOpen])
 
   return (
     <Modal
@@ -47,13 +63,19 @@ const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
         Sign {formateLogin(login)}
       </Title>
 
-      <s.Container style={{ height: menuHeight ?? 'auto' }} ref={containerRef}>
+      <s.Container
+        style={{ maxHeight: menuHeight ?? 'auto' }}
+        ref={containerRef}
+      >
         <CSSTransition
-          nodeRef={signInRef}
           in={login === 'sign-in'}
+          nodeRef={signInRef}
           timeout={700}
           classNames="sign-in"
           unmountOnExit
+          onEnter={() => {
+            setMenuHeight(signInRef.current?.offsetHeight)
+          }}
         >
           <div className="sign-in" ref={signInRef}>
             <SignIn setLogin={setLogin} />
@@ -66,9 +88,12 @@ const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
           timeout={700}
           classNames="sign-up"
           unmountOnExit
+          onEnter={() => {
+            setMenuHeight(signInRef.current?.offsetHeight)
+          }}
         >
           <div className="sign-up" ref={signOutRef}>
-            <SignOut setLogin={setLogin} />
+            <SignOut setLogin={setLogin} setRefreshHeight={setRefreshHeight} />
           </div>
         </CSSTransition>
       </s.Container>
@@ -76,4 +101,4 @@ const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
   )
 }
 
-export default Login
+export default memo(Login)

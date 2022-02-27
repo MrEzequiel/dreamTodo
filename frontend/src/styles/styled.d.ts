@@ -9,6 +9,7 @@ declare module 'styled-components' {
     colors: {
       colorPrimary: string
       colorPrimary2: string
+      colorError: string
       g1: string
       g2: string
       g3: string

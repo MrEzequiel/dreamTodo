@@ -6,6 +6,7 @@ export const SignUp = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 1.4rem;
   }
 
   .sign-google {
@@ -15,4 +16,11 @@ export const SignUp = styled.div`
     gap: 10px;
     text-transform: none;
   }
+`
+
+export const MessageError = styled.div`
+  color: ${props => props.theme.colors.colorError};
+  font-size: 1.2rem;
+  margin-top: 4px;
+  font-weight: 300;
 `
