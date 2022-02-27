@@ -5,7 +5,7 @@
 <p align="center">
   <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="#-autor">Autores</a>&nbsp;&nbsp;
+  <a href="#-autores">Autores</a>&nbsp;&nbsp;
 </p>
 <br>
 <hr>
