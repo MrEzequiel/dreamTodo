@@ -10,9 +10,24 @@
 - [Desenvolvedor](#-desenvolvedor)
 
 
-# 📒 Documentatação
+# 📒 Documentação
 
-A documentação desse projeto, foi feita com o swagger, e mostra todas as rotas, sinta-se a vontade para testa-las e entender melhor a api. Para entrar nela, lembre-se de estar rodando a aplicação em sua maquina, com o comando "yarn dev", clique no link: [Documentation](http://localhost:3333/api-docs/)
+A documentação desse projeto, foi feita com o swagger, e mostra todas as rotas, sinta-se a vontade para testa-las e entender melhor a api. Para entrar nela, lembre-se de estar rodando a aplicação em sua maquina. 
+
+```bash
+  ## Instruções
+  Tenha certeza da applicação estar rodando.
+
+  Executando o comando "yarn dev" dentro da pasta backend
+
+  Entre no seu browser (ex:google), e entre no link 
+  http://localhost:3333/api-docs.
+
+  Ou aperte no "Documentation"
+
+```
+
+ [Documentation](http://localhost:3333/api-docs/)
 
 
 <h1 align='center'>

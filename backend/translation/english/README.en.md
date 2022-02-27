@@ -9,7 +9,23 @@
 
 # 📒 Documentation
 
-The documentation of this project, was done with swagger, shows all the routes, feel free to test and better understand the api. To enter it, remember to be running the application on your machine, with the command "yarn dev", click on the link: [Documentation](http://localhost:3333/api-docs/)
+The documentation of this project, was done with swagger, shows all the routes, feel free to test and better understand the api. To enter it, remember to be running the application on your machine.
+
+```bash
+  ## Instructions
+  Make sure the application is running.
+
+  Running "yarn dev" command inside backend folder
+
+  Enter your browser (ex: google), and enter the link
+  http://localhost:3333/api-docs.
+
+  Or click on "Documentation"
+
+```
+
+ [Documentation](http://localhost:3333/api-docs/)
+ 
 
 
 <h1 align='center'>
