@@ -8,6 +8,6 @@ const authenticateUserController = new AuthenticateUserController()
 const authenticateUserGoogleController = new AuthenticateUserGoogleController()
 
 authRoutes.post('/login', authenticateUserController.handle);
-authRoutes.post('/login/google/CLIENT_ID/token', authenticateUserGoogleController.handle);
+authRoutes.post('/login/google/:CLIENT_ID/:token', authenticateUserGoogleController.handle);
 
 export { authRoutes }
