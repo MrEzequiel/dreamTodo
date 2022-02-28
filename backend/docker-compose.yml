@@ -12,7 +12,7 @@ services:
             - POSTGRES_PASSWORD=todo
             - POSTGRES_DB=todo
         volumes: 
-            - todo-db:/etc/todos  
+            - pgdata:/data/postgres  
 
 
 

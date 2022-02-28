@@ -13,8 +13,6 @@ export class AuthenticateUserGoogleUseCase {
       audience: CLIENT_ID 
     });
 
-    
-
     const payload = ticket.getPayload();
 
     return { payload }
