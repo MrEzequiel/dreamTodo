@@ -7,16 +7,16 @@ export class AuthenticateUserGoogleUseCase {
 
     const client = new OAuth2Client()
 
-    async function verify() {
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: CLIENT_ID 
-      });
-
-      const payload = ticket.getPayload();
-      const userid = payload['sub']
-    }
     
-    verify().catch(console.error);
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: CLIENT_ID 
+    });
+
+    
+
+    const payload = ticket.getPayload();
+
+    return { payload }
   }
 }
