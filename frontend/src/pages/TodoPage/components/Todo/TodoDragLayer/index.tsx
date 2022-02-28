@@ -40,6 +40,8 @@ const TodoDragLayer: React.FC = () => {
     }
   }
 
+  if (!obj.item) return null
+
   return (
     <CSSTransition
       in={
