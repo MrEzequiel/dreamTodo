@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { CSSTransition, Transition } from 'react-transition-group'
+import { ModalContext } from '../../../context/ModalContext'
 import Title from '../../../styles/Title'
 import Modal from '../../Modal'
 import SignIn from './SignIn'
@@ -54,50 +55,54 @@ const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
   }, [modalIsOpen])
 
   return (
-    <Modal
-      size="min(380px, 90%)"
-      setCloseModal={setModal}
-      modalIsOpen={modalIsOpen}
+    <ModalContext.Provider
+      value={{ isOpen: modalIsOpen, setIsOpen: setModal, login, setLogin }}
     >
-      <Title size="2.8rem" separator style={{ marginBottom: '20px' }}>
-        Sign {formateLogin(login)}
-      </Title>
-
-      <s.Container
-        style={{ maxHeight: menuHeight ?? 'auto' }}
-        ref={containerRef}
+      <Modal
+        size="min(380px, 90%)"
+        setCloseModal={setModal}
+        modalIsOpen={modalIsOpen}
       >
-        <CSSTransition
-          in={login === 'sign-in'}
-          nodeRef={signInRef}
-          timeout={700}
-          classNames="sign-in"
-          unmountOnExit
-          onEnter={() => {
-            setMenuHeight(signInRef.current?.offsetHeight)
-          }}
-        >
-          <div className="sign-in" ref={signInRef}>
-            <SignIn setLogin={setLogin} />
-          </div>
-        </CSSTransition>
+        <Title size="2.8rem" separator style={{ marginBottom: '20px' }}>
+          Sign {formateLogin(login)}
+        </Title>
 
-        <CSSTransition
-          nodeRef={signOutRef}
-          in={login === 'sign-up'}
-          timeout={700}
-          classNames="sign-up"
-          unmountOnExit
-          onEnter={() => {
-            setMenuHeight(signInRef.current?.offsetHeight)
-          }}
+        <s.Container
+          style={{ maxHeight: menuHeight ?? 'auto' }}
+          ref={containerRef}
         >
-          <div className="sign-up" ref={signOutRef}>
-            <SignOut setLogin={setLogin} setRefreshHeight={setRefreshHeight} />
-          </div>
-        </CSSTransition>
-      </s.Container>
-    </Modal>
+          <CSSTransition
+            in={login === 'sign-in'}
+            nodeRef={signInRef}
+            timeout={700}
+            classNames="sign-in"
+            unmountOnExit
+            onEnter={() => {
+              setMenuHeight(signInRef.current?.offsetHeight)
+            }}
+          >
+            <div className="sign-in" ref={signInRef}>
+              <SignIn />
+            </div>
+          </CSSTransition>
+
+          <CSSTransition
+            nodeRef={signOutRef}
+            in={login === 'sign-up'}
+            timeout={700}
+            classNames="sign-up"
+            unmountOnExit
+            onEnter={() => {
+              setMenuHeight(signInRef.current?.offsetHeight)
+            }}
+          >
+            <div className="sign-up" ref={signOutRef}>
+              <SignOut setRefreshHeight={setRefreshHeight} />
+            </div>
+          </CSSTransition>
+        </s.Container>
+      </Modal>
+    </ModalContext.Provider>
   )
 }
 

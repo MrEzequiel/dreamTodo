@@ -1,16 +1,14 @@
 import React, { useCallback, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import { useModalContext } from '../../../../context/ModalContext'
 import Button from '../../../../styles/Button'
 import InputStyle from '../../../../styles/Input'
 
 import * as s from './style'
 
-interface ISignIn {
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
-}
-
-const SignIn: React.FC<ISignIn> = ({ setLogin }) => {
+const SignIn: React.FC = () => {
+  const { setLogin } = useModalContext()
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
 

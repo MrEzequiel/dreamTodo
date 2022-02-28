@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import { useModalContext } from '../../../../context/ModalContext'
 import { useUser } from '../../../../context/UserContext'
 import {
   createUser,
@@ -38,11 +39,11 @@ const confirmPasswordValidation = (value: string, password: string) => {
 }
 
 interface ISignOut {
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
   setRefreshHeight: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
+const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
+  const { setLogin } = useModalContext()
   const { signIn } = useUser()
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
