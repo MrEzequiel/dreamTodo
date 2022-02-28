@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import { useUser } from '../../../../context/UserContext'
 import {
   createUser,
   loginWithGoogle
@@ -42,6 +43,7 @@ interface ISignOut {
 }
 
 const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
+  const { signIn } = useUser()
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
 
@@ -66,7 +68,10 @@ const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
   const handleSuccess = (response: any) => {
     console.log(response)
     loginWithGoogle(response.tokenId).then(res => {
-      console.log(res)
+      signIn({
+        ...res.payload,
+        token: response.tokenId
+      })
     })
   }
 
