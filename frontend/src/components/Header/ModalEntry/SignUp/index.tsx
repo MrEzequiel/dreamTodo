@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
-import createUser from '../../../../functions/User/createUser'
+import {
+  createUser,
+  loginWithGoogle
+} from '../../../../functions/User/createUser'
 import useForm from '../../../../hooks/useForm'
 import Button from '../../../../styles/Button'
 import CheckboxStyle from '../../../../styles/CheckboxStyle'
@@ -62,6 +65,9 @@ const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
 
   const handleSuccess = (response: any) => {
     console.log(response)
+    loginWithGoogle(response.tokenId).then(res => {
+      console.log(res)
+    })
   }
 
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,11 +80,16 @@ const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
     )
       return
 
-    createUser({
-      email: emailField.value,
-      name: nameField.value,
-      password: passwordField.value
-    }).then(res => {
+    const formData = new FormData()
+    formData.append('name', nameField.value)
+    formData.append('email', emailField.value)
+    formData.append('password', passwordField.value)
+    formData.append(
+      'imageURL',
+      'https://d2slcw3kip6qmk.cloudfront.net/marketing/blogs/tech/base64-header@2x.png'
+    )
+
+    createUser(formData).then(res => {
       console.log(res)
     })
   }
