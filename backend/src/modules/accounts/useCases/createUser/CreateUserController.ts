@@ -10,8 +10,6 @@ export class CreateUserController {
     const { name, email, password } = request.body;
     const { originalname: imageURL } = request.file;
 
-    console.log(imageURL);
-
     const createUserUseCase = new CreateUserUseCase();
 
     const user = await createUserUseCase.execute({
