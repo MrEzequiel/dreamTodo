@@ -85,10 +85,8 @@ const FormCollection: React.FC<IProps> = ({
   }, [showForm, collectionName, initialEmoji, initial])
 
   useEffect(() => {
-    const interval = setInterval(() => inputEl.current?.focus(), 300)
-
-    return () => clearInterval(interval)
-  }, [])
+    if (showForm) inputEl.current?.focus()
+  }, [inputEl, showForm])
 
   return (
     <Modal
@@ -119,7 +117,7 @@ const FormCollection: React.FC<IProps> = ({
 
         {emoji && (
           <Picker
-            set="apple"
+            native
             title="Pick your emoji"
             emoji="point_up"
             theme="dark"
