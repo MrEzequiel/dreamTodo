@@ -5,13 +5,15 @@ import { routes } from './routes/routes';
 import 'dotenv';
 import SwaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
+import cors from 'cors';
 
 
 
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+app.use(cors())
 app.use(routes);
 
 
