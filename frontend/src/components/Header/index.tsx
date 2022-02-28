@@ -5,12 +5,16 @@ import logo from '../../assets/logo.svg'
 import { NavLink } from 'react-router-dom'
 import Login from './ModalEntry'
 import Button from '../../styles/Button'
-import { FaBars } from 'react-icons/fa'
+import { FaBars, FaDoorClosed, FaUser, FaUserCog } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
 import { CSSTransition } from 'react-transition-group'
 import Clock from './Clock'
+import { useUser } from '../../context/UserContext'
+import Dropdown from '../Dropdown'
+import { DropdownItens } from '../Dropdown/style'
 
 const Header = () => {
+  const { user } = useUser()
   const navBarRef = createRef<HTMLDivElement>()
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [navBar, setNavBar] = useState<boolean>(false)
@@ -32,13 +36,41 @@ const Header = () => {
           <div className="left">
             <Clock />
 
-            <Button
-              onClick={() => setOpenModal(true)}
-              outlined
-              className="button-login"
-            >
-              Login
-            </Button>
+            {!user || Object.keys(user).length === 0 ? (
+              <Button
+                onClick={() => setOpenModal(true)}
+                outlined
+                className="button-login"
+              >
+                Login
+              </Button>
+            ) : (
+              <>
+                <s.ProfilePill>
+                  <s.ProfilePillImage>
+                    {user.picture ? (
+                      <img src={user.picture} alt="profile" />
+                    ) : (
+                      <FaUser />
+                    )}
+                  </s.ProfilePillImage>
+
+                  <s.ProfilePillText>{user.name}</s.ProfilePillText>
+
+                  <Dropdown>
+                    <DropdownItens>
+                      <FaUserCog />
+                      Settings
+                    </DropdownItens>
+
+                    <DropdownItens>
+                      <FaDoorClosed />
+                      Logout
+                    </DropdownItens>
+                  </Dropdown>
+                </s.ProfilePill>
+              </>
+            )}
           </div>
         </s.HeaderStyle>
       </s.HeaderWrapper>

@@ -66,7 +66,6 @@ const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
   ])
 
   const handleSuccess = (response: any) => {
-    console.log(response)
     loginWithGoogle(response.tokenId).then(res => {
       signIn({
         ...res.payload,

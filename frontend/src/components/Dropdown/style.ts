@@ -61,7 +61,7 @@ export const DropdownStyle = styled.div`
 
   transform-origin: top center;
 
-  width: 100px;
+  width: auto;
   border-radius: ${props => props.theme.borderRadius};
   background: ${props => props.theme.colors.g1};
 `
@@ -71,13 +71,13 @@ export const DropdownItens = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
 
   width: 100%;
   height: 50px;
   font-size: 1.4rem;
   font-weight: 300;
+  padding: 0 8px;
   transition: background 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
   & + div::before {
@@ -85,6 +85,9 @@ export const DropdownItens = styled.div`
     content: '';
     position: absolute;
     top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 8px;
     width: 85%;
     height: 1px;
     display: block;

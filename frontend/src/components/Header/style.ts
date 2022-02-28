@@ -56,3 +56,45 @@ export const ButtonCollections = styled.button`
     color: ${props => props.theme.colors.g6};
   }
 `
+
+export const ProfilePill = styled.div`
+  margin-left: 10px;
+  border-radius: 1000px;
+  background: ${props => props.theme.colors.g2};
+  padding: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 250px;
+`
+
+export const ProfilePillImage = styled.picture`
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  border: ${props => props.theme.colors.colorPrimary} solid 2px;
+  border-radius: 50%;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`
+
+export const ProfilePillText = styled.p`
+  font-weight: 300;
+  font-size: 1.4rem;
+  margin: 0 2px 0 4px;
+
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`
