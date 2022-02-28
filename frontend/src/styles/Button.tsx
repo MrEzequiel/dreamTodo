@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import ButtonStyle from './ButtonStyle'
+import { VscLoading } from 'react-icons/vsc'
 
 interface IButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   outlined?: boolean
+  loading?: boolean
   type?: string
 }
 
 const Button: React.FC<IButtonProps> = ({
   outlined = false,
+  loading = false,
   type = 'button',
   children,
   ...props
@@ -29,8 +32,9 @@ const Button: React.FC<IButtonProps> = ({
       {...props}
       onMouseDown={() => setWave(true)}
       wave={wave}
+      isLoading={loading}
     >
-      {children}
+      {loading ? <VscLoading className="loading-indicator" /> : children}
       <span className="wave"></span>
     </ButtonStyle>
   )

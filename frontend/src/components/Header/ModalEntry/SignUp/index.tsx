@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
-import createUser from '../../../../functions/User/createUser'
+import { useModalContext } from '../../../../context/ModalContext'
+import { useUser } from '../../../../context/UserContext'
+import {
+  createUser,
+  loginWithGoogle
+} from '../../../../functions/User/createUser'
 import useForm from '../../../../hooks/useForm'
 import Button from '../../../../styles/Button'
 import CheckboxStyle from '../../../../styles/CheckboxStyle'
@@ -34,11 +39,13 @@ const confirmPasswordValidation = (value: string, password: string) => {
 }
 
 interface ISignOut {
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
   setRefreshHeight: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
+const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
+  const { setLogin } = useModalContext()
+  const { signIn } = useUser()
+  const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
 
@@ -61,31 +68,49 @@ const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
   ])
 
   const handleSuccess = (response: any) => {
-    console.log(response)
+    loginWithGoogle(response.tokenId).then(res => {
+      signIn({
+        ...res.payload,
+        token: response.tokenId
+      })
+    })
   }
 
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.target as any
+    const file = form.firstChild as any
 
-    if (
-      !emailField.isValid ||
-      !passwordField.isValid ||
-      !confirmPasswordField.isValid
-    )
-      return
+    // if (
+    //   emailField.isValid ||
+    //   passwordField.isValid ||
+    //   confirmPasswordField.isValid
+    // )
+    //   return
 
-    createUser({
-      email: emailField.value,
-      name: nameField.value,
-      password: passwordField.value
-    }).then(res => {
-      console.log(res)
-    })
+    console.log(file.files[0])
+
+    setLoading(true)
+    const formData = new FormData()
+    formData.append('name', nameField.value)
+    formData.append('email', emailField.value)
+    formData.append('password', passwordField.value)
+    formData.append('imageURL', file.files[0])
+
+    createUser(formData)
+      .then(res => {
+        console.log(res)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
     <s.SignUp>
       <FormStyle onSubmit={handleSubmitSignUp}>
+        <InputStyle type="file" />
+
         <InputStyle
           type="text"
           placeholder="Name (optional)"
@@ -147,7 +172,7 @@ const SignOut: React.FC<ISignOut> = ({ setLogin, setRefreshHeight }) => {
           Accepted the Terms and Conditions
         </div>
 
-        <Button outlined={false} type="submit">
+        <Button outlined={false} type="submit" loading={loading}>
           Sign Up
         </Button>
       </FormStyle>

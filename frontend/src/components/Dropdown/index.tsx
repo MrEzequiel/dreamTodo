@@ -6,10 +6,10 @@ import { CSSTransition } from 'react-transition-group'
 import * as s from './style'
 
 interface Props {
-  callbackClick: (arg: 'edit' | 'remove') => void
+  callbackClick?: (arg: 'edit' | 'remove') => void
 }
 
-const Dropdown: React.FC<Props> = ({ callbackClick }) => {
+const Dropdown: React.FC<Props> = ({ callbackClick, children }) => {
   const DropdownItemEl = useRef<HTMLDivElement>(null)
   const DropdownEl = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
@@ -35,12 +35,12 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
   }, [open])
 
   function handleClickRemove() {
-    callbackClick('remove')
+    callbackClick?.('remove')
     setOpen(false)
   }
 
   function handleClickEdit() {
-    callbackClick('edit')
+    callbackClick?.('edit')
     setOpen(false)
   }
 
@@ -58,15 +58,21 @@ const Dropdown: React.FC<Props> = ({ callbackClick }) => {
         unmountOnExit
       >
         <s.DropdownStyle ref={DropdownItemEl}>
-          <s.DropdownItens onClick={handleClickEdit}>
-            <FaEdit />
-            edit
-          </s.DropdownItens>
+          {!children ? (
+            <>
+              <s.DropdownItens onClick={handleClickEdit}>
+                <FaEdit />
+                edit
+              </s.DropdownItens>
 
-          <s.DropdownItens onClick={handleClickRemove}>
-            <FaTrash />
-            remove
-          </s.DropdownItens>
+              <s.DropdownItens onClick={handleClickRemove}>
+                <FaTrash />
+                remove
+              </s.DropdownItens>
+            </>
+          ) : (
+            children
+          )}
         </s.DropdownStyle>
       </CSSTransition>
     </s.DropdownWrapper>
