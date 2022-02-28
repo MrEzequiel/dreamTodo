@@ -45,6 +45,7 @@ interface ISignOut {
 const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
   const { setLogin } = useModalContext()
   const { signIn } = useUser()
+  const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
 
@@ -77,31 +78,39 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
 
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.target as any
+    const file = form.firstChild as any
 
-    if (
-      !emailField.isValid ||
-      !passwordField.isValid ||
-      !confirmPasswordField.isValid
-    )
-      return
+    // if (
+    //   emailField.isValid ||
+    //   passwordField.isValid ||
+    //   confirmPasswordField.isValid
+    // )
+    //   return
 
+    console.log(file.files[0])
+
+    setLoading(true)
     const formData = new FormData()
     formData.append('name', nameField.value)
     formData.append('email', emailField.value)
     formData.append('password', passwordField.value)
-    formData.append(
-      'imageURL',
-      'https://d2slcw3kip6qmk.cloudfront.net/marketing/blogs/tech/base64-header@2x.png'
-    )
+    formData.append('imageURL', file.files[0])
 
-    createUser(formData).then(res => {
-      console.log(res)
-    })
+    createUser(formData)
+      .then(res => {
+        console.log(res)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
     <s.SignUp>
       <FormStyle onSubmit={handleSubmitSignUp}>
+        <InputStyle type="file" />
+
         <InputStyle
           type="text"
           placeholder="Name (optional)"
@@ -163,7 +172,7 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
           Accepted the Terms and Conditions
         </div>
 
-        <Button outlined={false} type="submit">
+        <Button outlined={false} type="submit" loading={loading}>
           Sign Up
         </Button>
       </FormStyle>

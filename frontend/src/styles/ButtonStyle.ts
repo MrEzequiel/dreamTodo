@@ -3,6 +3,7 @@ import { FilledButton, OutlinedButton } from './LayoutComponents'
 
 interface IButtonProps {
   outlined: boolean
+  isLoading: boolean
   wave?: boolean
 }
 
@@ -17,6 +18,17 @@ const ButtonStyle = styled.button<IButtonProps>`
   padding: 8px 16px;
   height: 40px;
   font-size: 1.6rem;
+
+  ${props =>
+    props.isLoading &&
+    css`
+      cursor: progress;
+      filter: opacity(0.6) !important;
+
+      &:hover {
+        transform: none !important;
+      }
+    `}
 
   transition: all 700ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
@@ -48,6 +60,19 @@ const ButtonStyle = styled.button<IButtonProps>`
         animation: pulse 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
         box-shadow: 0 0 0 1.3em rgba(255, 255, 255, 0);
       `}
+  }
+
+  .loading-indicator {
+    @keyframes rotate-loader {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    animation: rotate-loader 900ms cubic-bezier(1, 0.39, 0.17, 1) infinite;
   }
 `
 
