@@ -6,7 +6,6 @@ import crypto from 'crypto';
 
 export default {
   dest,
-
   storage: multer.diskStorage({
     destination: dest,
     filename: (req, file, callback) => {
@@ -16,5 +15,5 @@ export default {
 
       callback(null, filename);
     }
-  }), 
+  }),
 }

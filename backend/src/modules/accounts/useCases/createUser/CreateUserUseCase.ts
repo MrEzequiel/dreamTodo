@@ -9,7 +9,7 @@ import fetch from 'node-fetch'
 
 export class CreateUserUseCase {
 
-  async execute({name, email, imageURL, password, }: ICreateUserDTO): Promise<User>{
+  async execute({name, email, imageURL, password, imageProfile }: ICreateUserDTO): Promise<User>{
 
     const passwordHash = await hash(password, 8)
 
@@ -28,7 +28,8 @@ export class CreateUserUseCase {
         name,
         email,
         imageURL,
-        password: passwordHash
+        password: passwordHash,
+        imageProfile
       }
     })
 
