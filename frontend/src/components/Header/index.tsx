@@ -5,16 +5,19 @@ import logo from '../../assets/logo.svg'
 import { NavLink } from 'react-router-dom'
 import Login from './ModalEntry'
 import Button from '../../styles/Button'
-import { FaBars, FaDoorClosed, FaUser, FaUserCog } from 'react-icons/fa'
+import { FaBars, FaDoorClosed, FaUserCog } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
 import { CSSTransition } from 'react-transition-group'
 import Clock from './Clock'
 import { useUser } from '../../context/UserContext'
 import Dropdown from '../Dropdown'
 import { DropdownItens } from '../Dropdown/style'
+import RenderImageUser from '../RenderImageUser'
 
 const Header = () => {
-  const { user } = useUser()
+  const {
+    user: { user }
+  } = useUser()
   const navBarRef = createRef<HTMLDivElement>()
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [navBar, setNavBar] = useState<boolean>(false)
@@ -47,13 +50,18 @@ const Header = () => {
             ) : (
               <>
                 <s.ProfilePill>
-                  <s.ProfilePillImage>
-                    {user.picture ? (
-                      <img src={user.picture} alt="profile" />
-                    ) : (
-                      <FaUser />
-                    )}
-                  </s.ProfilePillImage>
+                  <RenderImageUser
+                    height={35}
+                    width={35}
+                    alt="user image"
+                    fashion={{
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      border: '2px solid #11EEDD',
+                      flexShrink: 0
+                    }}
+                    url={user?.picture ? user.picture : user.imageURL}
+                  />
 
                   <s.ProfilePillText>{user.name}</s.ProfilePillText>
 
