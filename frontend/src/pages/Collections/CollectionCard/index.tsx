@@ -45,9 +45,6 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
     return false
   }
 
-  console.log(collections)
-  console.log(isUser)
-
   return (
     <>
       {verificationCollectionIsEmpty() && (

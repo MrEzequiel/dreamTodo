@@ -1,6 +1,7 @@
 import api from '../../services/api'
+import endpoints from '../../services/endpoints'
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID_GOOGLE
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID_GOOGLE as string
 
 interface ICreateUserData {
   email: string
@@ -10,11 +11,13 @@ interface ICreateUserData {
 }
 
 export const createUser = async (data: FormData) => {
-  const response = await api.post('/user', data)
+  const response = await api.post(endpoints.user.create, data)
   return response.data
 }
 
 export const loginWithGoogle = async (token: string) => {
-  const response = await api.post(`/login/google/${CLIENT_ID}/${token}`)
+  const response = await api.post(
+    endpoints.user.loginWithGoogle(CLIENT_ID, token)
+  )
   return response.data
 }
