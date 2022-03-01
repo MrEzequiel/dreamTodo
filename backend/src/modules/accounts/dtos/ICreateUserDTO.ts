@@ -7,5 +7,6 @@ export interface ICreateUserDTO {
   email: string    
   password: string  
   imageURL?: string   
+  imageProfile?: string
   created_at?: Date
 }
