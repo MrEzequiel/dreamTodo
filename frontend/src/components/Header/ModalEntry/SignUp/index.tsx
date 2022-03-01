@@ -110,12 +110,13 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // if (
-    //   emailField.isValid ||
-    //   passwordField.isValid ||
-    //   confirmPasswordField.isValid
-    // )
-    //   return
+    if (
+      !emailField.isValid ||
+      !passwordField.isValid ||
+      !confirmPasswordField.isValid
+    ) {
+      return
+    }
 
     setLoading(true)
     const formData = new FormData()
@@ -207,13 +208,6 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
           {confirmPasswordField.error && (
             <s.MessageError>{confirmPasswordField.error}</s.MessageError>
           )}
-        </div>
-
-        <div className="terms">
-          <CheckboxStyle>
-            <input type="checkbox" />
-          </CheckboxStyle>
-          Accepted the Terms and Conditions
         </div>
 
         <Button outlined={false} type="submit" loading={loading}>
