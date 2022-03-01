@@ -16,13 +16,13 @@ const editColletionController = new EditColletionController();
 const deleteColletionController = new DeleteColletionController();
 const listColletionByDateController = new ListColletionByDateController();
 
-colletionRoutes.post('/colletion', ensureAuthenticareUser, createColletionController.handle)
-colletionRoutes.get('/colletion', ensureAuthenticareUser, listColletionController.handle)
+colletionRoutes.post('/collection', ensureAuthenticareUser, createColletionController.handle)
+colletionRoutes.get('/collection', ensureAuthenticareUser, listColletionController.handle)
 
-colletionRoutes.put('/colletion/:id', ensureAuthenticareUser, editColletionController.handle)
-colletionRoutes.delete('/colletion/:id', ensureAuthenticareUser, deleteColletionController.handle)
+colletionRoutes.put('/collection/:id', ensureAuthenticareUser, editColletionController.handle)
+colletionRoutes.delete('/collection/:id', ensureAuthenticareUser, deleteColletionController.handle)
 
-colletionRoutes.get('/colletion/ByDate', ensureAuthenticareUser, listColletionByDateController.handle)
+colletionRoutes.get('/collection/ByDate', ensureAuthenticareUser, listColletionByDateController.handle)
 
 
 
