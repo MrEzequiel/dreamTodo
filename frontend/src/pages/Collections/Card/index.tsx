@@ -56,7 +56,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
     <>
       <s.CardWrapper>
         <div className="upper">
-          <Emoji emoji={collection.emoji} size={50} />
+          <Emoji emoji={collection.emoji} size={50} native />
 
           <Dropdown callbackClick={handleClickDropdown} />
         </div>

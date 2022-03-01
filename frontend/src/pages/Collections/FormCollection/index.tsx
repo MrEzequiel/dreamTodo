@@ -100,7 +100,7 @@ const FormCollection: React.FC<IProps> = ({
           className="select-emoji"
           onClick={() => setEmoji(prev => !prev)}
         >
-          <Emoji emoji={selectEmoji} size={18} tooltip />
+          <Emoji emoji={selectEmoji} size={18} native />
         </button>
 
         {emoji && (
