@@ -10,14 +10,15 @@ export class EditUserController {
     const { id } = request.user
 
     const { name } = request.body
-    const { originalname: imageURL } = request.file;
+    const { filename: imageProfile } = request.file;
 
     const editUserUseCase = new EditUserUseCase();
 
     const edit = await editUserUseCase.execute({
       id,
       name,
-      imageURL
+      imageURL:`${process.env.APP_URL}/files/${imageProfile}`,
+      imageProfile
     })
 
     return response.json(edit)
