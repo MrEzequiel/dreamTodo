@@ -8,7 +8,9 @@ const darkTheme: DefaultTheme = {
   colors: {
     colorPrimary: '#11EEDD',
     colorPrimary2: '#29B0A6',
-    colorError: '#dc3545',
+    colorError: '#e43e3d',
+    colorWarning: '#e3a007',
+    colorInfo: '#9493fb',
     g1: '#0E0E0E',
     g2: '#1A1A1A',
     g3: '#2E2E2E',

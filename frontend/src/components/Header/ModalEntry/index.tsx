@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { CSSTransition, Transition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 import { ModalContext } from '../../../context/ModalContext'
 import Title from '../../../styles/Title'
 import Modal from '../../Modal'

@@ -1,4 +1,4 @@
-import { createRef, useCallback, useEffect, useState } from 'react'
+import { createRef, useState } from 'react'
 import * as s from './style'
 
 import logo from '../../assets/logo.svg'
