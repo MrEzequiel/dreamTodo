@@ -3,6 +3,7 @@ import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
 import { useModalContext } from '../../../../context/ModalContext'
 import { useNotification } from '../../../../context/NotificationContext'
+import { useUser } from '../../../../context/UserContext'
 import { loginUser } from '../../../../functions/User/loginUser'
 import useForm from '../../../../hooks/useForm'
 import Button from '../../../../styles/Button'
@@ -16,8 +17,10 @@ interface ISignIn {
 }
 
 const SignIn: React.FC<ISignIn> = ({ setRefreshHeight }) => {
-  const { setLogin } = useModalContext()
+  const { setLogin, setIsOpen } = useModalContext()
   const { createNotification } = useNotification()
+  const { signIn } = useUser()
+
   const [loding, setLoding] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
@@ -34,7 +37,8 @@ const SignIn: React.FC<ISignIn> = ({ setRefreshHeight }) => {
     setLoding(true)
     loginUser(emailField.value, passwordField.value)
       .then(response => {
-        console.log(response)
+        signIn(response.token)
+        setIsOpen(false)
       })
       .catch(err => {
         createNotification('error', `Email or password incorrect`)

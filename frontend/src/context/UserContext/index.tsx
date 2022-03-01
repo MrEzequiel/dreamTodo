@@ -2,25 +2,28 @@ import { createContext, FC, useCallback, useContext, useState } from 'react'
 import Cookies from 'js-cookie'
 
 interface IUser {
-  at_hash: string
-  aud: string
-  azp: string
-  email: string
-  email_verified: boolean
-  exp: number
-  family_name: string
-  given_name: string
-  iat: number
-  iss: string
-  jti: string
-  locale: string
-  name: string
-  picture: string
-  sub: string
-}
+  user: {
+    at_hash: string
+    aud: string
+    azp: string
+    email: string
+    email_verified: boolean
+    exp: number
+    family_name: string
+    given_name: string
+    iat: number
+    iss: string
+    jti: string
+    locale: string
+    name: string
+    picture: string
+    sub: string
+    created_at: string
+    id: string
+    imageURL: string
+    password: string
+  }
 
-interface IData {
-  user: IUser
   token: string
 }
 
@@ -37,24 +40,21 @@ const removeAuthCookies = () => {
 export const UserContext = createContext({} as UserContext)
 
 const UserProvider: FC = ({ children }) => {
-  const [data, setData] = useState<IData>({} as IData)
+  const [data, setData] = useState<IUser>({} as IUser)
 
   const signOut = useCallback(() => {
     removeAuthCookies()
-    setData({} as IData)
+    setData({} as IUser)
   }, [])
 
   const signIn = useCallback(user => {
     Cookies.set('auth', JSON.stringify(user.token))
 
-    setData({
-      user,
-      token: user.token
-    })
+    setData(user)
   }, [])
 
   return (
-    <UserContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <UserContext.Provider value={{ user: data, signIn, signOut }}>
       {children}
     </UserContext.Provider>
   )
