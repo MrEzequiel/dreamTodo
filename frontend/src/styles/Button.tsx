@@ -33,6 +33,7 @@ const Button: React.FC<IButtonProps> = ({
       onMouseDown={() => setWave(true)}
       wave={wave}
       isLoading={loading}
+      disabled={loading}
     >
       {loading ? <VscLoading className="loading-indicator" /> : children}
       <span className="wave"></span>

@@ -10,6 +10,7 @@ import Button from '../../../styles/Button'
 
 import * as s from './style'
 import Title from '../../../styles/Title'
+import { Emoji } from 'emoji-mart'
 
 interface IProps {
   collection: ICollection
@@ -55,7 +56,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
     <>
       <s.CardWrapper>
         <div className="upper">
-          {collection.emoji.native}
+          <Emoji emoji={collection.emoji} size={50} />
 
           <Dropdown callbackClick={handleClickDropdown} />
         </div>

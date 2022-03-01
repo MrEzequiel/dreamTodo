@@ -17,7 +17,7 @@ interface IProps {
 
 const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
   const { state } = useContext(TodoContext)
-  const { user, isUser } = useUser()
+  const { isUser } = useUser()
   const {
     run,
     result: userCollections,
@@ -36,30 +36,39 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
     return state.collections
   }, [state, isUser, userCollections])
 
+  const verificationCollectionIsEmpty = () => {
+    if (collections?.length > 0) return false
+
+    if (status === 'resolved' && isUser) return true
+    if (!isUser) return true
+
+    return false
+  }
+
   console.log(collections)
+  console.log(isUser)
 
   return (
     <>
-      {(!isUser && collections?.length === 0) ||
-        (isUser && status === 'resolved' && collections?.length === 0 && (
-          <s.EmptyCollection>
-            <FaStickyNote size={30} />
-            <p>
-              You don&#8219;t have any collection
-              <br />
-              <a
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  setShowForm(true)
-                }}
-              >
-                click here
-              </a>{' '}
-              to add
-            </p>
-          </s.EmptyCollection>
-        ))}
+      {verificationCollectionIsEmpty() && (
+        <s.EmptyCollection>
+          <FaStickyNote size={30} />
+          <p>
+            You don&#8219;t have any collection
+            <br />
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                setShowForm(true)
+              }}
+            >
+              click here
+            </a>{' '}
+            to add
+          </p>
+        </s.EmptyCollection>
+      )}
 
       {!!collections && !!collections.length && (
         <s.CollectionCardWrapper>

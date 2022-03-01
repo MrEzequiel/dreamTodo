@@ -1,3 +1,4 @@
+import { Emoji } from 'emoji-mart'
 import React, { useContext, useRef } from 'react'
 import { FaStickyNote, FaTimes } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
@@ -44,7 +45,7 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
                 onClick={() => props.setNavBar(false)}
               >
                 <s.CollectionsItems>
-                  <span>{collection.emoji.native}</span>
+                  <Emoji emoji={collection.emoji} size={20} />
                   {collection.title}
                 </s.CollectionsItems>
               </NavLink>

@@ -2,7 +2,6 @@ import { InitialStateType } from '../context/TodoListContext'
 import ICollection from '../interfaces/Collection'
 import ITodo from '../interfaces/Todo'
 import { v4 as uuidv4 } from 'uuid'
-import { BaseEmoji } from 'emoji-mart'
 import update from 'immutability-helper'
 import IFieldTodo from '../interfaces/IFieldTodo'
 
@@ -31,11 +30,11 @@ export enum Types {
 type CollectionsPayload = {
   [Types.Add_Collection]: {
     title: string
-    emoji: BaseEmoji
+    emoji: string
   }
   [Types.Edit_Collection]: {
     title: string
-    emoji: BaseEmoji
+    emoji: string
     id: string
   }
   [Types.Remove_Collection]: {
