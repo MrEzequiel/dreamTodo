@@ -27,6 +27,7 @@ const NotificationContextProvider: FC<INotificationProviderProps> = ({
 }) => {
   const [notification, setNotification] = useState<INotification[]>([])
 
+  // function to create a notification, don't use it in the body of a component, it will cause a looping
   const createNotification = useCallback(
     (type: ITypeNotification, message: string) => {
       const id = uuidv4()

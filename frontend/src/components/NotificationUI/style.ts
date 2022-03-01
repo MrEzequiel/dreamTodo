@@ -16,8 +16,8 @@ const getColors = (type: ITypeNotification, theme: DefaultTheme) => {
 }
 
 export const NotificationContainer = styled.aside`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 20px;
 
   position: fixed;
@@ -58,7 +58,7 @@ export const NotificationContent = styled.div<NotificationProps>`
   flex-shrink: 0;
   position: relative;
   width: 300px;
-  height: 60px;
+  min-height: 60px;
   display: flex;
   border-radius: 5px;
   box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.25);

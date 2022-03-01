@@ -1,14 +1,6 @@
 import styled from 'styled-components'
 
 export const SignUp = styled.div`
-  .terms {
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.4rem;
-  }
-
   .sign-google {
     display: flex;
     align-items: center;
