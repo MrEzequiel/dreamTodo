@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
 import { useModalContext } from '../../../../context/ModalContext'
 import { useNotification } from '../../../../context/NotificationContext'
 import { useUser } from '../../../../context/UserContext'
+import { loginWithGoogle } from '../../../../functions/User/createUser'
 import { loginUser } from '../../../../functions/User/loginUser'
 import useForm from '../../../../hooks/useForm'
 import Button from '../../../../styles/Button'
@@ -17,18 +18,41 @@ interface ISignIn {
 }
 
 const SignIn: React.FC<ISignIn> = ({ setRefreshHeight }) => {
-  const { setLogin, setIsOpen } = useModalContext()
+  const { setLogin, setIsOpen, isOpen } = useModalContext()
   const { createNotification } = useNotification()
   const { signIn } = useUser()
 
   const [loding, setLoding] = useState(false)
+  const [loadingPopUpGoogle, setLoadingPopUpGoogle] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
   const emailField = useForm({ type: 'email' })
   const passwordField = useForm()
 
+  const handleFailureLoginWithGoogle = (error: any) => {
+    if (error.error === 'popup_closed_by_user') {
+      createNotification('error', 'You have not authorized access to Google')
+    }
+    setLoadingPopUpGoogle(false)
+  }
+
   const handleSuccess = (response: any) => {
-    console.log(response)
+    if (!isOpen) return
+
+    loginWithGoogle(response.tokenId)
+      .then(res => {
+        signIn({
+          user: res.payload,
+          token: response.tokenId
+        })
+        setIsOpen(false)
+      })
+      .catch(err => {
+        createNotification('error', 'oops! something went wrong')
+      })
+      .finally(() => {
+        setLoadingPopUpGoogle(false)
+      })
   }
 
   const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,6 +78,14 @@ const SignIn: React.FC<ISignIn> = ({ setRefreshHeight }) => {
 
   return (
     <s.SignIn>
+      {loadingPopUpGoogle && (
+        <s.LoadingLoginWithGoogle>
+          <div>
+            <FaGoogle fontSize={30} />
+            <h3>Popup open in another tab</h3>
+          </div>
+        </s.LoadingLoginWithGoogle>
+      )}
       <s.FormStyle onSubmit={handleSubmitSignIn}>
         <div>
           <InputStyle
@@ -107,7 +139,8 @@ const SignIn: React.FC<ISignIn> = ({ setRefreshHeight }) => {
           <GoogleLogin
             clientId={clientGoogle}
             onSuccess={handleSuccess}
-            onFailure={handleSuccess}
+            onFailure={handleFailureLoginWithGoogle}
+            onRequest={() => setLoadingPopUpGoogle(true)}
             className="google-login"
           />
         </div>

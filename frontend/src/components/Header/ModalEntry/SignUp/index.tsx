@@ -13,7 +13,12 @@ import useRequest from '../../../../hooks/useRequest'
 import Button from '../../../../styles/Button'
 import CheckboxStyle from '../../../../styles/CheckboxStyle'
 import InputStyle, { FileInputStyle } from '../../../../styles/Input'
-import { Actions, FormStyle, Separator } from '../SignIn/style'
+import {
+  Actions,
+  FormStyle,
+  LoadingLoginWithGoogle,
+  Separator
+} from '../SignIn/style'
 
 import * as s from './style'
 
@@ -45,9 +50,10 @@ interface ISignOut {
 }
 
 const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
-  const { setLogin } = useModalContext()
+  const { setLogin, setIsOpen } = useModalContext()
   const { signIn } = useUser()
   const [loading, setLoading] = useState(false)
+  const [loadingPopUpGoogle, setLoadingPopUpGoogle] = useState(false)
   const [userImage, setUserImage] = useState<{
     file: File | null
     url: string | null
@@ -98,13 +104,28 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
     reader.readAsDataURL(file)
   }
 
+  const handleFailureLoginWithGoogle = (error: any) => {
+    if (error.error === 'popup_closed_by_user') {
+      createNotification('error', 'You have not authorized access to Google')
+    }
+    setLoadingPopUpGoogle(false)
+  }
+
   const handleSuccess = (response: any) => {
-    loginWithGoogle(response.tokenId).then(res => {
-      signIn({
-        ...res.payload,
-        token: response.tokenId
+    loginWithGoogle(response.tokenId)
+      .then(res => {
+        signIn({
+          user: res.payload,
+          token: response.tokenId
+        })
+        setIsOpen(false)
       })
-    })
+      .catch(err => {
+        createNotification('error', 'oops! something went wrong')
+      })
+      .finally(() => {
+        setLoadingPopUpGoogle(false)
+      })
   }
 
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
@@ -127,7 +148,6 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
 
     createUser(formData)
       .then(res => {
-        console.log(res)
         setLogin('sign-in')
         createNotification(
           'success',
@@ -144,6 +164,14 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
 
   return (
     <s.SignUp>
+      {loadingPopUpGoogle && (
+        <LoadingLoginWithGoogle>
+          <div>
+            <FaGoogle fontSize={30} />
+            <h3>Popup open in another tab</h3>
+          </div>
+        </LoadingLoginWithGoogle>
+      )}
       <FormStyle onSubmit={handleSubmitSignUp}>
         <div className="grid-inputs">
           <FileInputStyle>
@@ -233,7 +261,8 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
           <GoogleLogin
             clientId={clientGoogle}
             onSuccess={handleSuccess}
-            onFailure={handleSuccess}
+            onFailure={handleFailureLoginWithGoogle}
+            onRequest={() => setLoadingPopUpGoogle(true)}
             className="google-login"
           />
         </div>
