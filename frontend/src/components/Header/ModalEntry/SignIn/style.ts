@@ -104,3 +104,41 @@ export const Actions = styled.div`
     text-decoration: underline;
   }
 `
+
+export const LoadingLoginWithGoogle = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.7);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  & > div {
+    @keyframes growing {
+      from {
+        transform: scale(0.5);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+
+    animation: growing 700ms ease;
+  }
+
+  svg {
+    color: ${props => props.theme.colors.colorPrimary};
+  }
+
+  h3 {
+    font-size: 2.4rem;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+`
