@@ -12,7 +12,8 @@ model User {
   name       String?
   email      String
   password   String
-  imageURL   String?
+  imageProfile  String?
+  imageURL   String? 
   created_at DateTime @default(now())
 
   @@map("users")
