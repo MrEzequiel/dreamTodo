@@ -82,7 +82,7 @@ const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
             }}
           >
             <div className="sign-in" ref={signInRef}>
-              <SignIn />
+              <SignIn setRefreshHeight={setRefreshHeight} />
             </div>
           </CSSTransition>
 
