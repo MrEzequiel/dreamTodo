@@ -14,6 +14,7 @@ export class ListColletionUseCase {
       select: {
         id: true,
         name: true,
+        emoji: true,
         Todo: true
       },
     })

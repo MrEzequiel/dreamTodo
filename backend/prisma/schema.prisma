@@ -42,6 +42,7 @@ model Colletion {
   todo    Todo?   @relation(fields: [id_todo], references: [id], onDelete: Cascade)
   user    User    @relation(references: [id], fields: [userId], onDelete: Cascade)
   Todo Todo[] @relation("DAUMTEMPO")
+  emoji String
   created_at  DateTime @default(now())
 
   

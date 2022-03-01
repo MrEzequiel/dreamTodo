@@ -8,11 +8,11 @@ export class CreateColletionController {
   async handle(request: Request, response: Response): Promise<Response>{
 
     const { id: userId } = request.user;
-    const { name  } = request.body;
+    const { name, emoji } = request.body;
 
     const createColletionUseCase = new CreateColletionUseCase();
 
-    const colletion = await createColletionUseCase.execute(userId, name);
+    const colletion = await createColletionUseCase.execute(userId, name, emoji);
 
     return response.json(colletion);
   }

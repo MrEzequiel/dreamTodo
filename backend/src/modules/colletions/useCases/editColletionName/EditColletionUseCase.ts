@@ -6,11 +6,12 @@ import { AppError } from "../../../../infra/errors/AppError";
 interface IRequest {
   id: string
   name: string
+  emoji: string
 }
 
 
 export class EditColletionUseCase {
-  async execute({ id, name }: IRequest): Promise<Colletion>{  
+  async execute({ id, name, emoji }: IRequest): Promise<Colletion>{  
 
     const verifyIfColletionExist = await client.colletion.findFirst({
       where: {
@@ -27,7 +28,8 @@ export class EditColletionUseCase {
         id,
       },
       data: {
-        name 
+        name,
+        emoji 
       },
     })
 
