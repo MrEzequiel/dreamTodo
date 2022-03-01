@@ -9,9 +9,16 @@ interface IRequestLogin {
   password: string
 }
 
+interface UserConfig {
+  name: string
+  email: string
+  password: string
+  imageURL: string
+}
+
 export class AuthenticateUserUseCase {
 
-  async execute({ email, password }: IRequestLogin): Promise<String>{
+  async execute({ email, password }: IRequestLogin){
 
     const user = await client.user.findFirst({
       where: {
@@ -34,6 +41,9 @@ export class AuthenticateUserUseCase {
       expiresIn: '15m'
     })
 
-    return token;
+    return {
+      user,
+      token
+    }
   }
 }

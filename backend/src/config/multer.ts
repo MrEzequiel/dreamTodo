@@ -12,6 +12,7 @@ export default {
     filename: (req, file, callback) => {
       const filehash = crypto.randomBytes(16);
       const filename = `${filehash.toString('hex')}-${file.originalname}`;
+      
 
       callback(null, filename);
     }
