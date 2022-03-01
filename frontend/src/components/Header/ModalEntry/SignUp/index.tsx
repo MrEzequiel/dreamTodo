@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import GoogleLogin from 'react-google-login'
-import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import { FaEye, FaEyeSlash, FaGoogle, FaUpload } from 'react-icons/fa'
 import { useModalContext } from '../../../../context/ModalContext'
+import { useNotification } from '../../../../context/NotificationContext'
 import { useUser } from '../../../../context/UserContext'
 import {
   createUser,
@@ -10,7 +11,7 @@ import {
 import useForm from '../../../../hooks/useForm'
 import Button from '../../../../styles/Button'
 import CheckboxStyle from '../../../../styles/CheckboxStyle'
-import InputStyle from '../../../../styles/Input'
+import InputStyle, { FileInputStyle } from '../../../../styles/Input'
 import { Actions, FormStyle, Separator } from '../SignIn/style'
 
 import * as s from './style'
@@ -46,8 +47,16 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
   const { setLogin } = useModalContext()
   const { signIn } = useUser()
   const [loading, setLoading] = useState(false)
+  const [userImage, setUserImage] = useState<{
+    file: File | null
+    url: string | null
+  }>({
+    file: null,
+    url: null
+  })
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
+  const { createNotification } = useNotification()
 
   const emailField = useForm({ type: 'email' })
   const nameField = useForm({ required: false })
@@ -67,6 +76,27 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
     emailField.isValid
   ])
 
+  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      setUserImage({ file: null, url: null })
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const data = reader.result as string
+      if (data) {
+        setUserImage({
+          file,
+          url: data
+        })
+      }
+    }
+
+    reader.readAsDataURL(file)
+  }
+
   const handleSuccess = (response: any) => {
     loginWithGoogle(response.tokenId).then(res => {
       signIn({
@@ -78,8 +108,6 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
 
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.target as any
-    const file = form.firstChild as any
 
     // if (
     //   emailField.isValid ||
@@ -88,18 +116,24 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
     // )
     //   return
 
-    console.log(file.files[0])
-
     setLoading(true)
     const formData = new FormData()
     formData.append('name', nameField.value)
     formData.append('email', emailField.value)
     formData.append('password', passwordField.value)
-    formData.append('imageURL', file.files[0])
+    if (userImage.file) formData.append('imageURL', userImage.file)
 
     createUser(formData)
       .then(res => {
         console.log(res)
+        setLogin('sign-in')
+        createNotification(
+          'success',
+          'Account created successfully, please sign in'
+        )
+      })
+      .catch(() => {
+        createNotification('error', 'User already exists')
       })
       .finally(() => {
         setLoading(false)
@@ -109,14 +143,23 @@ const SignOut: React.FC<ISignOut> = ({ setRefreshHeight }) => {
   return (
     <s.SignUp>
       <FormStyle onSubmit={handleSubmitSignUp}>
-        <InputStyle type="file" />
+        <div className="grid-inputs">
+          <FileInputStyle>
+            <input type="file" onChange={handleUploadImage} />
+            {userImage.url ? (
+              <img src={userImage.url} alt="user" />
+            ) : (
+              <FaUpload />
+            )}
+          </FileInputStyle>
 
-        <InputStyle
-          type="text"
-          placeholder="Name (optional)"
-          onChange={nameField.handleChange}
-          value={nameField.value}
-        />
+          <InputStyle
+            type="text"
+            placeholder="Name (optional)"
+            onChange={nameField.handleChange}
+            value={nameField.value}
+          />
+        </div>
 
         <div>
           <InputStyle

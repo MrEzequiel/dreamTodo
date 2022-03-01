@@ -16,6 +16,13 @@ export const SignUp = styled.div`
     gap: 10px;
     text-transform: none;
   }
+
+  .grid-inputs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 10px;
+  }
 `
 
 export const MessageError = styled.div`

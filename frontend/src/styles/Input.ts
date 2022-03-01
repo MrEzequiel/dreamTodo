@@ -31,6 +31,30 @@ const InputStyle = styled.input<InputProps>`
   ${InputCSS}
 `
 
+export const FileInputStyle = styled.label`
+  overflow: hidden;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto;
+  border: 1px dashed ${props => props.theme.colors.colorPrimary};
+  color: ${props => props.theme.colors.colorPrimary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  input {
+    display: none;
+  }
+`
+
 export const TextAreaStyle = styled.textarea<InputProps>`
   ${InputCSS}
   resize: vertical;

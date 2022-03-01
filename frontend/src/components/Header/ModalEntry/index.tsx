@@ -59,7 +59,7 @@ const Login: React.FC<IProps> = ({ setModal, modalIsOpen }) => {
       value={{ isOpen: modalIsOpen, setIsOpen: setModal, login, setLogin }}
     >
       <Modal
-        size="min(380px, 90%)"
+        size="min(440px, 90%)"
         setCloseModal={setModal}
         modalIsOpen={modalIsOpen}
       >
