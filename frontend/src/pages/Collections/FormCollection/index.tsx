@@ -6,7 +6,7 @@ import useForm from '../../../hooks/useForm'
 import { FormStyled } from './style'
 
 import 'emoji-mart/css/emoji-mart.css'
-import { BaseEmoji, Picker } from 'emoji-mart'
+import { BaseEmoji, Emoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
 import Modal from '../../../components/Modal'
 
@@ -26,26 +26,14 @@ const FormCollection: React.FC<IProps> = ({
   const { dispatch } = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const collectionName = useForm({ initialValue: initial?.title })
-  const initialEmoji: BaseEmoji = useMemo(
-    () => ({
-      id: 'muscle',
-      name: 'Flexed Biceps',
-      colons: ':muscle::skin-tone-4:',
-      emoticons: [],
-      unified: '1f4aa-1f3fd',
-      skin: 4,
-      native: '💪🏽'
-    }),
-    []
-  )
 
   const [emoji, setEmoji] = useState(false)
-  const [selectEmoji, setSelectEmoji] = useState<BaseEmoji>(
-    initial?.emoji ?? initialEmoji
+  const [selectEmoji, setSelectEmoji] = useState(
+    initial?.emoji ?? ':muscle::skin-tone-4:'
   )
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
-    setSelectEmoji(emoji)
+    setSelectEmoji(emoji.colons)
   }
 
   useEffect(() => {
@@ -80,9 +68,9 @@ const FormCollection: React.FC<IProps> = ({
   useEffect(() => {
     if (!showForm && !initial) {
       collectionName.setValue('')
-      setSelectEmoji(initialEmoji)
+      setSelectEmoji(':muscle::skin-tone-4:')
     }
-  }, [showForm, collectionName, initialEmoji, initial])
+  }, [showForm, collectionName, initial])
 
   useEffect(() => {
     if (showForm) inputEl.current?.focus()
@@ -104,7 +92,7 @@ const FormCollection: React.FC<IProps> = ({
           className="close-form"
           onClick={() => setShowForm(false)}
         >
-          <FaTimes size={15} />
+          <FaTimes size={16} />
         </button>
 
         <button
@@ -112,7 +100,7 @@ const FormCollection: React.FC<IProps> = ({
           className="select-emoji"
           onClick={() => setEmoji(prev => !prev)}
         >
-          {selectEmoji.native}
+          <Emoji emoji={selectEmoji} size={18} tooltip />
         </button>
 
         {emoji && (

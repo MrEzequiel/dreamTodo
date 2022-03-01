@@ -1,3 +1,4 @@
+import { Emoji } from 'emoji-mart'
 import React, { useContext, useEffect } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -44,7 +45,7 @@ const TodoPage = () => {
           </NavLink>
 
           <h1>
-            <span>{thisCollection?.emoji.native}</span>
+            <Emoji emoji={thisCollection?.emoji} size={32} />
             {thisCollection?.title}
           </h1>
         </s.TitleStyle>

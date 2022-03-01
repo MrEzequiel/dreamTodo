@@ -13,8 +13,11 @@ export const FormStyled = styled.form`
 
   .select-emoji {
     cursor: pointer;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: ${props => props.theme.colors.g2};
     border-radius: 5px;
     box-shadow: 0 4px 4px -1px rgba(0, 0, 0, 0.1);

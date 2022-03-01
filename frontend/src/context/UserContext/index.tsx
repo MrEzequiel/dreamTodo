@@ -1,4 +1,11 @@
-import { createContext, FC, useCallback, useContext, useState } from 'react'
+import {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 import Cookies from 'js-cookie'
 
 interface IUser {
@@ -29,6 +36,7 @@ interface IUser {
 
 interface UserContext {
   user: IUser
+  isUser: boolean
   signIn: Function
   signOut: Function
 }
@@ -41,6 +49,7 @@ export const UserContext = createContext({} as UserContext)
 
 const UserProvider: FC = ({ children }) => {
   const [data, setData] = useState<IUser>({} as IUser)
+  const [isUser, setIsUser] = useState(false)
 
   const signOut = useCallback(() => {
     removeAuthCookies()
@@ -53,8 +62,12 @@ const UserProvider: FC = ({ children }) => {
     setData(user)
   }, [])
 
+  useEffect(() => {
+    setIsUser(!!data.token)
+  }, [data])
+
   return (
-    <UserContext.Provider value={{ user: data, signIn, signOut }}>
+    <UserContext.Provider value={{ user: data, signIn, signOut, isUser }}>
       {children}
     </UserContext.Provider>
   )

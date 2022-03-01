@@ -27,7 +27,9 @@ export const TitleStyle = styled.div`
     align-items: center;
 
     span {
-      font-size: 2.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-right: 5px;
     }
   }
