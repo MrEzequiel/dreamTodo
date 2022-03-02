@@ -22,7 +22,7 @@ model User {
 
 model Todo {
   id           String    @id @unique @default(uuid())
-  name         String
+  title         String
   description  String?
   complete     Boolean   @default(false)
   id_colletion String
