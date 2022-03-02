@@ -8,45 +8,41 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String?
-  email      String
-  password   String
-  imageProfile  String?
-  imageURL   String? 
-  created_at DateTime @default(now())
+  id           String      @id @default(uuid())
+  name         String?
+  email        String
+  password     String
+  imageURL     String?
+  created_at   DateTime    @default(now())
+  imageProfile String?
+  Colletion    Colletion[]
 
   @@map("users")
-  Colletion Colletion[]
 }
 
 model Todo {
-  id           String    @id @unique @default(uuid())
-  title         String
+  id           String      @id @unique @default(uuid())
   description  String?
-  complete     Boolean   @default(false)
+  complete     Boolean     @default(false)
   id_colletion String
-  colletion    Colletion @relation(name: "DAUMTEMPO", fields: [id_colletion], references: [id], onDelete: Cascade)
-  created_at  DateTime @default(now())
+  created_at   DateTime    @default(now())
+  title        String
+  colletion    Colletion   @relation("DAUMTEMPO", fields: [id_colletion], references: [id], onDelete: Cascade)
+  Colletion    Colletion[]
 
-
-  Colletion Colletion[]
   @@map("todo")
 }
 
 model Colletion {
-
-  id      String  @id @unique @default(uuid())
-  name    String
-  id_todo String?
-  todo    Todo?   @relation(fields: [id_todo], references: [id], onDelete: Cascade)
-  user    User    @relation(references: [id], fields: [userId], onDelete: Cascade)
-  Todo Todo[] @relation("DAUMTEMPO")
-  emoji String
-  created_at  DateTime @default(now())
-
-  
+  id         String   @id @unique @default(uuid())
+  name       String
+  id_todo    String?
+  userId     String
+  created_at DateTime @default(now())
+  emoji      String
+  todo       Todo?    @relation(fields: [id_todo], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Todo       Todo[]   @relation("DAUMTEMPO")
 
   @@map("colletions")
-  userId String
 }

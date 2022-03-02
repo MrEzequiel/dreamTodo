@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
 import { CreateUserUseCase } from "./CreateUserUseCase";
+import crypto from 'crypto'
+import fetch from 'node-fetch'
 
 export class CreateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
-    const imageProfile = request?.file?.filename;
+    let imageProfile = request?.file?.filename;
+
+    if(!imageProfile){
+      imageProfile = `https://robohash.org/${crypto.randomUUID()}`;
+    }
 
     const createUserUseCase = new CreateUserUseCase();
 
@@ -12,8 +18,8 @@ export class CreateUserController {
       name,
       email,
       password,
-      imageURL : `${process.env.APP_URL}/files/${imageProfile}`,
-      imageProfile 
+      imageProfile,
+      imageURL : imageProfile.includes('robohash') ? imageProfile : `${process.env.APP_URL}/files/${imageProfile}`
     });
 
     return response.json(user);
