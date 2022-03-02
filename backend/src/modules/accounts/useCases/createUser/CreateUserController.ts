@@ -4,7 +4,7 @@ import { CreateUserUseCase } from "./CreateUserUseCase";
 export class CreateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
-    const { filename : imageProfile } = request.file;
+    const imageProfile = request?.file?.filename;
 
     const createUserUseCase = new CreateUserUseCase();
 
@@ -13,7 +13,7 @@ export class CreateUserController {
       email,
       password,
       imageURL : `${process.env.APP_URL}/files/${imageProfile}`,
-      imageProfile
+      imageProfile 
     });
 
     return response.json(user);
