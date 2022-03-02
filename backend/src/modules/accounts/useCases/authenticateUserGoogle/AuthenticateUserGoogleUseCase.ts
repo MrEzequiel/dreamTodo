@@ -10,15 +10,11 @@ export class AuthenticateUserGoogleUseCase {
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID 
-    });
-
-
-    const getToken = client.getAccessToken(() => {
-      console.log(getToken)
     })
 
     const payload = ticket.getPayload();
-    
+
+
     return { payload }
   }
 }

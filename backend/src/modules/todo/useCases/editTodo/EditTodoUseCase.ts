@@ -5,13 +5,13 @@ import { AppError } from "../../../../infra/errors/AppError";
 
 interface IRequest {
   id: string
-  name: string
+  title: string
   description: string
 }
 
 export class EditTodoUseCase {
 
-  async execute({ id, name, description }: IRequest): Promise<Todo> {
+  async execute({ id, title, description }: IRequest): Promise<Todo> {
 
     const todoExist = await client.todo.findFirst({
       where: {
@@ -25,7 +25,7 @@ export class EditTodoUseCase {
 
     const editedTodo = await client.todo.update({
       data: {
-        name,
+        title,
         description,
       },
       where: {
