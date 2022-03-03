@@ -10,7 +10,8 @@ const endpoints = {
     newPassword: '/newPassword'
   },
   collections: {
-    get: '/collection'
+    get: '/collection',
+    post: '/collection'
   }
 }
 

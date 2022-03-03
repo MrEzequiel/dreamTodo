@@ -13,10 +13,11 @@ import Title from '../../../styles/Title'
 import { Emoji } from 'emoji-mart'
 
 interface IProps {
-  collection: ICollection
+  collection: any
 }
 
 const Card: React.FC<IProps> = ({ collection }) => {
+  console.log(collection)
   const { dispatch } = useContext(TodoContext)
   const [hasEdit, setHasEdit] = useState(false)
   const [confirmed, setConfirmed] = useState(false)
@@ -56,14 +57,14 @@ const Card: React.FC<IProps> = ({ collection }) => {
     <>
       <s.CardWrapper>
         <div className="upper">
-          <Emoji emoji={collection.emoji} size={50} />
+          <Emoji emoji={collection.emoji} size={50} native />
 
           <Dropdown callbackClick={handleClickDropdown} />
         </div>
 
         <div className="down">
           <h2>
-            <NavLink to={`/todo/${collection.id}`}>{collection.title}</NavLink>
+            <NavLink to={`/todo/${collection.id}`}>{collection?.title}</NavLink>
           </h2>
 
           <p>

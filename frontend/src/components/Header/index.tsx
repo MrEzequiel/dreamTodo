@@ -16,6 +16,7 @@ import RenderImageUser from '../RenderImageUser'
 
 const Header = () => {
   const {
+    isUser,
     user: { user }
   } = useUser()
   const navBarRef = createRef<HTMLDivElement>()
@@ -39,7 +40,7 @@ const Header = () => {
           <div className="left">
             <Clock />
 
-            {!user || Object.keys(user).length === 0 ? (
+            {!isUser ? (
               <Button
                 onClick={() => setOpenModal(true)}
                 outlined
@@ -63,7 +64,9 @@ const Header = () => {
                     url={user?.picture ? user.picture : user.imageURL}
                   />
 
-                  <s.ProfilePillText>{user.name}</s.ProfilePillText>
+                  <s.ProfilePillText>
+                    {user.name ? user.name : user.email}
+                  </s.ProfilePillText>
 
                   <Dropdown>
                     <DropdownItens>

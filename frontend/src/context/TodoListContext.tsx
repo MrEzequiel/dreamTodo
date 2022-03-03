@@ -1,6 +1,7 @@
 import React, { createContext, Dispatch, useEffect, useReducer } from 'react'
-import { CollectionsActions, todoReducer } from '../functions/reducers'
+import { CollectionsActions, todoReducer, Types } from '../functions/reducers'
 import ICollection from '../interfaces/Collection'
+import { useUser } from './UserContext'
 
 export type InitialStateType = {
   collections: ICollection[]
@@ -33,11 +34,21 @@ export const TodoContext = createContext<{
 })
 
 const TodoProvider: React.FC = ({ children }) => {
+  const { isUser } = useUser()
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
   useEffect(() => {
+    if (isUser) {
+      dispatch({ type: Types.Clear, payload: {} })
+    }
+  }, [isUser])
+
+  useEffect(() => {
+    if (isUser) {
+      return
+    }
     localStorage.setItem('collections', JSON.stringify(state.collections))
-  }, [state])
+  }, [state, isUser])
 
   return (
     <TodoContext.Provider value={{ state, dispatch }}>
