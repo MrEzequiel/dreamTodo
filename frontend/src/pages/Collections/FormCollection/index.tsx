@@ -9,6 +9,9 @@ import 'emoji-mart/css/emoji-mart.css'
 import { BaseEmoji, Emoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
 import Modal from '../../../components/Modal'
+import { useUser } from '../../../context/UserContext'
+import useRequest from '../../../hooks/useRequest'
+import { postCollection } from '../../../functions/Collection/postCollection'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -23,6 +26,7 @@ const FormCollection: React.FC<IProps> = ({
   initial,
   callback
 }) => {
+  const { isUser } = useUser()
   const { dispatch } = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
   const collectionName = useForm({ initialValue: initial?.title })
@@ -31,6 +35,13 @@ const FormCollection: React.FC<IProps> = ({
   const [selectEmoji, setSelectEmoji] = useState(
     initial?.emoji ?? ':muscle::skin-tone-4:'
   )
+
+  const { run } = useRequest(async () => {
+    return await postCollection({
+      name: collectionName.value,
+      emoji: selectEmoji
+    })
+  }, false)
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
     setSelectEmoji(emoji.colons)
@@ -56,10 +67,14 @@ const FormCollection: React.FC<IProps> = ({
       }
       callback(editedCollection)
     } else {
-      dispatch({
-        type: Types.Add_Collection,
-        payload: { title: collectionName.value, emoji: selectEmoji }
-      })
+      if (!isUser) {
+        dispatch({
+          type: Types.Add_Collection,
+          payload: { title: collectionName.value, emoji: selectEmoji }
+        })
+      } else {
+        run()
+      }
     }
 
     setShowForm(false)

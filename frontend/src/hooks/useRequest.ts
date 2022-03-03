@@ -5,11 +5,11 @@ import { useCallback, useEffect, useState } from 'react'
   @param {boolean} shouldRun
 */
 
-const useRequest = (
+function useRequest<T = unknown>(
   asyncFunction: () => Promise<unknown>,
   shouldRun: boolean
-) => {
-  const [result, setResult] = useState<unknown | null>(null)
+) {
+  const [result, setResult] = useState<T | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [status, setStatus] = useState<
     'idle' | 'pending' | 'resolved' | 'error'
@@ -23,7 +23,7 @@ const useRequest = (
     return asyncFunction()
       .then(res => {
         setStatus('resolved')
-        setResult(res)
+        setResult(res as T)
       })
       .catch(err => {
         setStatus('error')

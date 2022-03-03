@@ -17,6 +17,8 @@ type ActionMap<M extends { [index: string]: any }> = {
 }
 
 export enum Types {
+  Clear = 'CLEAR',
+  Inject_Collection = 'INJECT_COLLECTION',
   Add_Collection = 'ADD_COLLECTION',
   Edit_Collection = 'EDIT_COLLECTION',
   Remove_Collection = 'REMOVE_COLLECTION',
@@ -28,6 +30,12 @@ export enum Types {
 }
 
 type CollectionsPayload = {
+  [Types.Clear]: {}
+
+  [Types.Inject_Collection]: {
+    collections: ICollection[]
+  }
+
   [Types.Add_Collection]: {
     title: string
     emoji: string
@@ -143,6 +151,17 @@ export const todoReducer = (
 
   // TODO: Drag n drop todos
   switch (action.type) {
+    case Types.Clear: {
+      return { collections: [] }
+    }
+
+    case Types.Inject_Collection: {
+      const { payload } = action
+      return {
+        collections: [...collections, ...payload.collections]
+      }
+    }
+
     case Types.Add_Collection: {
       const newCollection: ICollection = {
         id: uuidv4(),

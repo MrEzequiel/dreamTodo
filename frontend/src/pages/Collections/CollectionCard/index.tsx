@@ -3,6 +3,7 @@ import { FaStickyNote } from 'react-icons/fa'
 import { TodoContext } from '../../../context/TodoListContext'
 import { useUser } from '../../../context/UserContext'
 import { getCollection } from '../../../functions/Collection/getCollection'
+import { Types } from '../../../functions/reducers'
 import useRequest from '../../../hooks/useRequest'
 import ICollection from '../../../interfaces/Collection'
 import { Skeleton } from '../../../styles/Skeleton'
@@ -16,28 +17,31 @@ interface IProps {
 }
 
 const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
-  const { state } = useContext(TodoContext)
+  const { state, dispatch } = useContext(TodoContext)
   const { isUser } = useUser()
   const {
     run,
     result: userCollections,
     status
-  } = useRequest(getCollection, false)
+  } = useRequest<ICollection[]>(getCollection, false)
 
   useEffect(() => {
-    if (isUser) run()
-  }, [run, isUser])
-
-  const collections = useMemo(() => {
     if (isUser) {
-      return userCollections as ICollection[]
+      run()
     }
+  }, [isUser, run])
 
-    return state.collections
-  }, [state, isUser, userCollections])
+  useEffect(() => {
+    if (status === 'resolved' && userCollections) {
+      dispatch({
+        type: Types.Inject_Collection,
+        payload: { collections: userCollections }
+      })
+    }
+  }, [isUser, userCollections, status, dispatch])
 
   const verificationCollectionIsEmpty = () => {
-    if (collections?.length > 0) return false
+    if (state.collections?.length > 0) return false
 
     if (status === 'resolved' && isUser) return true
     if (!isUser) return true
@@ -67,7 +71,7 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
         </s.EmptyCollection>
       )}
 
-      {!!collections && !!collections.length && (
+      {!!state.collections && !!state.collections.length && (
         <s.CollectionCardWrapper>
           {state.collections.map(collection => (
             <Card key={collection.id} collection={collection} />
