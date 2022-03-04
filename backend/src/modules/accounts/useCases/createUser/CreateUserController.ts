@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CreateUserUseCase } from "./CreateUserUseCase";
 import crypto from 'crypto'
-import fetch from 'node-fetch'
+
 
 export class CreateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
