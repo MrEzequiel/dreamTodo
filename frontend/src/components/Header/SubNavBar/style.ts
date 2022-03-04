@@ -93,7 +93,7 @@ export const CollectionsItems = styled.div`
   color: ${props => props.theme.colors.g6};
   font-weight: 300;
 
-  span {
+  > span {
     width: 40px;
     height: 40px;
     display: flex;

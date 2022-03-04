@@ -45,7 +45,7 @@ const TodoPage = () => {
           </NavLink>
 
           <h1>
-            <Emoji emoji={thisCollection?.emoji} size={32} />
+            <Emoji emoji={thisCollection?.emoji} size={32} native />
             {thisCollection?.title}
           </h1>
         </s.TitleStyle>
