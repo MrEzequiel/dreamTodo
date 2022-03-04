@@ -1,11 +1,11 @@
 import { client } from "../../../../database/client"
 import { AppError } from "../../../../infra/errors/AppError"
 
-export class DeleteColletionUseCase {
+export class DeleteCollectionUseCase {
 
   async execute(id: string): Promise<void>{  
     
-    const verifyIfColletionExist = await client.colletion.findFirst({
+    const verifyIfColletionExist = await client.collection.findFirst({
       where: {
         id
       }
@@ -15,7 +15,7 @@ export class DeleteColletionUseCase {
       throw new AppError("Colletion não encontrada!")
     }
 
-    await client.colletion.delete({
+    await client.collection.delete({
       where: {
         id,
       }

@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
-import { DeleteColletionUseCase } from "./DeleteColletionUseCase";
+import { DeleteCollectionUseCase } from "./DeleteCollectionUseCase";
 
 
 
 
-export class DeleteColletionController {
+export class DeleteCollectionController {
   
   async handle(request: Request, response: Response): Promise<Response>{
   
     const { id } = request.params;
 
-    const deleteColletionUseCase = new DeleteColletionUseCase();
+    const deleteCollectionUseCase = new DeleteCollectionUseCase();
 
-    await deleteColletionUseCase.execute(id);
+    await deleteCollectionUseCase.execute(id);
 
     return response.status(204).json({
       message: 'Colletion deletada com sucesso'

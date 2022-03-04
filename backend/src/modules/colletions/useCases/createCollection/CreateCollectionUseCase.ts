@@ -1,23 +1,23 @@
-import { Colletion } from "@prisma/client";
+import { Collection } from "@prisma/client";
 import { client } from "../../../../database/client";
 import { AppError } from "../../../../infra/errors/AppError";
 
 
-export class CreateColletionUseCase {
+export class CreateCollectionUseCase {
 
-  async execute(userId: string, name: string, emoji: string): Promise<Colletion>{
+  async execute(userId: string, name: string, emoji: string): Promise<Collection>{
 
-    const verifyIfColletionExist = await client.colletion.findFirst({
+    const verifyIfCollectionExist = await client.collection.findFirst({
       where: {
         name: name
       }
     })
 
-    if(verifyIfColletionExist) {
+    if(verifyIfCollectionExist) {
       throw new AppError("Colletion já existente")
     }
 
-    const colletion = await client.colletion.create({
+    const colletion = await client.collection.create({
       data: {
         userId,
         name,

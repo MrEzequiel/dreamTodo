@@ -1,4 +1,4 @@
-import { Colletion } from "@prisma/client";
+import { Collection } from "@prisma/client";
 import { client } from "../../../../database/client";
 import { AppError } from "../../../../infra/errors/AppError";
 
@@ -10,20 +10,20 @@ interface IRequest {
 }
 
 
-export class EditColletionUseCase {
-  async execute({ id, name, emoji }: IRequest): Promise<Colletion>{  
+export class EditCollectionUseCase {
+  async execute({ id, name, emoji }: IRequest): Promise<Collection>{  
 
-    const verifyIfColletionExist = await client.colletion.findFirst({
+    const verifyIfCollectionExist = await client.collection.findFirst({
       where: {
         id
       }
     })
 
-    if(!verifyIfColletionExist) {
+    if(!verifyIfCollectionExist) {
       throw new AppError("Colletion não encontrada!")
     }
 
-    const editedColletion = await client.colletion.update({
+    const editedCollection = await client.collection.update({
       where: {
         id,
       },
@@ -33,6 +33,6 @@ export class EditColletionUseCase {
       },
     })
 
-    return editedColletion
+    return editedCollection
   }
 }

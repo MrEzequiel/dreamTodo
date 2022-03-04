@@ -8,32 +8,32 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(uuid())
+  id           String       @id @default(uuid())
   name         String?
   email        String
   password     String
-  imageURL     String?
-  created_at   DateTime    @default(now())
   imageProfile String?
-  Colletion    Colletion[]
+  imageURL     String?
+  created_at   DateTime     @default(now())
+  Collection   Collection[]
 
   @@map("users")
 }
 
 model Todo {
-  id           String      @id @unique @default(uuid())
-  description  String?
-  complete     Boolean     @default(false)
-  id_colletion String
-  created_at   DateTime    @default(now())
-  title        String
-  colletion    Colletion   @relation("DAUMTEMPO", fields: [id_colletion], references: [id], onDelete: Cascade)
-  Colletion    Colletion[]
+  id            String       @id @unique @default(uuid())
+  title         String
+  id_collection String
+  description   String?
+  complete      Boolean      @default(false)
+  created_at    DateTime     @default(now())
+  collection    Collection   @relation("DAUMTEMPO", fields: [id_collection], references: [id], onDelete: Cascade)
+  Collection    Collection[]
 
   @@map("todo")
 }
 
-model Colletion {
+model Collection {
   id         String   @id @unique @default(uuid())
   name       String
   id_todo    String?
@@ -44,5 +44,5 @@ model Colletion {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Todo       Todo[]   @relation("DAUMTEMPO")
 
-  @@map("colletions")
+  @@map("collections")
 }
