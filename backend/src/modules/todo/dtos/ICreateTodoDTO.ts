@@ -6,5 +6,5 @@ export interface ICreateTodoDTO {
   title: string
   description: string
   complete: boolean
-  id_colletion: string
+  id_collection: string
 }
