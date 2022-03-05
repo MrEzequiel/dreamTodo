@@ -6,8 +6,9 @@ import { CreateTodoUseCase } from "./CreateTodoUseCase";
 export class CreateTodoController {
 
   async handle(request: Request, response: Response): Promise<Response> {
-    
-    const { title, description, complete, id_collection } = request.body
+
+    const { id_collection } = request.params
+    const { title, description, complete } = request.body
 
     const createTodoUseCase = new CreateTodoUseCase()
 
