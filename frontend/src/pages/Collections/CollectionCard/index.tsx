@@ -34,8 +34,8 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
   useEffect(() => {
     if (status === 'resolved' && userCollections) {
       dispatch({
-        type: Types.Inject_Collection,
-        payload: { collections: userCollections }
+        type: Types.Add_Collection,
+        payload: { collection: userCollections, emoji: ' ', name: ' ' }
       })
     }
   }, [isUser, userCollections, status, dispatch])

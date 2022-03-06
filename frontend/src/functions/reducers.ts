@@ -3,7 +3,6 @@ import ICollection from '../interfaces/Collection'
 import ITodo from '../interfaces/Todo'
 import { v4 as uuidv4 } from 'uuid'
 import update from 'immutability-helper'
-import IFieldTodo from '../interfaces/IFieldTodo'
 
 type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -18,7 +17,6 @@ type ActionMap<M extends { [index: string]: any }> = {
 
 export enum Types {
   Clear = 'CLEAR',
-  Inject_Collection = 'INJECT_COLLECTION',
   Add_Collection = 'ADD_COLLECTION',
   Edit_Collection = 'EDIT_COLLECTION',
   Remove_Collection = 'REMOVE_COLLECTION',
@@ -30,18 +28,15 @@ export enum Types {
 }
 
 type CollectionsPayload = {
-  [Types.Clear]: {}
-
-  [Types.Inject_Collection]: {
-    collections: ICollection[]
-  }
+  [Types.Clear]: undefined
 
   [Types.Add_Collection]: {
-    title: string
+    name: string
     emoji: string
+    collection?: ICollection[]
   }
   [Types.Edit_Collection]: {
-    title: string
+    name: string
     emoji: string
     id: string
   }
@@ -90,7 +85,7 @@ function removeTodoById(id: string, todos: ITodo[]) {
 
 interface IFindReturn {
   collection: ICollection
-  todos: IFieldTodo
+  todos: ITodo[]
 }
 
 function findThisCollection(
@@ -98,11 +93,11 @@ function findThisCollection(
   collections: ICollection[]
 ): IFindReturn | undefined {
   const collection = collections.find(collection => collection.id === id)
-  if (collection) return { collection, todos: collection.todo }
+  if (collection) return { collection, todos: collection.Todo }
 }
 
 function findTodo(
-  arr: IFieldTodo,
+  arr: ITodo[],
   id: string,
   callback?: (todo: ITodo, key: keyof typeof arr) => any
 ) {
@@ -112,10 +107,9 @@ function findTodo(
   keyTodos.forEach(key => {
     if (findTodo) return
 
-    findTodo = arr[key].find(todo => {
+    findTodo = arr.find(todo => {
       if (todo.id === id) {
-        if (callback) callback(todo, key)
-
+        callback?.(todo, key)
         return true
       } else {
         return false
@@ -129,14 +123,14 @@ function findTodo(
 function updateCollections(
   collections: ICollection[],
   id: string,
-  todos: IFieldTodo
+  todos: ITodo[]
 ) {
   return collections.map(collection => {
     if (id !== collection.id) return collection
 
     const newCollection: ICollection = {
       ...collection,
-      todo: todos
+      Todo: todos
     }
 
     return newCollection
@@ -146,30 +140,24 @@ function updateCollections(
 export const todoReducer = (
   state: InitialStateType,
   action: CollectionsActions
-) => {
+): InitialStateType => {
   const { collections } = state
 
   // TODO: Drag n drop todos
   switch (action.type) {
     case Types.Clear: {
-      return { collections: [] }
-    }
-
-    case Types.Inject_Collection: {
-      const { payload } = action
-      return {
-        collections: [...collections, ...payload.collections]
-      }
+      return { collections: [] as ICollection[] }
     }
 
     case Types.Add_Collection: {
+      if (action.payload.collection) {
+        return { collections: [...collections, ...action.payload.collection] }
+      }
+
       const newCollection: ICollection = {
         id: uuidv4(),
-        title: action.payload.title,
-        todo: {
-          complete: [],
-          incomplete: []
-        },
+        name: action.payload.name,
+        Todo: [],
         emoji: action.payload.emoji
       }
 
@@ -192,7 +180,7 @@ export const todoReducer = (
 
           return {
             ...collection,
-            title: action.payload.title,
+            name: action.payload.name,
             emoji: action.payload.emoji
           }
         })
@@ -212,7 +200,7 @@ export const todoReducer = (
         expanded: action.payload.expanded
       }
 
-      todos.incomplete.push(newTodo)
+      todos.push(newTodo)
       return {
         collections: updateCollections(collections, collection.id, todos)
       }
@@ -228,18 +216,13 @@ export const todoReducer = (
       let thisTodo = findTodo(todos, action.payload.id)
       if (thisTodo === undefined) return state
 
-      thisTodo = {
-        ...thisTodo,
-        complete: !thisTodo.complete
-      }
-
-      if (thisTodo.complete) {
-        todos.incomplete = removeTodoById(thisTodo.id, todos.incomplete)
-        todos.complete.unshift(thisTodo)
-      } else {
-        todos.complete = removeTodoById(thisTodo.id, todos.complete)
-        todos.incomplete.unshift(thisTodo)
-      }
+      collection.Todo = collection.Todo.map(thisTodo => {
+        if (thisTodo.id === action.payload.id) {
+          thisTodo.complete = !thisTodo.complete
+          return thisTodo
+        }
+        return thisTodo
+      })
 
       return {
         collections: updateCollections(collections, collection.id, todos)
@@ -254,9 +237,7 @@ export const todoReducer = (
       const thisTodo = findTodo(todos, action.payload.id)
       if (thisTodo === undefined) return state
 
-      if (thisTodo.complete)
-        todos.complete = removeTodoById(thisTodo.id, todos.complete)
-      else todos.incomplete = removeTodoById(thisTodo.id, todos.incomplete)
+      todos = removeTodoById(thisTodo.id, todos)
 
       return {
         collections: updateCollections(collections, collection.id, todos)
@@ -269,18 +250,13 @@ export const todoReducer = (
 
       let { collection, todos } = find
 
-      findTodo(todos, action.payload.id, (thisTodoCallback, field) => {
-        const newField = todos[field].map(todo => {
-          if (todo.id !== thisTodoCallback.id) return todo
+      todos = todos.map(todo => {
+        if (todo.id !== action.payload.id) return todo
 
-          const newTodo: ITodo = {
-            ...thisTodoCallback,
-            ...action.payload
-          }
-          return newTodo
-        })
-
-        todos[field] = newField
+        return {
+          ...todo,
+          ...action.payload
+        }
       })
 
       return {
@@ -289,30 +265,30 @@ export const todoReducer = (
     }
 
     case Types.Move: {
-      const find = findThisCollection(action.payload.id_collection, collections)
-      if (!find) return state
+      // const find = findThisCollection(action.payload.id_collection, collections)
+      return state
 
-      let { collection, todos } = find
+      // let { collection, todos } = find
 
-      const newTodos = update(todos[action.payload.type], {
-        $splice: [
-          [action.payload.dragIndex, 1],
-          [
-            action.payload.hoverIndex,
-            0,
-            todos[action.payload.type][action.payload.dragIndex]
-          ]
-        ]
-      })
+      // const newTodos = update(todos[action.payload.type], {
+      //   $splice: [
+      //     [action.payload.dragIndex, 1],
+      //     [
+      //       action.payload.hoverIndex,
+      //       0,
+      //       todos[action.payload.type][action.payload.dragIndex]
+      //     ]
+      //   ]
+      // })
 
-      todos = {
-        ...todos,
-        [action.payload.type]: newTodos
-      }
+      // todos = {
+      //   ...todos,
+      //   [action.payload.type]: newTodos
+      // }
 
-      return {
-        collections: updateCollections(collections, collection.id, todos)
-      }
+      // return {
+      //   collections: updateCollections(collections, collection.id, todos)
+      // }
     }
 
     default:

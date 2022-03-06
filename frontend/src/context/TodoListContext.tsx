@@ -11,7 +11,7 @@ const getTodosFromLocalStorage = (): ICollection[] => {
   const storage = localStorage.getItem('collections')
   if (storage) {
     const parsedStorage = JSON.parse(storage)
-    if (!parsedStorage[0] || !parsedStorage[0].todo?.complete) {
+    if (!parsedStorage[0] || parsedStorage[0].todo?.complete) {
       localStorage.removeItem('collections')
     } else {
       return parsedStorage
@@ -39,7 +39,7 @@ const TodoProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (isUser) {
-      dispatch({ type: Types.Clear, payload: {} })
+      dispatch({ type: Types.Clear })
     }
   }, [isUser])
 

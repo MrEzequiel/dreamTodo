@@ -9,7 +9,7 @@ import * as s from './styles'
 
 const TodoList: React.FC = () => {
   const { thisCollection } = useContext(TodoPageContext)
-  const todos = thisCollection.todo
+  const todos = thisCollection.Todo
 
   if (!todos.complete.length && !todos.incomplete.length) return <EmptyTodo />
 

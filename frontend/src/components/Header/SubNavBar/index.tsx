@@ -46,7 +46,7 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
               >
                 <s.CollectionsItems>
                   <Emoji emoji={collection.emoji} size={20} native />
-                  {collection.title}
+                  {collection.name}
                 </s.CollectionsItems>
               </NavLink>
             ))

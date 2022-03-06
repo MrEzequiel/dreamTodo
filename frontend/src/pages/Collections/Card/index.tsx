@@ -13,7 +13,7 @@ import Title from '../../../styles/Title'
 import { Emoji } from 'emoji-mart'
 
 interface IProps {
-  collection: any
+  collection: ICollection
 }
 
 const Card: React.FC<IProps> = ({ collection }) => {
@@ -23,14 +23,16 @@ const Card: React.FC<IProps> = ({ collection }) => {
   const [confirmed, setConfirmed] = useState(false)
 
   const getPercentageTodo = useMemo(() => {
-    const todos = collection.todo
+    const todos = collection.Todo
 
-    if (todos.complete.length === 0) return '0%'
+    if (todos.length === 0) return '0%'
 
-    const todosTotal = todos.complete.length + todos.incomplete.length
-
-    return ((todos.complete.length * 100) / todosTotal).toFixed() + '%'
-  }, [collection.todo])
+    const total = todos.reduce(
+      (acc, item) => (item.complete ? acc + 1 : acc),
+      0
+    )
+    return `${((total * 100) / todos.length).toFixed()}%`
+  }, [collection.Todo])
 
   function handleClickDropdown(types: 'edit' | 'remove') {
     if (types === 'remove') {
@@ -64,14 +66,10 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
         <div className="down">
           <h2>
-            <NavLink to={`/todo/${collection.id}`}>{collection?.title}</NavLink>
+            <NavLink to={`/todo/${collection.id}`}>{collection.name}</NavLink>
           </h2>
 
-          <p>
-            Tasks:{' '}
-            {collection.todo.complete.length +
-              collection.todo.incomplete.length}
-          </p>
+          <p>Tasks: {collection.Todo.length}</p>
 
           <s.Porcetage quant={getPercentageTodo}>
             <p>{getPercentageTodo}</p>
@@ -94,7 +92,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
       >
         <Title size="2.2rem" weight="300" separator>
           Want to delete collection
-          <strong>{` "${collection.title}"`}?</strong>
+          <strong>{` "${collection.name}"`}?</strong>
         </Title>
 
         <s.ControlsButton>

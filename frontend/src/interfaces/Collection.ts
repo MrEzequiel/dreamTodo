@@ -1,9 +1,9 @@
-import IFieldTodo from './IFieldTodo'
+import ITodo from './Todo'
 
 interface ICollection {
   id: string
-  title: string
-  todo: IFieldTodo
+  name: string
+  Todo: ITodo[]
   emoji: string
 }
 

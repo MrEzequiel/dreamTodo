@@ -29,14 +29,14 @@ const FormCollection: React.FC<IProps> = ({
   const { isUser } = useUser()
   const { dispatch } = useContext(TodoContext)
   const inputEl = useRef<HTMLInputElement>(null)
-  const collectionName = useForm({ initialValue: initial?.title })
+  const collectionName = useForm({ initialValue: initial?.name })
 
   const [emoji, setEmoji] = useState(false)
   const [selectEmoji, setSelectEmoji] = useState(
     initial?.emoji ?? ':muscle::skin-tone-4:'
   )
 
-  const { run } = useRequest(async () => {
+  const { run, result } = useRequest<ICollection>(async () => {
     return await postCollection({
       name: collectionName.value,
       emoji: selectEmoji
@@ -51,6 +51,17 @@ const FormCollection: React.FC<IProps> = ({
     setEmoji(false)
   }, [selectEmoji])
 
+  useEffect(() => {
+    if (result) {
+      dispatch({
+        type: Types.Add_Collection,
+        payload: { name: result.name, emoji: result.emoji }
+      })
+
+      setShowForm(false)
+    }
+  }, [result, setShowForm, dispatch, collectionName.value, selectEmoji])
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
 
@@ -62,7 +73,7 @@ const FormCollection: React.FC<IProps> = ({
     if (initial && callback) {
       const editedCollection: ICollection = {
         ...initial,
-        title: collectionName.value,
+        name: collectionName.value,
         emoji: selectEmoji
       }
       callback(editedCollection)
@@ -70,7 +81,7 @@ const FormCollection: React.FC<IProps> = ({
       if (!isUser) {
         dispatch({
           type: Types.Add_Collection,
-          payload: { title: collectionName.value, emoji: selectEmoji }
+          payload: { name: collectionName.value, emoji: selectEmoji }
         })
       } else {
         run()

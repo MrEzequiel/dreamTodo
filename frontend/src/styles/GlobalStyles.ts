@@ -34,6 +34,13 @@ export default createGlobalStyle`
     background: ${props => props.theme.colors.g2};
     color: ${props => props.theme.colors.g5};
     font: 400 1.6rem 'Lexend', sans-serif;
+  }
+
+  iframe {
+    display: none !important;
+  }
+
+  #root {
     min-height: 100vh;
   }
 

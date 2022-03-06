@@ -2,38 +2,41 @@ import { ThemeProvider } from 'styled-components'
 
 import GlobalStyles from './styles/GlobalStyles'
 import darkTheme from './styles/theme/dark'
-import TodoProvider from './context/TodoListContext'
-import Header from './components/Header'
-import TodoPage from './pages/TodoPage'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Collections from './pages/Collections'
-import NotFound from './pages/NotFound'
-import UserProvider from './context/UserContext'
+import UserProvider, { useUser } from './context/UserContext'
 import NotificationContextProvider from './context/NotificationContext'
 import NotificationUI from './components/NotificationUI'
+import Register from './pages/Register'
+import RequiredUser from './components/RequiredUser'
+import Home from './pages/Home'
 
 const App: React.FC = () => {
+  const { isUser } = useUser()
+
   return (
-    <NotificationContextProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <TodoProvider>
-            <ThemeProvider theme={darkTheme}>
-              <Header />
+    <ThemeProvider theme={darkTheme}>
+      <NotificationContextProvider>
+        <UserProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/register/*" element={<Register />} />
 
-              <Routes>
-                <Route path="/" element={<Collections />} />
-                <Route path="/todo/:id" element={<TodoPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Route
+                path="/*"
+                element={
+                  <RequiredUser>
+                    <Home />
+                  </RequiredUser>
+                }
+              />
+            </Routes>
 
-              <NotificationUI />
-              <GlobalStyles />
-            </ThemeProvider>
-          </TodoProvider>
-        </BrowserRouter>
-      </UserProvider>
-    </NotificationContextProvider>
+            <NotificationUI />
+            <GlobalStyles />
+          </BrowserRouter>
+        </UserProvider>
+      </NotificationContextProvider>
+    </ThemeProvider>
   )
 }
 
