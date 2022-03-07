@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { ThemeProvider } from 'styled-components'
 
 import GlobalStyles from './styles/GlobalStyles'
@@ -8,11 +9,11 @@ import NotificationContextProvider from './context/NotificationContext'
 import NotificationUI from './components/NotificationUI'
 import Register from './pages/Register'
 import RequiredUser from './components/RequiredUser'
-import Home from './pages/Home'
+import SuspenseFallback from './components/SuspenseFallback'
+
+const Home = lazy(() => import('./pages/Home'))
 
 const App: React.FC = () => {
-  const { isUser } = useUser()
-
   return (
     <ThemeProvider theme={darkTheme}>
       <NotificationContextProvider>
@@ -25,7 +26,9 @@ const App: React.FC = () => {
                 path="/*"
                 element={
                   <RequiredUser>
-                    <Home />
+                    <Suspense fallback={<SuspenseFallback />}>
+                      <Home />
+                    </Suspense>
                   </RequiredUser>
                 }
               />
