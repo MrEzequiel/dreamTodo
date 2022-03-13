@@ -11,14 +11,14 @@ import Button from '../../../styles/Button'
 import * as s from './style'
 import Title from '../../../styles/Title'
 import { Emoji } from 'emoji-mart'
+import useCollections from '../../../context/CollectionsContext'
 
 interface IProps {
   collection: ICollection
 }
 
 const Card: React.FC<IProps> = ({ collection }) => {
-  console.log(collection)
-  const { dispatch } = useContext(TodoContext)
+  const [, setCollections] = useCollections()
   const [hasEdit, setHasEdit] = useState(false)
   const [confirmed, setConfirmed] = useState(false)
 
@@ -45,14 +45,14 @@ const Card: React.FC<IProps> = ({ collection }) => {
   }
 
   function handleCollectionEdit(newCollection: ICollection) {
-    dispatch({ type: Types.Edit_Collection, payload: { ...newCollection } })
+    // dispatch({ type: Types.Edit_Collection, payload: { ...newCollection } })
   }
 
   function handleCollectionRemove() {
-    dispatch({
-      type: Types.Remove_Collection,
-      payload: { id: collection.id }
-    })
+    // dispatch({
+    //   type: Types.Remove_Collection,
+    //   payload: { id: collection.id }
+    // })
   }
 
   return (

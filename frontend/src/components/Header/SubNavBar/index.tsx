@@ -2,7 +2,7 @@ import { Emoji } from 'emoji-mart'
 import React, { useContext, useRef } from 'react'
 import { FaStickyNote, FaTimes } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
-import { TodoContext } from '../../../context/TodoListContext'
+import useCollections from '../../../context/CollectionsContext'
 import Title from '../../../styles/Title'
 
 import * as s from './style'
@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
-  const { state } = useContext(TodoContext)
+  const [collections] = useCollections()
   const subNavBarRef = useRef<HTMLDivElement>(null)
 
   const handleClickOutside = ({ target }: React.MouseEvent) => {
@@ -36,8 +36,8 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
         </s.SubNavBarHeader>
 
         <s.SubNavBarContent>
-          {state.collections.length ? (
-            state.collections.map(collection => (
+          {collections.length ? (
+            collections.map(collection => (
               <NavLink
                 key={collection.id}
                 to={`/todo/${collection.id}`}

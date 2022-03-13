@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react'
 import { FaStickyNote } from 'react-icons/fa'
+import useCollections from '../../../context/CollectionsContext'
 import { TodoContext } from '../../../context/TodoListContext'
 import { useUser } from '../../../context/UserContext'
 import { getCollection } from '../../../functions/Collection/getCollection'
@@ -17,8 +18,10 @@ interface IProps {
 }
 
 const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
-  const { state, dispatch } = useContext(TodoContext)
+  const [collections, setCollections] = useCollections()
+  console.log(collections)
   const { isUser } = useUser()
+
   const {
     run,
     result: userCollections,
@@ -33,25 +36,13 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
 
   useEffect(() => {
     if (status === 'resolved' && userCollections) {
-      dispatch({
-        type: Types.Add_Collection,
-        payload: { collection: userCollections, emoji: ' ', name: ' ' }
-      })
+      setCollections(userCollections)
     }
-  }, [isUser, userCollections, status, dispatch])
-
-  const verificationCollectionIsEmpty = () => {
-    if (state.collections?.length > 0) return false
-
-    if (status === 'resolved' && isUser) return true
-    if (!isUser) return true
-
-    return false
-  }
+  }, [status, userCollections, setCollections])
 
   return (
     <>
-      {verificationCollectionIsEmpty() && (
+      {collections.length === 0 && status === 'resolved' && (
         <s.EmptyCollection>
           <FaStickyNote size={30} />
           <p>
@@ -71,15 +62,15 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
         </s.EmptyCollection>
       )}
 
-      {!!state.collections && !!state.collections.length && (
+      {collections.length > 0 && status === 'resolved' && (
         <s.CollectionCardWrapper>
-          {state.collections.map(collection => (
+          {collections.map(collection => (
             <Card key={collection.id} collection={collection} />
           ))}
         </s.CollectionCardWrapper>
       )}
 
-      {isUser && status === 'pending' && (
+      {status === 'pending' && (
         <CardWrapper style={{ maxWidth: '280px' }}>
           <div className="upper">
             <Skeleton

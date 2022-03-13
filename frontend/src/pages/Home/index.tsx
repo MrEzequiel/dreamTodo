@@ -1,14 +1,14 @@
 import React from 'react'
-import TodoProvider from '../../context/TodoListContext'
 import Header from '../../components/Header'
 import Collections from '../Collections'
 import TodoPage from '../TodoPage'
 import NotFound from '../NotFound'
 import { Route, Routes } from 'react-router-dom'
+import { CollectionsProvider } from '../../context/CollectionsContext'
 
 const Home: React.FC = () => {
   return (
-    <TodoProvider>
+    <CollectionsProvider>
       <Header />
 
       <Routes>
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
         <Route path="/todo/:id" element={<TodoPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </TodoProvider>
+    </CollectionsProvider>
   )
 }
 

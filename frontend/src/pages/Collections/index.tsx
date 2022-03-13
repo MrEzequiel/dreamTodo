@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import Button from '../../styles/Button'
+import Title from '../../styles/Title'
 import CollectionCard from './CollectionCard'
 import FormCollection from './FormCollection'
 
 import * as s from './style'
 
 const Collections: React.FC = () => {
-  console.log('Collections')
   const [showForm, setShowForm] = useState(false)
+
   return (
     <s.CollectionWrapper>
-      <h1>Collections</h1>
+      <Title size="3.2rem" separator>
+        Collections
+      </Title>
 
       <CollectionCard setShowForm={setShowForm} />
 

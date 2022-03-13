@@ -12,6 +12,7 @@ import Modal from '../../../components/Modal'
 import { useUser } from '../../../context/UserContext'
 import useRequest from '../../../hooks/useRequest'
 import { postCollection } from '../../../functions/Collection/postCollection'
+import useCollections from '../../../context/CollectionsContext'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -26,8 +27,7 @@ const FormCollection: React.FC<IProps> = ({
   initial,
   callback
 }) => {
-  const { isUser } = useUser()
-  const { dispatch } = useContext(TodoContext)
+  const [, setCollections] = useCollections()
   const inputEl = useRef<HTMLInputElement>(null)
   const collectionName = useForm({ initialValue: initial?.name })
 
@@ -36,7 +36,7 @@ const FormCollection: React.FC<IProps> = ({
     initial?.emoji ?? ':muscle::skin-tone-4:'
   )
 
-  const { run, result } = useRequest<ICollection>(async () => {
+  const { run, result, status } = useRequest<ICollection>(async () => {
     return await postCollection({
       name: collectionName.value,
       emoji: selectEmoji
@@ -52,15 +52,11 @@ const FormCollection: React.FC<IProps> = ({
   }, [selectEmoji])
 
   useEffect(() => {
-    if (result) {
-      dispatch({
-        type: Types.Add_Collection,
-        payload: { name: result.name, emoji: result.emoji }
-      })
-
+    if (status === 'resolved' && result) {
+      setCollections(prevCollections => [result, ...prevCollections])
       setShowForm(false)
     }
-  }, [result, setShowForm, dispatch, collectionName.value, selectEmoji])
+  }, [result, setShowForm, status, setCollections])
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -78,14 +74,7 @@ const FormCollection: React.FC<IProps> = ({
       }
       callback(editedCollection)
     } else {
-      if (!isUser) {
-        dispatch({
-          type: Types.Add_Collection,
-          payload: { name: collectionName.value, emoji: selectEmoji }
-        })
-      } else {
-        run()
-      }
+      run()
     }
 
     setShowForm(false)
