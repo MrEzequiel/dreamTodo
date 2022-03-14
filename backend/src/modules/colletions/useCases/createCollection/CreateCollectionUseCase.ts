@@ -19,9 +19,9 @@ export class CreateCollectionUseCase {
 
     const colletion = await client.collection.create({
       data: {
-        userId,
         name,
-        emoji
+        emoji,
+        userId
       }
     })
 

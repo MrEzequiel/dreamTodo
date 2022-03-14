@@ -36,10 +36,11 @@ model Todo {
 model Collection {
   id         String   @id @unique @default(uuid())
   name       String
+  emoji      String
   id_todo    String?
   userId     String
   created_at DateTime @default(now())
-  emoji      String
+  modified_at DateTime @updatedAt
   todo       Todo?    @relation(fields: [id_todo], references: [id], onDelete: Cascade)
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Todo       Todo[]   @relation("DAUMTEMPO")
