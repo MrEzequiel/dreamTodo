@@ -9,14 +9,19 @@ export class ListCollectionUseCase {
 
     const collections = await client.collection.findMany({
       where: {
-        userId: user_id
+        userId: user_id,
       },
       select: {
         id: true,
         name: true,
         emoji: true,
-        Todo: true
+        Todo: true,
+        created_at: true,
+        modified_at: true
       },
+      orderBy: {
+        modified_at: 'asc'
+      }
     })
 
     return collections

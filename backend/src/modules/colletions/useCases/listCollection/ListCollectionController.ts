@@ -10,7 +10,7 @@ export class ListCollectionController {
 
     const listCollectionUseCase = new ListCollectionUseCase();
 
-    const collection = await listCollectionUseCase.execute(user_id);
+    const collection = await listCollectionUseCase.execute(user_id as string);
 
     return response.json(collection);
   }
