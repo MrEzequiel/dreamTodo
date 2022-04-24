@@ -11,7 +11,8 @@ const endpoints = {
   },
   collections: {
     get: '/collection',
-    post: '/collection'
+    post: '/collection',
+    delete: '/collection'
   }
 }
 

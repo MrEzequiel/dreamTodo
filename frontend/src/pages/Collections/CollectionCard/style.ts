@@ -1,10 +1,40 @@
 import styled from 'styled-components'
 
 export const CollectionCardWrapper = styled.div`
+  position: relative;
   margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 30px;
+`
+
+export const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  @keyframes show-up {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-20px) scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  animation: show-up 0.3s ease-in-out forwards;
+
+  svg {
+    color: ${({ theme }) => theme.colors.colorPrimary};
+  }
 `
 
 export const EmptyCollection = styled.div`
