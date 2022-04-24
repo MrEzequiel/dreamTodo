@@ -46,7 +46,7 @@ const TodoPage = () => {
 
           <h1>
             <Emoji emoji={thisCollection?.emoji} size={32} native />
-            {thisCollection?.title}
+            {thisCollection?.name}
           </h1>
         </s.TitleStyle>
 

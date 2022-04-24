@@ -7,6 +7,7 @@ import {
   useState
 } from 'react'
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 interface IUser {
   user: {
@@ -48,13 +49,17 @@ const removeAuthCookies = () => {
 export const UserContext = createContext({} as UserContext)
 
 const UserProvider: FC = ({ children }) => {
+  const navigate = useNavigate()
+
   const [data, setData] = useState<IUser>({} as IUser)
   const [isUser, setIsUser] = useState(false)
 
   const signOut = useCallback(() => {
     removeAuthCookies()
     setData({} as IUser)
-  }, [])
+
+    navigate('register')
+  }, [navigate])
 
   const signIn = useCallback(user => {
     Cookies.set('auth', JSON.stringify(user.token))

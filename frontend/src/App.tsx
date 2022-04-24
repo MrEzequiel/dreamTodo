@@ -22,8 +22,8 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={darkTheme}>
         <NotificationContextProvider>
-          <UserProvider>
-            <BrowserRouter>
+          <BrowserRouter>
+            <UserProvider>
               <Routes>
                 <Route path="/register/*" element={<Register />} />
 
@@ -41,8 +41,8 @@ const App: React.FC = () => {
 
               <NotificationUI />
               <GlobalStyles />
-            </BrowserRouter>
-          </UserProvider>
+            </UserProvider>
+          </BrowserRouter>
         </NotificationContextProvider>
       </ThemeProvider>
     </QueryClientProvider>

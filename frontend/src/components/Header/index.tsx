@@ -16,8 +16,8 @@ import { useTheme } from 'styled-components'
 
 const Header = () => {
   const {
-    isUser,
-    user: { user }
+    user: { user },
+    signOut
   } = useUser()
   const navBarRef = createRef<HTMLDivElement>()
   const [navBar, setNavBar] = useState<boolean>(false)
@@ -64,7 +64,7 @@ const Header = () => {
                   Settings
                 </DropdownItens>
 
-                <DropdownItens>
+                <DropdownItens onClick={() => signOut()}>
                   <FaDoorClosed />
                   Logout
                 </DropdownItens>
