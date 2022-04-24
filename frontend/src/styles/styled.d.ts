@@ -19,6 +19,7 @@ declare module 'styled-components' {
       g5: string
       g6: string
       g7: string
+      g8: string
     }
   }
 }

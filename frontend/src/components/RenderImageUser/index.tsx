@@ -4,8 +4,8 @@ import { RenderImageCover } from './style'
 
 interface IRenderImageUser {
   fashion?: React.CSSProperties
-  width?: number
-  height?: number
+  width?: number | string
+  height?: number | string
   url?: string
   alt?: string
 }

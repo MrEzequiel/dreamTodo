@@ -17,7 +17,8 @@ const darkTheme: DefaultTheme = {
     g4: '#404040',
     g5: '#f7f7f7',
     g6: '#EDEDED',
-    g7: '#DEDEDE'
+    g7: '#DEDEDE',
+    g8: '#7d7d7d'
   }
 }
 

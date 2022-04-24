@@ -2,8 +2,7 @@ import { createRef, useState } from 'react'
 import * as s from './style'
 
 import logo from '../../assets/logo.svg'
-import { NavLink } from 'react-router-dom'
-import Button from '../../styles/Button'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { FaBars, FaDoorClosed, FaUserCog } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
 import { CSSTransition } from 'react-transition-group'
@@ -15,6 +14,7 @@ import RenderImageUser from '../RenderImageUser'
 import { useTheme } from 'styled-components'
 
 const Header = () => {
+  const navigate = useNavigate()
   const {
     user: { user },
     signOut
@@ -59,7 +59,7 @@ const Header = () => {
               </s.ProfilePillText>
 
               <Dropdown>
-                <DropdownItens>
+                <DropdownItens onClick={() => navigate('user-settings')}>
                   <FaUserCog />
                   Settings
                 </DropdownItens>
