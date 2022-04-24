@@ -27,7 +27,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
   const query = useQueryClient()
   const { isLoading, mutate: mutateDelete } = useMutation(deleteCollection, {
     onSuccess: () => {
-      setConfirmed(true)
+      setConfirmed(false)
       createNotification('success', 'Collection deleted successfully')
       query.invalidateQueries('collection')
     },
@@ -57,10 +57,6 @@ const Card: React.FC<IProps> = ({ collection }) => {
     }
   }
 
-  function handleCollectionEdit(newCollection: ICollection) {
-    // dispatch({ type: Types.Edit_Collection, payload: { ...newCollection } })
-  }
-
   return (
     <>
       <s.CardWrapper>
@@ -88,7 +84,6 @@ const Card: React.FC<IProps> = ({ collection }) => {
         setShowForm={setHasEdit}
         showForm={hasEdit}
         initial={collection}
-        callback={handleCollectionEdit}
       />
 
       <Modal

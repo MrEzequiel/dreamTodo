@@ -13,21 +13,22 @@ import useRequest from '../../../hooks/useRequest'
 import { postCollection } from '../../../functions/Collection/postCollection'
 import LoadingIndicator from '../../../components/LoadingIndicator'
 import useCollections from '../../../context/CollectionsContext'
+import { useMutation, useQueryClient } from 'react-query'
+import { putCollection } from '../../../functions/Collection/editCollection'
+import { useNotification } from '../../../context/NotificationContext'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
   showForm: boolean
   initial?: ICollection
-  callback?: (editedCollection: ICollection) => void
 }
 
 const FormCollection: React.FC<IProps> = ({
   setShowForm,
   showForm,
-  initial,
-  callback
+  initial
 }) => {
-  const [, setCollections] = useCollections()
+  const { createNotification } = useNotification()
   const inputEl = useRef<HTMLInputElement>(null)
   const collectionName = useForm({ initialValue: initial?.name })
 
@@ -36,13 +37,46 @@ const FormCollection: React.FC<IProps> = ({
     initial?.emoji ?? ':muscle::skin-tone-4:'
   )
 
-  const { run, result, status } = useRequest<ICollection>(async () => {
-    return await postCollection({
-      name: collectionName.value,
-      emoji: selectEmoji
-    })
-  }, false)
-  console.log(status)
+  const query = useQueryClient()
+  const { mutate: mutatePost, isLoading: loadingPost } = useMutation(
+    postCollection,
+    {
+      onSuccess: () => {
+        query.invalidateQueries('collection')
+        setShowForm(false)
+        createNotification('success', 'Collection created')
+      },
+      onError: (err: any) => {
+        inputEl.current?.focus()
+
+        if (err?.response?.status === 400) {
+          createNotification('error', 'Collection name already exists')
+        } else {
+          createNotification('error', 'Error editing collection')
+        }
+      }
+    }
+  )
+
+  const { mutate: mutateEdit, isLoading: lodingEdit } = useMutation(
+    putCollection,
+    {
+      onSuccess: () => {
+        query.invalidateQueries('collection')
+        setShowForm(false)
+        createNotification('success', 'Collection edited successfully')
+      },
+      onError: (err: any) => {
+        inputEl.current?.focus()
+
+        if (err?.response?.status === 400) {
+          createNotification('error', 'Collection name already exists')
+        } else {
+          createNotification('error', 'Error editing collection')
+        }
+      }
+    }
+  )
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
     setSelectEmoji(emoji.colons)
@@ -52,13 +86,6 @@ const FormCollection: React.FC<IProps> = ({
     setEmoji(false)
   }, [selectEmoji])
 
-  useEffect(() => {
-    if (status === 'resolved' && result) {
-      setCollections(prevCollections => [result, ...prevCollections])
-      setShowForm(false)
-    }
-  }, [result, setShowForm, status, setCollections])
-
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
 
@@ -67,18 +94,18 @@ const FormCollection: React.FC<IProps> = ({
       return
     }
 
-    if (initial && callback) {
-      const editedCollection: ICollection = {
-        ...initial,
+    if (initial) {
+      mutateEdit({
+        idCollection: initial.id,
         name: collectionName.value,
         emoji: selectEmoji
-      }
-      callback(editedCollection)
+      })
     } else {
-      run()
+      mutatePost({
+        name: collectionName.value,
+        emoji: selectEmoji
+      })
     }
-
-    setShowForm(false)
   }
 
   useEffect(() => {
@@ -145,8 +172,13 @@ const FormCollection: React.FC<IProps> = ({
         />
 
         <button className="button-submit" type="submit">
-          {status === 'pending' && <LoadingIndicator />}
-          {status !== 'pending' && initial ? <FaEdit /> : <FaPlus />}
+          {loadingPost || lodingEdit ? (
+            <LoadingIndicator />
+          ) : initial ? (
+            <FaEdit />
+          ) : (
+            <FaPlus />
+          )}
         </button>
       </FormStyled>
     </Modal>
