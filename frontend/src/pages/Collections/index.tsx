@@ -7,8 +7,8 @@ import FormCollection from './FormCollection'
 import * as s from './style'
 
 const Collections: React.FC = () => {
-  console.log('Collections')
   const [showForm, setShowForm] = useState(false)
+
   return (
     <s.CollectionWrapper>
       <h1>Collections</h1>

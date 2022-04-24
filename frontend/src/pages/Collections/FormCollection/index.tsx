@@ -12,6 +12,7 @@ import Modal from '../../../components/Modal'
 import { useUser } from '../../../context/UserContext'
 import useRequest from '../../../hooks/useRequest'
 import { postCollection } from '../../../functions/Collection/postCollection'
+import LoadingIndicator from '../../../components/LoadingIndicator'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -36,12 +37,13 @@ const FormCollection: React.FC<IProps> = ({
     initial?.emoji ?? ':muscle::skin-tone-4:'
   )
 
-  const { run, result } = useRequest<ICollection>(async () => {
+  const { run, result, status } = useRequest<ICollection>(async () => {
     return await postCollection({
       name: collectionName.value,
       emoji: selectEmoji
     })
   }, false)
+  console.log(status)
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
     setSelectEmoji(emoji.colons)
@@ -155,7 +157,8 @@ const FormCollection: React.FC<IProps> = ({
         />
 
         <button className="button-submit" type="submit">
-          {initial ? <FaEdit /> : <FaPlus />}
+          {status === 'pending' && <LoadingIndicator />}
+          {status !== 'pending' && initial ? <FaEdit /> : <FaPlus />}
         </button>
       </FormStyled>
     </Modal>

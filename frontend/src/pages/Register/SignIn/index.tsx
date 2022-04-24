@@ -13,6 +13,7 @@ import * as s from './style'
 import Button from '../../../styles/Button'
 import InputStyle from '../../../styles/Input'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import { useMutation, useQuery } from 'react-query'
 
 interface ISignInProps {
   login: 'sign-in' | 'sign-up'
@@ -33,7 +34,6 @@ const SignIn: React.FC<ISignInProps> = ({
   const { signIn } = useUser()
   const navigate = useNavigate()
 
-  const [loding, setLoding] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
   const emailField = useForm({ type: 'email' })
@@ -46,41 +46,62 @@ const SignIn: React.FC<ISignInProps> = ({
     setLoadingPopUpGoogle(false)
   }
 
-  const handleSuccess = (response: any) => {
-    loginWithGoogle(response.tokenId)
-      .then(res => {
-        signIn({
-          user: res.payload,
-          token: response.tokenId
-        })
+  const {
+    data: loginRes,
+    isError,
+    mutate
+  } = useMutation('loginWithGoogle', (token: string) => {
+    return loginWithGoogle(token)
+  })
 
-        // redirect
-        navigate('/collection')
-      })
-      .catch(err => {
-        createNotification('error', 'oops! something went wrong')
-      })
-      .finally(() => {
-        setLoadingPopUpGoogle(false)
-      })
+  useEffect(() => {
+    if (!loginRes) return
+
+    signIn({
+      user: loginRes.payload,
+      token: loginRes.tokenId
+    })
+
+    navigate('/collection')
+  }, [loginRes, signIn, navigate])
+
+  useEffect(() => {
+    if (isError) {
+      createNotification('error', 'oops! something went wrong')
+    }
+  }, [isError, createNotification])
+
+  const handleSuccess = (response: any) => {
+    mutate(response.tokenId)
   }
+
+  const { mutate: mutateLogin, isLoading: loginLoading } = useMutation(
+    async (data: { email: string; password: string }) => {
+      return await loginUser(data.email, data.password)
+    },
+    {
+      onSuccess: data => {
+        signIn(data.token)
+        navigate('/collection')
+      },
+
+      onError: (err: any) => {
+        if (err?.response?.status === 400) {
+          createNotification('error', 'Invalid email or password')
+        } else {
+          createNotification('error', 'oops! something went wrong')
+        }
+      }
+    }
+  )
 
   const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    setLoding(true)
-    loginUser(emailField.value, passwordField.value)
-      .then(response => {
-        signIn(response.token)
-        // redirect
-        navigate('/collection')
-      })
-      .catch(err => {
-        createNotification('error', `Email or password incorrect`)
-      })
-      .finally(() => {
-        setLoding(false)
-      })
+    mutateLogin({
+      email: emailField.value,
+      password: passwordField.value
+    })
   }
 
   useEffect(() => {
@@ -123,7 +144,7 @@ const SignIn: React.FC<ISignInProps> = ({
           )}
         </label>
 
-        <Button outlined={false} type="submit" loading={loding}>
+        <Button outlined={false} type="submit" loading={loginLoading}>
           Sign in
         </Button>
       </s.FormStyle>

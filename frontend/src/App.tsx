@@ -11,35 +11,41 @@ import Register from './pages/Register'
 import RequiredUser from './components/RequiredUser'
 import SuspenseFallback from './components/SuspenseFallback'
 
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
+
 const Home = lazy(() => import('./pages/Home'))
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <NotificationContextProvider>
-        <UserProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/register/*" element={<Register />} />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={darkTheme}>
+        <NotificationContextProvider>
+          <UserProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/register/*" element={<Register />} />
 
-              <Route
-                path="/*"
-                element={
-                  <RequiredUser>
-                    <Suspense fallback={<SuspenseFallback />}>
-                      <Home />
-                    </Suspense>
-                  </RequiredUser>
-                }
-              />
-            </Routes>
+                <Route
+                  path="/*"
+                  element={
+                    <RequiredUser>
+                      <Suspense fallback={<SuspenseFallback />}>
+                        <Home />
+                      </Suspense>
+                    </RequiredUser>
+                  }
+                />
+              </Routes>
 
-            <NotificationUI />
-            <GlobalStyles />
-          </BrowserRouter>
-        </UserProvider>
-      </NotificationContextProvider>
-    </ThemeProvider>
+              <NotificationUI />
+              <GlobalStyles />
+            </BrowserRouter>
+          </UserProvider>
+        </NotificationContextProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
 

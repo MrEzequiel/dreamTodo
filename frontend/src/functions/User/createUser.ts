@@ -1,7 +1,11 @@
 import api from '../../services/api'
 import endpoints from '../../services/endpoints'
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID_GOOGLE as string
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID_GOOGLE
+
+if (!CLIENT_ID || CLIENT_ID.trim() === '') {
+  throw new Error('Missing client google id in .env file')
+}
 
 interface ICreateUserData {
   email: string
