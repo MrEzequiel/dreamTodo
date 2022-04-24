@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FaEdit, FaPlus, FaTimes } from 'react-icons/fa'
-import { TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
 import useForm from '../../../hooks/useForm'
 import { FormStyled } from './style'
 
@@ -9,10 +7,8 @@ import 'emoji-mart/css/emoji-mart.css'
 import { BaseEmoji, Emoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
 import Modal from '../../../components/Modal'
-import useRequest from '../../../hooks/useRequest'
 import { postCollection } from '../../../functions/Collection/postCollection'
 import LoadingIndicator from '../../../components/LoadingIndicator'
-import useCollections from '../../../context/CollectionsContext'
 import { useMutation, useQueryClient } from 'react-query'
 import { putCollection } from '../../../functions/Collection/editCollection'
 import { useNotification } from '../../../context/NotificationContext'
@@ -134,6 +130,7 @@ const FormCollection: React.FC<IProps> = ({
           type="button"
           className="close-form"
           onClick={() => setShowForm(false)}
+          disabled={loadingPost || lodingEdit}
         >
           <FaTimes size={16} />
         </button>
@@ -169,9 +166,14 @@ const FormCollection: React.FC<IProps> = ({
           placeholder="Add collection"
           value={collectionName.value}
           onChange={collectionName.handleChange}
+          disabled={loadingPost || lodingEdit}
         />
 
-        <button className="button-submit" type="submit">
+        <button
+          className="button-submit"
+          type="submit"
+          disabled={loadingPost || lodingEdit}
+        >
           {loadingPost || lodingEdit ? (
             <LoadingIndicator />
           ) : initial ? (

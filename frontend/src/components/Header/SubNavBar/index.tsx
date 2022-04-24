@@ -1,8 +1,9 @@
 import { Emoji } from 'emoji-mart'
-import React, { useContext, useRef } from 'react'
+import React, { useRef } from 'react'
 import { FaStickyNote, FaTimes } from 'react-icons/fa'
+import { useQueryClient } from 'react-query'
 import { NavLink } from 'react-router-dom'
-import useCollections from '../../../context/CollectionsContext'
+import ICollection from '../../../interfaces/Collection'
 import Title from '../../../styles/Title'
 
 import * as s from './style'
@@ -13,7 +14,6 @@ interface IProps {
 }
 
 const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
-  const [collections] = useCollections()
   const subNavBarRef = useRef<HTMLDivElement>(null)
 
   const handleClickOutside = ({ target }: React.MouseEvent) => {
@@ -21,6 +21,9 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
       props.setNavBar(false)
     }
   }
+  const query = useQueryClient()
+
+  const collections = query.getQueriesData('collection')[0][1] as ICollection[]
 
   return (
     <s.SubNavBarWrapper ref={ref} onClick={handleClickOutside}>
