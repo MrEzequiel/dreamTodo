@@ -1,8 +1,9 @@
 import { Emoji } from 'emoji-mart'
-import React, { useContext, useRef } from 'react'
+import React, { useRef } from 'react'
 import { FaStickyNote, FaTimes } from 'react-icons/fa'
+import { useQueryClient } from 'react-query'
 import { NavLink } from 'react-router-dom'
-import { TodoContext } from '../../../context/TodoListContext'
+import ICollection from '../../../interfaces/Collection'
 import Title from '../../../styles/Title'
 
 import * as s from './style'
@@ -13,7 +14,6 @@ interface IProps {
 }
 
 const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
-  const { state } = useContext(TodoContext)
   const subNavBarRef = useRef<HTMLDivElement>(null)
 
   const handleClickOutside = ({ target }: React.MouseEvent) => {
@@ -21,6 +21,9 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
       props.setNavBar(false)
     }
   }
+  const query = useQueryClient()
+
+  const collections = query.getQueriesData('collection')[0][1] as ICollection[]
 
   return (
     <s.SubNavBarWrapper ref={ref} onClick={handleClickOutside}>
@@ -36,8 +39,8 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
         </s.SubNavBarHeader>
 
         <s.SubNavBarContent>
-          {state.collections.length ? (
-            state.collections.map(collection => (
+          {collections.length ? (
+            collections.map(collection => (
               <NavLink
                 key={collection.id}
                 to={`/todo/${collection.id}`}

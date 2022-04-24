@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useMemo } from 'react'
+import React from 'react'
 import { FaStickyNote } from 'react-icons/fa'
-import { TodoContext } from '../../../context/TodoListContext'
-import { useUser } from '../../../context/UserContext'
+import { useQuery } from 'react-query'
+import LoadingIndicator from '../../../components/LoadingIndicator'
 import { getCollection } from '../../../functions/Collection/getCollection'
-import { Types } from '../../../functions/reducers'
-import useRequest from '../../../hooks/useRequest'
 import ICollection from '../../../interfaces/Collection'
 import { Skeleton } from '../../../styles/Skeleton'
 import Card from '../Card'
@@ -17,41 +15,17 @@ interface IProps {
 }
 
 const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
-  const { state, dispatch } = useContext(TodoContext)
-  const { isUser } = useUser()
   const {
-    run,
-    result: userCollections,
-    status
-  } = useRequest<ICollection[]>(getCollection, false)
-
-  useEffect(() => {
-    if (isUser) {
-      run()
-    }
-  }, [isUser, run])
-
-  useEffect(() => {
-    if (status === 'resolved' && userCollections) {
-      dispatch({
-        type: Types.Add_Collection,
-        payload: { collection: userCollections, emoji: ' ', name: ' ' }
-      })
-    }
-  }, [isUser, userCollections, status, dispatch])
-
-  const verificationCollectionIsEmpty = () => {
-    if (state.collections?.length > 0) return false
-
-    if (status === 'resolved' && isUser) return true
-    if (!isUser) return true
-
-    return false
-  }
+    data: collections,
+    isLoading,
+    isFetching
+  } = useQuery<ICollection[]>('collection', getCollection, {
+    refetchOnWindowFocus: false
+  })
 
   return (
     <>
-      {verificationCollectionIsEmpty() && (
+      {collections && collections.length === 0 && !isLoading && (
         <s.EmptyCollection>
           <FaStickyNote size={30} />
           <p>
@@ -71,15 +45,27 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
         </s.EmptyCollection>
       )}
 
-      {!!state.collections && !!state.collections.length && (
-        <s.CollectionCardWrapper>
-          {state.collections.map(collection => (
+      {collections && collections.length > 0 && !isLoading && (
+        <s.CollectionCardWrapper
+          style={{
+            opacity: isFetching && collections.length ? 0.5 : 1,
+            pointerEvents: isFetching && collections.length ? 'none' : 'auto',
+            transition: 'all 0.3s ease-in-out'
+          }}
+        >
+          {collections.map(collection => (
             <Card key={collection.id} collection={collection} />
           ))}
+
+          {isFetching && Boolean(collections.length) && (
+            <s.LoadingWrapper>
+              <LoadingIndicator size={40} />
+            </s.LoadingWrapper>
+          )}
         </s.CollectionCardWrapper>
       )}
 
-      {isUser && status === 'pending' && (
+      {isLoading && (
         <CardWrapper style={{ maxWidth: '280px' }}>
           <div className="upper">
             <Skeleton

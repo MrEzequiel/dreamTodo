@@ -11,20 +11,33 @@ import Button from '../../../styles/Button'
 import * as s from './style'
 import Title from '../../../styles/Title'
 import { Emoji } from 'emoji-mart'
+import { useMutation, useQueryClient } from 'react-query'
+import deleteCollection from '../../../functions/Collection/deleteCollection'
+import { useNotification } from '../../../context/NotificationContext'
 
 interface IProps {
   collection: ICollection
 }
 
 const Card: React.FC<IProps> = ({ collection }) => {
-  console.log(collection)
-  const { dispatch } = useContext(TodoContext)
+  const { createNotification } = useNotification()
   const [hasEdit, setHasEdit] = useState(false)
   const [confirmed, setConfirmed] = useState(false)
 
+  const query = useQueryClient()
+  const { isLoading, mutate: mutateDelete } = useMutation(deleteCollection, {
+    onSuccess: () => {
+      setConfirmed(false)
+      createNotification('success', 'Collection deleted successfully')
+      query.invalidateQueries('collection')
+    },
+    onError: () => {
+      createNotification('error', 'Error deleting collection')
+    }
+  })
+
   const getPercentageTodo = useMemo(() => {
     const todos = collection.Todo
-
     if (todos.length === 0) return '0%'
 
     const total = todos.reduce(
@@ -42,17 +55,6 @@ const Card: React.FC<IProps> = ({ collection }) => {
     if (types === 'edit') {
       setHasEdit(true)
     }
-  }
-
-  function handleCollectionEdit(newCollection: ICollection) {
-    dispatch({ type: Types.Edit_Collection, payload: { ...newCollection } })
-  }
-
-  function handleCollectionRemove() {
-    dispatch({
-      type: Types.Remove_Collection,
-      payload: { id: collection.id }
-    })
   }
 
   return (
@@ -82,7 +84,6 @@ const Card: React.FC<IProps> = ({ collection }) => {
         setShowForm={setHasEdit}
         showForm={hasEdit}
         initial={collection}
-        callback={handleCollectionEdit}
       />
 
       <Modal
@@ -96,9 +97,14 @@ const Card: React.FC<IProps> = ({ collection }) => {
         </Title>
 
         <s.ControlsButton>
-          <Button onClick={handleCollectionRemove}>Yes</Button>
           <Button outlined onClick={() => setConfirmed(false)}>
             No
+          </Button>
+          <Button
+            onClick={() => mutateDelete(collection.id)}
+            loading={isLoading}
+          >
+            Yes
           </Button>
         </s.ControlsButton>
       </Modal>

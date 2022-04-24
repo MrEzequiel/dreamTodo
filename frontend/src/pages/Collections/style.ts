@@ -6,24 +6,6 @@ export const CollectionWrapper = styled.div`
   ${Container()}
   padding-bottom: 130px;
 
-  h1 {
-    display: flex;
-    align-items: center;
-
-    font-size: 3.2rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-
-    &::before {
-      content: '';
-      margin-right: 10px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: ${props => props.theme.colors.colorPrimary};
-    }
-  }
-
   .add-collection {
     position: fixed;
     left: 50%;

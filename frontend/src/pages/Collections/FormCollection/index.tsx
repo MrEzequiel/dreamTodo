@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FaEdit, FaPlus, FaTimes } from 'react-icons/fa'
-import { TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
 import useForm from '../../../hooks/useForm'
 import { FormStyled } from './style'
 
@@ -9,26 +7,24 @@ import 'emoji-mart/css/emoji-mart.css'
 import { BaseEmoji, Emoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
 import Modal from '../../../components/Modal'
-import { useUser } from '../../../context/UserContext'
-import useRequest from '../../../hooks/useRequest'
 import { postCollection } from '../../../functions/Collection/postCollection'
 import LoadingIndicator from '../../../components/LoadingIndicator'
+import { useMutation, useQueryClient } from 'react-query'
+import { putCollection } from '../../../functions/Collection/editCollection'
+import { useNotification } from '../../../context/NotificationContext'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
   showForm: boolean
   initial?: ICollection
-  callback?: (editedCollection: ICollection) => void
 }
 
 const FormCollection: React.FC<IProps> = ({
   setShowForm,
   showForm,
-  initial,
-  callback
+  initial
 }) => {
-  const { isUser } = useUser()
-  const { dispatch } = useContext(TodoContext)
+  const { createNotification } = useNotification()
   const inputEl = useRef<HTMLInputElement>(null)
   const collectionName = useForm({ initialValue: initial?.name })
 
@@ -37,13 +33,46 @@ const FormCollection: React.FC<IProps> = ({
     initial?.emoji ?? ':muscle::skin-tone-4:'
   )
 
-  const { run, result, status } = useRequest<ICollection>(async () => {
-    return await postCollection({
-      name: collectionName.value,
-      emoji: selectEmoji
-    })
-  }, false)
-  console.log(status)
+  const query = useQueryClient()
+  const { mutate: mutatePost, isLoading: loadingPost } = useMutation(
+    postCollection,
+    {
+      onSuccess: () => {
+        query.invalidateQueries('collection')
+        setShowForm(false)
+        createNotification('success', 'Collection created')
+      },
+      onError: (err: any) => {
+        inputEl.current?.focus()
+
+        if (err?.response?.status === 400) {
+          createNotification('error', 'Collection name already exists')
+        } else {
+          createNotification('error', 'Error editing collection')
+        }
+      }
+    }
+  )
+
+  const { mutate: mutateEdit, isLoading: lodingEdit } = useMutation(
+    putCollection,
+    {
+      onSuccess: () => {
+        query.invalidateQueries('collection')
+        setShowForm(false)
+        createNotification('success', 'Collection edited successfully')
+      },
+      onError: (err: any) => {
+        inputEl.current?.focus()
+
+        if (err?.response?.status === 400) {
+          createNotification('error', 'Collection name already exists')
+        } else {
+          createNotification('error', 'Error editing collection')
+        }
+      }
+    }
+  )
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
     setSelectEmoji(emoji.colons)
@@ -53,17 +82,6 @@ const FormCollection: React.FC<IProps> = ({
     setEmoji(false)
   }, [selectEmoji])
 
-  useEffect(() => {
-    if (result) {
-      dispatch({
-        type: Types.Add_Collection,
-        payload: { name: result.name, emoji: result.emoji }
-      })
-
-      setShowForm(false)
-    }
-  }, [result, setShowForm, dispatch, collectionName.value, selectEmoji])
-
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
 
@@ -72,25 +90,18 @@ const FormCollection: React.FC<IProps> = ({
       return
     }
 
-    if (initial && callback) {
-      const editedCollection: ICollection = {
-        ...initial,
+    if (initial) {
+      mutateEdit({
+        idCollection: initial.id,
         name: collectionName.value,
         emoji: selectEmoji
-      }
-      callback(editedCollection)
+      })
     } else {
-      if (!isUser) {
-        dispatch({
-          type: Types.Add_Collection,
-          payload: { name: collectionName.value, emoji: selectEmoji }
-        })
-      } else {
-        run()
-      }
+      mutatePost({
+        name: collectionName.value,
+        emoji: selectEmoji
+      })
     }
-
-    setShowForm(false)
   }
 
   useEffect(() => {
@@ -119,6 +130,7 @@ const FormCollection: React.FC<IProps> = ({
           type="button"
           className="close-form"
           onClick={() => setShowForm(false)}
+          disabled={loadingPost || lodingEdit}
         >
           <FaTimes size={16} />
         </button>
@@ -154,11 +166,21 @@ const FormCollection: React.FC<IProps> = ({
           placeholder="Add collection"
           value={collectionName.value}
           onChange={collectionName.handleChange}
+          disabled={loadingPost || lodingEdit}
         />
 
-        <button className="button-submit" type="submit">
-          {status === 'pending' && <LoadingIndicator />}
-          {status !== 'pending' && initial ? <FaEdit /> : <FaPlus />}
+        <button
+          className="button-submit"
+          type="submit"
+          disabled={loadingPost || lodingEdit}
+        >
+          {loadingPost || lodingEdit ? (
+            <LoadingIndicator />
+          ) : initial ? (
+            <FaEdit />
+          ) : (
+            <FaPlus />
+          )}
         </button>
       </FormStyled>
     </Modal>

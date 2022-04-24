@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useContext } from 'react'
 import TodoPageContext from '../../../../context/TodoPageContext'
 import Todo from '../Todo'

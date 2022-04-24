@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import Button from '../../styles/Button'
+import Title from '../../styles/Title'
 import CollectionCard from './CollectionCard'
 import FormCollection from './FormCollection'
 
@@ -11,7 +12,9 @@ const Collections: React.FC = () => {
 
   return (
     <s.CollectionWrapper>
-      <h1>Collections</h1>
+      <Title size="3.2rem" separator>
+        Collections
+      </Title>
 
       <CollectionCard setShowForm={setShowForm} />
 

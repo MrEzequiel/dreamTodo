@@ -3,7 +3,6 @@ import * as s from './style'
 
 import logo from '../../assets/logo.svg'
 import { NavLink } from 'react-router-dom'
-import Login from './ModalEntry'
 import Button from '../../styles/Button'
 import { FaBars, FaDoorClosed, FaUserCog } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
@@ -13,15 +12,16 @@ import { useUser } from '../../context/UserContext'
 import Dropdown from '../Dropdown'
 import { DropdownItens } from '../Dropdown/style'
 import RenderImageUser from '../RenderImageUser'
+import { useTheme } from 'styled-components'
 
 const Header = () => {
   const {
-    isUser,
-    user: { user }
+    user: { user },
+    signOut
   } = useUser()
   const navBarRef = createRef<HTMLDivElement>()
-  const [openModal, setOpenModal] = useState<boolean>(false)
   const [navBar, setNavBar] = useState<boolean>(false)
+  const { colors } = useTheme()
 
   return (
     <>
@@ -40,53 +40,39 @@ const Header = () => {
           <div className="left">
             <Clock />
 
-            {!isUser ? (
-              <Button
-                onClick={() => setOpenModal(true)}
-                outlined
-                className="button-login"
-              >
-                Login
-              </Button>
-            ) : (
-              <>
-                <s.ProfilePill>
-                  <RenderImageUser
-                    height={35}
-                    width={35}
-                    alt="user image"
-                    fashion={{
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      border: '2px solid #11EEDD',
-                      flexShrink: 0
-                    }}
-                    url={user?.picture ? user.picture : user.imageURL}
-                  />
+            <s.ProfilePill>
+              <RenderImageUser
+                height={35}
+                width={35}
+                alt="user image"
+                fashion={{
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: `2px solid ${colors.colorPrimary}`,
+                  flexShrink: 0
+                }}
+                url={user?.picture ? user.picture : user.imageURL}
+              />
 
-                  <s.ProfilePillText>
-                    {user.name ? user.name : user.email}
-                  </s.ProfilePillText>
+              <s.ProfilePillText>
+                {user.name ? user.name : user.email}
+              </s.ProfilePillText>
 
-                  <Dropdown>
-                    <DropdownItens>
-                      <FaUserCog />
-                      Settings
-                    </DropdownItens>
+              <Dropdown>
+                <DropdownItens>
+                  <FaUserCog />
+                  Settings
+                </DropdownItens>
 
-                    <DropdownItens>
-                      <FaDoorClosed />
-                      Logout
-                    </DropdownItens>
-                  </Dropdown>
-                </s.ProfilePill>
-              </>
-            )}
+                <DropdownItens onClick={() => signOut()}>
+                  <FaDoorClosed />
+                  Logout
+                </DropdownItens>
+              </Dropdown>
+            </s.ProfilePill>
           </div>
         </s.HeaderStyle>
       </s.HeaderWrapper>
-
-      <Login setModal={setOpenModal} modalIsOpen={openModal} />
 
       <CSSTransition
         in={navBar === true}
