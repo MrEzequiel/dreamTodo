@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-interface InputProps {
+export interface InputProps {
   isValid?: boolean
 }
 
@@ -67,5 +67,24 @@ InputStyle.defaultProps = {
 TextAreaStyle.defaultProps = {
   isValid: true
 }
+
+export const HelperTextStyle = styled.span<{ isError?: boolean }>`
+  color: ${props =>
+    props.isError ? props.theme.colors.colorError : props.theme.colors.g2};
+  font-size: 1.2rem;
+  padding-left: 10px;
+  margin-top: 4px;
+
+  @keyframes collapse-effect {
+    from {
+      max-height: 0;
+    }
+    to {
+      max-height: 100px;
+    }
+  }
+
+  animation: collapse-effect 0.5s ease;
+`
 
 export default InputStyle

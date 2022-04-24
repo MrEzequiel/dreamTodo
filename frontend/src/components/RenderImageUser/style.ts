@@ -1,11 +1,13 @@
 import styled from 'styled-components'
 
 export const RenderImageCover = styled.picture<{
-  width: number
-  height: number
+  width: number | string
+  height: number | string
 }>`
-  width: ${props => props.width}px;
-  height: ${props => props.height}px;
+  width: ${props =>
+    typeof props.width === 'string' ? props.width : `${props.width}px`};
+  height: ${props =>
+    typeof props.height === 'string' ? props.height : `${props.height}px`};
 
   display: flex;
   justify-content: center;

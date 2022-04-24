@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { ButtonHTMLAttributes, useEffect, useState } from 'react'
 import ButtonStyle from './ButtonStyle'
 import { VscLoading } from 'react-icons/vsc'
 
-interface IButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   outlined?: boolean
   loading?: boolean
-  type?: string
+  color?: 'error' | 'primary' | 'secondary'
 }
 
 const Button: React.FC<IButtonProps> = ({
   outlined = false,
   loading = false,
-  type = 'button',
+  color = 'primary',
   children,
   ...props
 }) => {
@@ -34,9 +34,10 @@ const Button: React.FC<IButtonProps> = ({
       wave={wave}
       isLoading={loading}
       disabled={loading}
+      color={color}
     >
       {loading ? <VscLoading className="loading-indicator" /> : children}
-      <span className="wave"></span>
+      <span className="wave" />
     </ButtonStyle>
   )
 }

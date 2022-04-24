@@ -1,10 +1,24 @@
-import styled, { css } from 'styled-components'
+import styled, { css, DefaultTheme } from 'styled-components'
 import { FilledButton, OutlinedButton } from './LayoutComponents'
 
 interface IButtonProps {
   outlined: boolean
   isLoading: boolean
   wave?: boolean
+  color?: 'error' | 'primary' | 'secondary'
+}
+
+const getColor = (color: IButtonProps['color'], theme: DefaultTheme) => {
+  switch (color) {
+    case 'error':
+      return theme.colors.colorError
+    case 'primary':
+      return theme.colors.colorPrimary
+    case 'secondary':
+      return theme.colors.colorPrimary2
+    default:
+      return theme.colors.colorPrimary
+  }
 }
 
 const ButtonStyle = styled.button<IButtonProps>`
@@ -50,7 +64,7 @@ const ButtonStyle = styled.button<IButtonProps>`
 
     @keyframes pulse {
       0% {
-        box-shadow: 0 0 0 0 ${props => props.theme.colors.colorPrimary};
+        box-shadow: 0 0 0 0 ${props => getColor(props.color, props.theme)};
       }
     }
 
@@ -74,6 +88,14 @@ const ButtonStyle = styled.button<IButtonProps>`
 
     animation: rotate-loader 900ms cubic-bezier(1, 0.39, 0.17, 1) infinite;
   }
+
+  ${props => props.outlined && `color: ${getColor(props.color, props.theme)}`};
+  ${props =>
+    !props.outlined && `background: ${getColor(props.color, props.theme)}`};
+  border-color: ${props => getColor(props.color, props.theme)};
 `
+ButtonStyle.defaultProps = {
+  color: 'primary'
+}
 
 export default ButtonStyle
