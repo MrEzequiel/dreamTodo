@@ -12,6 +12,7 @@ import Button from '../../../styles/Button'
 import InputStyle, { FileInputStyle } from '../../../styles/Input'
 import { Actions, FormStyle, Separator } from '../SignIn/style'
 import { FaEye, FaEyeSlash, FaGoogle, FaUpload } from 'react-icons/fa'
+import { useMutation } from 'react-query'
 
 // utils functions
 const passwordValidation = (value: string) => {
@@ -54,7 +55,6 @@ const SignUp: React.FC<ISignUpProps> = ({
 
   const { signIn } = useUser()
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
   const [userImage, setUserImage] = useState<{
     file: File | null
     url: string | null
@@ -103,6 +103,16 @@ const SignUp: React.FC<ISignUpProps> = ({
     setLoadingPopUpGoogle(false)
   }
 
+  const createUserFn = () => {
+    const formData = new FormData()
+    formData.append('name', nameField.value)
+    formData.append('email', emailField.value)
+    formData.append('password', passwordField.value)
+    if (userImage.file) formData.append('imageURL', userImage.file)
+
+    return createUser(formData)
+  }
+
   const handleSuccess = (response: any) => {
     loginWithGoogle(response.tokenId)
       .then(res => {
@@ -113,13 +123,34 @@ const SignUp: React.FC<ISignUpProps> = ({
         // redirect to home
         navigate('/collection')
       })
-      .catch(err => {
-        createNotification('error', 'oops! something went wrong')
+      .catch((err: any) => {
+        if (err?.response?.status === 400) {
+          createNotification('error', 'oops! Email is already in use.')
+        } else {
+          createNotification('error', 'oops! something went wrong')
+        }
       })
       .finally(() => {
         setLoadingPopUpGoogle(false)
       })
   }
+
+  const { mutate: mutateCreteUser, isLoading } = useMutation(createUserFn, {
+    onSuccess: () => {
+      setLogin('sign-in')
+      createNotification(
+        'success',
+        'Account created successfully, please sign in'
+      )
+    },
+    onError: (error: any) => {
+      if (error.response.status === 400) {
+        createNotification('error', 'Email already exists')
+      } else {
+        createNotification('error', 'oops! Email is already in use.')
+      }
+    }
+  })
 
   const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -132,27 +163,7 @@ const SignUp: React.FC<ISignUpProps> = ({
       return
     }
 
-    setLoading(true)
-    const formData = new FormData()
-    formData.append('name', nameField.value)
-    formData.append('email', emailField.value)
-    formData.append('password', passwordField.value)
-    if (userImage.file) formData.append('imageURL', userImage.file)
-
-    createUser(formData)
-      .then(res => {
-        setLogin('sign-in')
-        createNotification(
-          'success',
-          'Account created successfully, please sign in'
-        )
-      })
-      .catch(() => {
-        createNotification('error', 'User already exists')
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    mutateCreteUser()
   }
 
   useEffect(() => {
@@ -235,7 +246,7 @@ const SignUp: React.FC<ISignUpProps> = ({
           )}
         </div>
 
-        <Button outlined={false} type="submit" loading={loading}>
+        <Button outlined={false} type="submit" loading={isLoading}>
           Sign Up
         </Button>
       </FormStyle>

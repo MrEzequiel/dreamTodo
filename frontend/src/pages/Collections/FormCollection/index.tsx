@@ -9,9 +9,9 @@ import 'emoji-mart/css/emoji-mart.css'
 import { BaseEmoji, Emoji, Picker } from 'emoji-mart'
 import ICollection from '../../../interfaces/Collection'
 import Modal from '../../../components/Modal'
-import { useUser } from '../../../context/UserContext'
 import useRequest from '../../../hooks/useRequest'
 import { postCollection } from '../../../functions/Collection/postCollection'
+import LoadingIndicator from '../../../components/LoadingIndicator'
 import useCollections from '../../../context/CollectionsContext'
 
 interface IProps {
@@ -42,6 +42,7 @@ const FormCollection: React.FC<IProps> = ({
       emoji: selectEmoji
     })
   }, false)
+  console.log(status)
 
   const handleEmojiSelect = (emoji: BaseEmoji) => {
     setSelectEmoji(emoji.colons)
@@ -144,7 +145,8 @@ const FormCollection: React.FC<IProps> = ({
         />
 
         <button className="button-submit" type="submit">
-          {initial ? <FaEdit /> : <FaPlus />}
+          {status === 'pending' && <LoadingIndicator />}
+          {status !== 'pending' && initial ? <FaEdit /> : <FaPlus />}
         </button>
       </FormStyled>
     </Modal>
