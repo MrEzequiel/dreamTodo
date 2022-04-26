@@ -20,7 +20,7 @@ export default function ensureAuthenticareUser(request: Request, response: Respo
   try {
     const { sub: user_id } = verify(
       token,
-      process.env.SECRET_KEY
+      String(process.env.SECRET_KEY_TOKEN)
     ) as IpayLoad
 
     request.user = {
