@@ -28,7 +28,7 @@ export class RefreshTokenUseCase {
     await client.refreshToken.deleteMany({
       where: {
         userId: sub
-      }
+      },
     })
 
     const refreshToken = sign(
