@@ -16,6 +16,7 @@ model User {
   imageURL     String?
   created_at   DateTime     @default(now())
   Collection   Collection[]
+  RefreshToken RefreshToken[]
 
   @@map("users")
 }
@@ -34,16 +35,27 @@ model Todo {
 }
 
 model Collection {
-  id         String   @id @unique @default(uuid())
-  name       String
-  emoji      String
-  id_todo    String?
-  userId     String
-  created_at DateTime @default(now())
+  id          String   @id @unique @default(uuid())
+  name        String
+  emoji       String
+  id_todo     String?
+  userId      String
+  created_at  DateTime @default(now())
   modified_at DateTime @updatedAt
-  todo       Todo?    @relation(fields: [id_todo], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Todo       Todo[]   @relation("DAUMTEMPO")
+  todo        Todo?    @relation(fields: [id_todo], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Todo        Todo[]   @relation("DAUMTEMPO")
 
   @@map("collections")
+}
+
+model RefreshToken {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  refreshToken String
+  expires_in   DateTime
+  createdAt    DateTime @default(now())
+  userId       String
+
+  @@map("refresh_token")
 }
