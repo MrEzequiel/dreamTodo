@@ -2,7 +2,7 @@ import { createRef, useState } from 'react'
 import * as s from './style'
 
 import logo from '../../assets/logo.svg'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { FaBars, FaDoorClosed, FaUserCog } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
 import { CSSTransition } from 'react-transition-group'
@@ -15,6 +15,7 @@ import { useTheme } from 'styled-components'
 
 const Header = () => {
   const navigate = useNavigate()
+
   const {
     user: { user },
     signOut
@@ -32,7 +33,7 @@ const Header = () => {
               <FaBars size={20} />
             </s.ButtonCollections>
 
-            <NavLink to="/">
+            <NavLink to="/collection">
               <img src={logo} alt="dream to do logo" />
             </NavLink>
           </div>

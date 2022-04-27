@@ -1,25 +1,8 @@
 import 'styled-components'
+import darkTheme from './theme/dark'
+
+export type Theme = typeof darkTheme
 
 declare module 'styled-components' {
-  export interface DefaultTheme {
-    title: string
-
-    container: string
-    borderRadius: string
-    colors: {
-      colorPrimary: string
-      colorPrimary2: string
-      colorError: string
-      colorWarning: string
-      colorInfo: string
-      g1: string
-      g2: string
-      g3: string
-      g4: string
-      g5: string
-      g6: string
-      g7: string
-      g8: string
-    }
-  }
+  export interface DefaultTheme extends Theme {}
 }

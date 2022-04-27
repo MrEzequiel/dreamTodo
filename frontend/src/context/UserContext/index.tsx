@@ -8,6 +8,7 @@ import {
 } from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from 'react-query'
 
 interface IUser {
   user: {
@@ -50,16 +51,18 @@ export const UserContext = createContext({} as UserContext)
 
 const UserProvider: FC = ({ children }) => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const [data, setData] = useState<IUser>({} as IUser)
   const [isUser, setIsUser] = useState(false)
 
   const signOut = useCallback(() => {
     removeAuthCookies()
+    queryClient.removeQueries()
     setData({} as IUser)
 
     navigate('register')
-  }, [navigate])
+  }, [navigate, queryClient])
 
   const signIn = useCallback(user => {
     Cookies.set('auth', JSON.stringify(user.token))

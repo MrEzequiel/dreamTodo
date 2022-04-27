@@ -1,6 +1,7 @@
-import React, { ButtonHTMLAttributes, useEffect, useState } from 'react'
+import React, { ButtonHTMLAttributes, useEffect, useRef, useState } from 'react'
 import ButtonStyle from './ButtonStyle'
 import { VscLoading } from 'react-icons/vsc'
+import { CSSTransition } from 'react-transition-group'
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   outlined?: boolean
@@ -15,7 +16,16 @@ const Button: React.FC<IButtonProps> = ({
   children,
   ...props
 }) => {
+  const loadingRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const [wave, setWave] = useState(false)
+  const [animationIsFinished, setAnimationIsFinished] = useState(true)
+
+  useEffect(() => {
+    if (loading) {
+      setAnimationIsFinished(false)
+    }
+  }, [loading])
 
   useEffect(() => {
     if (!wave) return
@@ -35,8 +45,29 @@ const Button: React.FC<IButtonProps> = ({
       isLoading={loading}
       disabled={loading}
       color={color}
+      style={{
+        width:
+          !animationIsFinished && buttonRef.current
+            ? `${buttonRef.current.offsetWidth}px`
+            : 'auto'
+      }}
+      ref={buttonRef}
     >
-      {loading ? <VscLoading className="loading-indicator" /> : children}
+      <CSSTransition
+        in={loading}
+        timeout={500}
+        classNames="fade"
+        unmountOnExit
+        nodeRef={loadingRef}
+        onExited={() => setAnimationIsFinished(true)}
+      >
+        <div className="svg-container" ref={loadingRef}>
+          <VscLoading className="loading-indicator" />
+        </div>
+      </CSSTransition>
+
+      {animationIsFinished && children}
+
       <span className="wave" />
     </ButtonStyle>
   )

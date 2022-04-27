@@ -1,6 +1,4 @@
-import { DefaultTheme } from 'styled-components'
-
-const darkTheme: DefaultTheme = {
+const darkTheme = {
   title: 'dark',
 
   container: '960px',

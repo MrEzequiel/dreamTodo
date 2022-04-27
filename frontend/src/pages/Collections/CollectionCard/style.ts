@@ -1,11 +1,25 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const CollectionCardWrapper = styled.div`
+export const CollectionCardWrapper = styled.div<{ isFetching: boolean }>`
+  opacity: 1;
   position: relative;
   margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 30px;
+
+  transition: all 500ms ease;
+
+  ${({ isFetching }) =>
+    isFetching &&
+    css`
+      opacity: 0.5;
+      pointer-events: none;
+
+      & > * {
+        pointer-events: none;
+      }
+    `}
 `
 
 export const LoadingWrapper = styled.div`
@@ -14,7 +28,7 @@ export const LoadingWrapper = styled.div`
   align-items: center;
 
   position: absolute;
-  top: 20px;
+  top: 20%;
   left: 50%;
   transform: translateX(-50%);
 
