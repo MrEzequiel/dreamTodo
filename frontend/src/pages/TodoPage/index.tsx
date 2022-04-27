@@ -3,40 +3,33 @@ import React, { useContext, useEffect } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { FaAngleLeft } from 'react-icons/fa'
+import { useQuery } from 'react-query'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { TodoContext } from '../../context/TodoListContext'
 import TodoPageContext from '../../context/TodoPageContext'
+import { getIndividualCollection } from '../../functions/Todo/getTodo'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
 
 import * as s from './style'
 
 const TodoPage = () => {
-  const navigate = useNavigate()
-  const { id } = useParams()
-  const { state } = useContext(TodoContext)
-  const thisCollection = state.collections.find(
-    collection => collection.id === id
-  )
+  const { collectionName } = useParams()
 
-  useEffect(() => {
-    if (!thisCollection && id) navigate('/')
-  }, [thisCollection, navigate, id])
-
-  let contextTodoPage
-  if (thisCollection && id) {
-    contextTodoPage = {
-      id,
-      thisCollection
+  const { data: collection } = useQuery(
+    `todo-${collectionName}`,
+    () => {
+      getIndividualCollection(collectionName as string)
+    },
+    {
+      refetchOnWindowFocus: false
     }
-  } else {
-    navigate('/')
-    return null
-  }
+  )
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <TodoPageContext.Provider value={contextTodoPage}>
+      <h1>{collectionName}</h1>
+      {/* <TodoPageContext.Provider value={contextTodoPage}>
         <s.TitleStyle>
           <NavLink to="/" end>
             <button type="button">
@@ -52,7 +45,7 @@ const TodoPage = () => {
 
         <FormTodo />
         <TodoList />
-      </TodoPageContext.Provider>
+      </TodoPageContext.Provider> */}
     </DndProvider>
   )
 }

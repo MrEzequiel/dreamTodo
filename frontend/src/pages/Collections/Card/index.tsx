@@ -26,10 +26,10 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
   const query = useQueryClient()
   const { isLoading, mutate: mutateDelete } = useMutation(deleteCollection, {
-    onSuccess: () => {
+    onSuccess: data => {
       setConfirmed(false)
       createNotification('success', 'Collection deleted successfully')
-      query.invalidateQueries('collection')
+      query.refetchQueries('collection')
     },
     onError: () => {
       createNotification('error', 'Error deleting collection')
@@ -68,7 +68,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
         <div className="down">
           <h2>
-            <NavLink to={`/todo/${collection.id}`}>{collection.name}</NavLink>
+            <NavLink to={`/todo/${collection.name}`}>{collection.name}</NavLink>
           </h2>
 
           <p>Tasks: {collection.Todo.length}</p>

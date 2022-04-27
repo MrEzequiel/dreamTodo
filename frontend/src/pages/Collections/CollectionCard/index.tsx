@@ -18,9 +18,10 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
   const {
     data: collections,
     isLoading,
-    isFetching
+    isRefetching
   } = useQuery<ICollection[]>('collection', getCollection, {
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 2 // 2 minutes
   })
 
   return (
@@ -46,21 +47,21 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
       )}
 
       {collections && collections.length > 0 && !isLoading && (
-        <s.CollectionCardWrapper isFetching={isFetching}>
+        <s.CollectionCardWrapper isFetching={isRefetching}>
           {collections.map(collection => (
             <Card key={collection.id} collection={collection} />
           ))}
         </s.CollectionCardWrapper>
       )}
 
-      {isFetching && Boolean(collections?.length) && (
+      {isRefetching && Boolean(collections?.length) && (
         <s.LoadingWrapper>
           <LoadingIndicator size={40} />
         </s.LoadingWrapper>
       )}
 
       {isLoading && (
-        <CardWrapper style={{ maxWidth: '280px' }}>
+        <CardWrapper style={{ maxWidth: '280px', marginTop: '40px' }}>
           <div className="upper">
             <Skeleton
               width={50}

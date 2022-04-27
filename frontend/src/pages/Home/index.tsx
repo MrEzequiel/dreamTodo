@@ -14,7 +14,7 @@ const Home: React.FC = () => {
       <Routes>
         <Route path="/collection" element={<Collections />} />
         <Route path="/user-settings" element={<UserSettings />} />
-        <Route path="/todo/:id" element={<TodoPage />} />
+        <Route path="/todo/:collectionName" element={<TodoPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

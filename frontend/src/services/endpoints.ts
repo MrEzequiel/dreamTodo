@@ -14,6 +14,9 @@ const endpoints = {
     post: '/collection',
     delete: '/collection',
     put: '/collection'
+  },
+  todo: {
+    get: '/todo'
   }
 }
 
