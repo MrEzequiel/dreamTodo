@@ -4,11 +4,11 @@ import { AppError } from "../../../../infra/errors/AppError";
 
 export class ListTodoOfColletionUseCase {
   
-  async execute( collectionid: string, complete: string ): Promise<Todo[]>{
+  async execute( name: string, complete: string ){
 
     const verifyIfColletionExist = await client.collection.findFirst({
       where: {
-        id: collectionid
+        name
       }
     })
 
@@ -18,13 +18,25 @@ export class ListTodoOfColletionUseCase {
    
     const completeTodo = complete.includes('true') ? true : false
 
-    const todo = await client.todo.findMany({
+    const collection = await client.collection.findMany({
       where: {
-        id_collection: collectionid,
-        complete: completeTodo
+        name,
+      },
+      select: {
+        id: true,
+        name: true,
+        emoji: true,
+        userId: true,
+        created_at: true,
+        modified_at: true,
+        Todo: {
+          where: {
+            complete : completeTodo
+          }
+        }
       },
     })
 
-    return todo
+    return collection
   }
 }
