@@ -39,8 +39,10 @@ const confirmPasswordValidation = (value: string, password: string) => {
 }
 
 interface ISignUpProps {
-  login: 'sign-in' | 'sign-up'
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
+  login: 'sign-in' | 'sign-up' | 'forgot-password'
+  setLogin: React.Dispatch<
+    React.SetStateAction<'sign-in' | 'sign-up' | 'forgot-password'>
+  >
   setMenuHeight: React.Dispatch<React.SetStateAction<number | undefined>>
   setLoadingPopUpGoogle: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -279,7 +281,6 @@ const SignUp: React.FC<ISignUpProps> = ({
       <Actions>
         <p>
           <a
-            href="#"
             onClick={e => {
               e.preventDefault()
               setLogin('sign-in')

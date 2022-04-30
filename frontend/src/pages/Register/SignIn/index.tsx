@@ -18,8 +18,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { registerValidation } from '../validations'
 
 interface ISignInProps {
-  login: 'sign-in' | 'sign-up'
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
+  login: 'sign-in' | 'sign-up' | 'forgot-password'
+  setLogin: React.Dispatch<
+    React.SetStateAction<'sign-in' | 'sign-up' | 'forgot-password'>
+  >
   setMenuHeight: React.Dispatch<React.SetStateAction<number | undefined>>
   setLoadingPopUpGoogle: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -198,7 +200,6 @@ const SignIn: React.FC<ISignInProps> = ({
       <s.Actions>
         <p>
           <a
-            href="#"
             onClick={e => {
               e.preventDefault()
               setLogin('sign-up')
@@ -208,7 +209,12 @@ const SignIn: React.FC<ISignInProps> = ({
           </a>
         </p>
         <p>
-          <a href="#">
+          <a
+            onClick={e => {
+              e.preventDefault()
+              setLogin('forgot-password')
+            }}
+          >
             I <strong>forgot</strong> my password
           </a>
         </p>

@@ -24,9 +24,12 @@ import Title from '../../styles/Title'
 import dreamTodoLogo from '../../assets/logo.svg'
 import { FaGoogle } from 'react-icons/fa'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import ForgotPassword from './ForgotPassword'
 
-function formateLogin(text: string) {
-  return text.split('-')[1]
+const translateTitle: { [x: string]: string } = {
+  ['sign-in']: 'Sign In',
+  ['sign-up']: 'Sign Up',
+  ['forgot-password']: 'Forgot Password'
 }
 
 const Register: React.FC = () => {
@@ -49,14 +52,18 @@ const Register: React.FC = () => {
   // refs for animation
   const containerRef = useRef<HTMLDivElement | null>(null)
 
-  const [login, setLogin] = useState<'sign-in' | 'sign-up'>('sign-in')
+  const [login, setLogin] = useState<'sign-in' | 'sign-up' | 'forgot-password'>(
+    'sign-in'
+  )
   const [menuHeight, setMenuHeight] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     if (login === 'sign-in') {
       navigate('signin')
-    } else {
+    } else if (login === 'sign-up') {
       navigate('signup')
+    } else {
+      navigate('forgot-password')
     }
   }, [login, navigate])
 
@@ -77,7 +84,7 @@ const Register: React.FC = () => {
 
           <RegisterContent>
             <Title size="2.8rem" separator style={{ marginBottom: '20px' }}>
-              Sign {formateLogin(login)}
+              {translateTitle[login]}
             </Title>
 
             <AnimationWrapper
@@ -111,6 +118,17 @@ const Register: React.FC = () => {
                           setLogin={setLogin}
                           setMenuHeight={setMenuHeight}
                           setLoadingPopUpGoogle={setLoadingPopUpGoogle}
+                        />
+                      }
+                    />
+
+                    <Route
+                      path="/forgot-password"
+                      element={
+                        <ForgotPassword
+                          login={login}
+                          setLogin={setLogin}
+                          setMenuHeight={setMenuHeight}
                         />
                       }
                     />
