@@ -6,11 +6,11 @@ export class NewPasswordUserController {
   async handle(request: Request, response: Response): Promise<Response>{
 
     const { password, confirmPassword } = request.body
-    const { sub } = request.user;
+    const { id } = request.user;
 
     const newPasswordUserUseCase = new NewPasswordUserUseCase();
 
-    await newPasswordUserUseCase.execute(password, confirmPassword, sub);
+    await newPasswordUserUseCase.execute(password, confirmPassword, String(id));
 
     return response.json({
       message: `Senha Atualizada com sucesso.`

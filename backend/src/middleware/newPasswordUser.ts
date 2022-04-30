@@ -19,7 +19,7 @@ export default async function newPasswordUser(request: Request, response: Respon
   try {
     const { sub } = verify(
       token,
-      process.env.NEW_PASS_SECRET
+      String(process.env.NEW_PASS_SECRET)
     ) as PayLoad
 
     request.user = {

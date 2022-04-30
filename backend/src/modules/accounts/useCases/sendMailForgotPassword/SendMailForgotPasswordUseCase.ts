@@ -36,7 +36,7 @@ export class SendMailForgotPasswordUseCase {
 
     const code = await createCode();
 
-    const token = sign({ cod: code }, process.env.NEW_PASS_SECRET, {
+    const token = sign({ cod: code }, String(process.env.NEW_PASS_SECRET), {
       subject: verifyUserExist.id,
       expiresIn: '15m'
     })

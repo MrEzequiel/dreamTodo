@@ -17,6 +17,8 @@ export class NewPasswordUserUseCase {
         id: id_user
       }
     })
+
+    if(!user) throw new AppError('Usuário não encontrado')
     
     const passwordHash = await hash(password, 8)
 
