@@ -17,13 +17,13 @@ export default async function newPasswordUser(request: Request, response: Respon
   const [, token] = authHeader.split(" ")
 
   try {
-    const { sub } = verify(
+    const { sub: id } = verify(
       token,
       String(process.env.NEW_PASS_SECRET)
     ) as PayLoad
 
     request.user = {
-      sub
+      id
     }
 
     next()
