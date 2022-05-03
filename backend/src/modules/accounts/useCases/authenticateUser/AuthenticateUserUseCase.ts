@@ -39,7 +39,7 @@ export class AuthenticateUserUseCase {
       String(process.env.SECRET_KEY_REFRESH_TOKEN),
       {
         subject: user.id,
-        expiresIn: '1d'
+        expiresIn: '30d'
       }
     )
 
