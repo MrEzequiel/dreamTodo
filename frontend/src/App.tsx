@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { ThemeProvider } from 'styled-components'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 import GlobalStyles from './styles/GlobalStyles'
 import darkTheme from './styles/theme/dark'
@@ -45,6 +46,7 @@ const App: React.FC = () => {
           </BrowserRouter>
         </NotificationContextProvider>
       </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

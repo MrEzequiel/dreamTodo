@@ -22,7 +22,6 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
     }
   }
   const query = useQueryClient()
-
   const collections = query.getQueriesData('collection')[0][1] as ICollection[]
 
   return (
@@ -39,7 +38,7 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
         </s.SubNavBarHeader>
 
         <s.SubNavBarContent>
-          {collections.length ? (
+          {collections && collections.length ? (
             collections.map(collection => (
               <NavLink
                 key={collection.id}

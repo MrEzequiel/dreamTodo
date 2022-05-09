@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useNotification } from '../../../context/NotificationContext'
 import { loginWithGoogle } from '../../../functions/User/createUser'
@@ -6,7 +7,6 @@ import { useUser } from '../../../context/UserContext'
 
 import { loginUser } from '../../../functions/User/loginUser'
 
-import useForm from '../../../hooks/useForm'
 import GoogleLogin from 'react-google-login'
 
 import * as s from './style'
@@ -14,20 +14,34 @@ import Button from '../../../styles/Button'
 import InputStyle from '../../../styles/Input'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
 import { useMutation, useQuery } from 'react-query'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { registerValidation } from '../validations'
 
 interface ISignInProps {
-  login: 'sign-in' | 'sign-up'
-  setLogin: React.Dispatch<React.SetStateAction<'sign-in' | 'sign-up'>>
-  setMenuHeight: React.Dispatch<React.SetStateAction<number | undefined>>
+  setLogin: React.Dispatch<
+    React.SetStateAction<'sign-in' | 'sign-up' | 'forgot-password'>
+  >
   setLoadingPopUpGoogle: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SignIn: React.FC<ISignInProps> = ({
-  login,
   setLogin,
-  setMenuHeight,
   setLoadingPopUpGoogle
 }) => {
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    watch
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(registerValidation),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  })
+
   const signInRef = useRef<HTMLDivElement | null>(null)
 
   const { createNotification } = useNotification()
@@ -36,8 +50,6 @@ const SignIn: React.FC<ISignInProps> = ({
 
   const [showPassword, setShowPassword] = useState(false)
   const clientGoogle = process.env.REACT_APP_CLIENT_ID_GOOGLE
-  const emailField = useForm({ type: 'email' })
-  const passwordField = useForm()
 
   const handleFailureLoginWithGoogle = (error: any) => {
     if (error.error === 'popup_closed_by_user') {
@@ -95,53 +107,54 @@ const SignIn: React.FC<ISignInProps> = ({
     }
   )
 
-  const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const onSubmit = handleSubmit(data => {
     mutateLogin({
-      email: emailField.value,
-      password: passwordField.value
+      email: data.email,
+      password: data.password
     })
-  }
-
-  useEffect(() => {
-    if (login === 'sign-in') {
-      setMenuHeight(signInRef.current?.clientHeight)
-    }
-  }, [login, setMenuHeight, passwordField.isValid, emailField.isValid])
+  })
 
   return (
     <s.SignIn ref={signInRef}>
-      <s.FormStyle onSubmit={handleSubmitSignIn}>
+      <s.FormStyle onSubmit={onSubmit}>
         <div>
-          <InputStyle
-            type="text"
-            placeholder="Email"
-            onChange={emailField.handleChange}
-            onBlur={emailField.handleBlur}
-            value={emailField.value}
-            isValid={emailField.isValid}
+          <Controller
+            name="email"
+            control={control}
+            render={props => (
+              <>
+                <InputStyle type="text" placeholder="Email" {...props.field} />
+                {Boolean(errors?.email) && (
+                  <s.MessageError>{errors.email?.message}</s.MessageError>
+                )}
+              </>
+            )}
           />
-          {emailField.error && (
-            <s.MessageError>{emailField.error}</s.MessageError>
-          )}
         </div>
         <label>
-          <InputStyle
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            onChange={passwordField.handleChange}
-            onBlur={passwordField.handleBlur}
-            value={passwordField.value}
-            isValid={passwordField.isValid}
-          />
-          <button type="button" onClick={() => setShowPassword(prev => !prev)}>
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
-          </button>
+          <Controller
+            name="password"
+            control={control}
+            render={props => (
+              <>
+                <InputStyle
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  {...props.field}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(prev => !prev)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
 
-          {passwordField.error && (
-            <s.MessageError>{passwordField.error}</s.MessageError>
-          )}
+                {Boolean(errors?.password) && (
+                  <s.MessageError>{errors.password?.message}</s.MessageError>
+                )}
+              </>
+            )}
+          />
         </label>
 
         <Button outlined={false} type="submit" loading={loginLoading}>
@@ -177,7 +190,6 @@ const SignIn: React.FC<ISignInProps> = ({
       <s.Actions>
         <p>
           <a
-            href="#"
             onClick={e => {
               e.preventDefault()
               setLogin('sign-up')
@@ -187,7 +199,12 @@ const SignIn: React.FC<ISignInProps> = ({
           </a>
         </p>
         <p>
-          <a href="#">
+          <a
+            onClick={e => {
+              e.preventDefault()
+              setLogin('forgot-password')
+            }}
+          >
             I <strong>forgot</strong> my password
           </a>
         </p>

@@ -3,11 +3,23 @@ import { Container } from '../../styles/LayoutComponents'
 
 export const UserSettingsContainer = styled.div`
   ${Container()}
+  padding-bottom: 40px;
+`
+
+export const UserSettingsTitle = styled.h2`
+  .link-to-home {
+    font-weight: 700;
+    color: #717171;
+    &:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  }
 `
 
 export const SettingsWrapper = styled.div`
   background-color: ${props => props.theme.colors.g1};
-  margin: 40px 0;
+  margin-top: 40px;
   padding: 40px;
   border-radius: 20px 20px 5px 5px;
   box-shadow: rgb(0, 0, 0, 0.2) 0px 20px 30px;

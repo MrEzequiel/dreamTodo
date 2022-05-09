@@ -26,11 +26,22 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
   const query = useQueryClient()
   const { isLoading, mutate: mutateDelete } = useMutation(deleteCollection, {
-    onSuccess: () => {
+    onSuccess: (data, idCollection: string) => {
       setConfirmed(false)
       createNotification('success', 'Collection deleted successfully')
-      query.invalidateQueries('collection')
+
+      const collections = query.getQueryData('collection') as ICollection[]
+
+      if (collections) {
+        const newCollections = collections.filter(
+          (collection: ICollection) => collection.id !== idCollection
+        )
+        query.setQueryData('collection', newCollections)
+      } else {
+        query.refetchQueries('collection')
+      }
     },
+
     onError: () => {
       createNotification('error', 'Error deleting collection')
     }
@@ -38,7 +49,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
   const getPercentageTodo = useMemo(() => {
     const todos = collection.Todo
-    if (todos.length === 0) return '0%'
+    if (todos?.length === 0 || !todos) return '0%'
 
     const total = todos.reduce(
       (acc, item) => (item.complete ? acc + 1 : acc),
@@ -68,7 +79,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
         <div className="down">
           <h2>
-            <NavLink to={`/todo/${collection.id}`}>{collection.name}</NavLink>
+            <NavLink to={`/todo/${collection.name}`}>{collection.name}</NavLink>
           </h2>
 
           <p>Tasks: {collection.Todo.length}</p>

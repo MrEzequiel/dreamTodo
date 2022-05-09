@@ -4,7 +4,8 @@ import Button from '../../styles/Button'
 import InputStyle, { FileInputStyle, HelperTextStyle } from '../../styles/Input'
 import Title from '../../styles/Title'
 
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { useNotification } from '../../context/NotificationContext'
+import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
@@ -12,12 +13,20 @@ import {
   ImageWrapper,
   SettingItemTitle,
   SettingsWrapper,
-  UserSettingsContainer
+  UserSettingsContainer,
+  UserSettingsTitle
 } from './style'
 import RenderImageUser from '../../components/RenderImageUser'
 import { FaUpload } from 'react-icons/fa'
 import { useMutation } from 'react-query'
 import { putUser } from '../../functions/User/putUser'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+
+interface LocationState {
+  from: {
+    pathname: string
+  }
+}
 
 const schema = yup.object().shape({
   name: yup.string().required('Username is required'),
@@ -25,6 +34,7 @@ const schema = yup.object().shape({
 })
 
 const UserSettings: FC = () => {
+  const { createNotification } = useNotification()
   const {
     user: { user }
   } = useUser()
@@ -45,21 +55,24 @@ const UserSettings: FC = () => {
     url: user.imageURL
   })
 
-  const { mutate } = useMutation(putUser, {
+  const { mutate, isLoading } = useMutation(putUser, {
     onSuccess: () => {
-      console.log('success')
+      createNotification('success', 'User settings updated')
+    },
+    onError: () => {
+      createNotification('error', 'oops, something went wrong')
     }
   })
 
   const submit = handleSubmit(data => {
-    console.log(data)
     const formData = new FormData()
     formData.append('id', user.id)
     formData.append('name', data.name)
     formData.append('email', data.email)
+    console.log(userImage.file, userImage.url)
     if (userImage.file) formData.append('image', userImage.file)
 
-    mutate(formData)
+    mutate({ data: formData })
   })
 
   const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,10 +98,14 @@ const UserSettings: FC = () => {
 
   return (
     <UserSettingsContainer>
-      <Title size="2.8rem" separator>
-        {user?.name ?? 'User'}
-        <span style={{ color: '#717171' }}> / Edit Profile</span>
-      </Title>
+      <UserSettingsTitle>
+        <Title size="2.8rem" separator as="p">
+          <Link to="/collection" className="link-to-home">
+            Home
+          </Link>{' '}
+          / Edit Profile
+        </Title>
+      </UserSettingsTitle>
 
       <SettingsWrapper as="form" onSubmit={submit}>
         <div>
@@ -182,7 +199,9 @@ const UserSettings: FC = () => {
         </div>
 
         <div>
-          <Button type="submit">Save Profile</Button>
+          <Button type="submit" loading={isLoading}>
+            Save Profile
+          </Button>
         </div>
       </SettingsWrapper>
     </UserSettingsContainer>

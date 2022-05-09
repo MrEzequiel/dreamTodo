@@ -60,7 +60,8 @@ export const Separator = styled.p`
   align-items: center;
   justify-content: center;
   gap: 5px;
-  margin: 20px 0;
+  margin-top: 30px;
+  margin-bottom: 20px;
 
   &::before,
   &::after {
@@ -89,6 +90,10 @@ export const Actions = styled.div`
   strong {
     color: ${props => props.theme.colors.colorPrimary};
     font-weight: 400;
+  }
+
+  a {
+    cursor: pointer;
   }
 
   a:hover {

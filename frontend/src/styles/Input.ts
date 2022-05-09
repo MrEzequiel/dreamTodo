@@ -70,7 +70,7 @@ TextAreaStyle.defaultProps = {
 
 export const HelperTextStyle = styled.span<{ isError?: boolean }>`
   color: ${props =>
-    props.isError ? props.theme.colors.colorError : props.theme.colors.g2};
+    props.isError ? props.theme.colors.colorError : props.theme.colors.g6};
   font-size: 1.2rem;
   padding-left: 10px;
   margin-top: 4px;

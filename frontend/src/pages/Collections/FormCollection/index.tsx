@@ -57,10 +57,28 @@ const FormCollection: React.FC<IProps> = ({
   const { mutate: mutateEdit, isLoading: lodingEdit } = useMutation(
     putCollection,
     {
-      onSuccess: () => {
-        query.invalidateQueries('collection')
+      onSuccess: (newCollection: ICollection) => {
         setShowForm(false)
         createNotification('success', 'Collection edited successfully')
+
+        const collections = query.getQueryData('collection') as ICollection[]
+
+        if (collections) {
+          query.setQueryData(
+            'collection',
+            collections.map(collection => {
+              if (collection.id === newCollection.id) {
+                return {
+                  ...collection,
+                  ...newCollection
+                }
+              }
+              return collection
+            })
+          )
+        } else {
+          query.refetchQueries('collection')
+        }
       },
       onError: (err: any) => {
         inputEl.current?.focus()
