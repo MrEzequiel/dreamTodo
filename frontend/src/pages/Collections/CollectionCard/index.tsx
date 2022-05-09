@@ -20,7 +20,6 @@ const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
     isLoading,
     isRefetching
   } = useQuery<ICollection[]>('collection', getCollection, {
-    refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 2 // 2 minutes
   })
 
