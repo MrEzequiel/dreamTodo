@@ -10,7 +10,10 @@ type TokenType = {
 
 export class RefreshTokenUseCase {
   async execute(token: string) {
-    const { sub } = verify(token, String(process.env.SECRET_KEY_TOKEN)) as TokenType
+    const { sub } = verify(
+      token,
+      String(process.env.SECRET_KEY_REFRESH_TOKEN)
+    ) as TokenType
     console.log(sub)
 
     const userId = sub
@@ -28,7 +31,7 @@ export class RefreshTokenUseCase {
     await client.refreshToken.deleteMany({
       where: {
         userId: sub
-      },
+      }
     })
 
     const refreshToken = sign(
@@ -36,7 +39,7 @@ export class RefreshTokenUseCase {
       String(process.env.SECRET_KEY_REFRESH_TOKEN),
       {
         subject: userId,
-        expiresIn: '1d'
+        expiresIn: '30d'
       }
     )
 
@@ -52,7 +55,7 @@ export class RefreshTokenUseCase {
 
     const newToken = sign({}, String(process.env.SECRET_KEY_TOKEN), {
       subject: userId,
-      expiresIn: '1d'
+      expiresIn: '15m'
     })
 
     return {
