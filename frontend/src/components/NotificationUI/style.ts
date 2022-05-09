@@ -44,7 +44,8 @@ export const NotificationContainer = styled.aside`
   .notification-exit-active {
     opacity: 0;
     transform: translateX(50px);
-    transition: opacity 400ms, transform 400ms;
+    max-height: 0;
+    transition: opacity 400ms, transform 400ms, max-height 400ms;
     transition-timing-function: ease-in-out;
   }
 `
@@ -57,11 +58,14 @@ interface NotificationProps {
 export const NotificationContent = styled.div<NotificationProps>`
   flex-shrink: 0;
   position: relative;
-  width: 300px;
-  min-height: 60px;
+
   display: flex;
   border-radius: 5px;
+  width: 300px;
+  max-height: 500px;
+
   box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 
   background: ${props => props.theme.colors.g2};
 
@@ -86,8 +90,8 @@ export const NotificationContent = styled.div<NotificationProps>`
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
-    height: 5px;
+    width: calc(100% + 2px);
+    height: 2px;
 
     @keyframes widht-animation {
       to {
