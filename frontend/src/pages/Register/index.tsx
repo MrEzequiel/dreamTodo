@@ -12,7 +12,6 @@ import {
 } from 'react-router-dom'
 
 import {
-  AnimationWrapper,
   LoadingLoginWithGoogle,
   RegisterContent,
   RegisterCover,
@@ -23,7 +22,6 @@ import {
 import Title from '../../styles/Title'
 import dreamTodoLogo from '../../assets/logo.svg'
 import { FaGoogle } from 'react-icons/fa'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import ForgotPassword from './ForgotPassword'
 
 const translateTitle: { [x: string]: string } = {
@@ -37,7 +35,6 @@ const Register: React.FC = () => {
   const { isUser } = useUser()
   const param = useParams()
   const navigate = useNavigate()
-  const location = useLocation()
 
   useEffect(() => {
     if (isUser) navigate('/collection')
@@ -49,13 +46,9 @@ const Register: React.FC = () => {
 
   const [loadingPopUpGoogle, setLoadingPopUpGoogle] = useState(false)
 
-  // refs for animation
-  const containerRef = useRef<HTMLDivElement | null>(null)
-
   const [login, setLogin] = useState<'sign-in' | 'sign-up' | 'forgot-password'>(
     'sign-in'
   )
-  const [menuHeight, setMenuHeight] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     if (login === 'sign-in') {
@@ -87,55 +80,32 @@ const Register: React.FC = () => {
               {translateTitle[login]}
             </Title>
 
-            <AnimationWrapper
-              style={{ maxHeight: menuHeight ?? 'auto' }}
-              ref={containerRef}
-            >
-              <TransitionGroup>
-                <CSSTransition
-                  key={location.key}
-                  classNames="fade"
-                  timeout={700}
-                >
-                  <Routes>
-                    <Route
-                      path="/signin"
-                      element={
-                        <SignIn
-                          login={login}
-                          setLogin={setLogin}
-                          setMenuHeight={setMenuHeight}
-                          setLoadingPopUpGoogle={setLoadingPopUpGoogle}
-                        />
-                      }
-                    />
+            <Routes>
+              <Route
+                path="/signin"
+                element={
+                  <SignIn
+                    setLogin={setLogin}
+                    setLoadingPopUpGoogle={setLoadingPopUpGoogle}
+                  />
+                }
+              />
 
-                    <Route
-                      path="/signup"
-                      element={
-                        <SignUp
-                          login={login}
-                          setLogin={setLogin}
-                          setMenuHeight={setMenuHeight}
-                          setLoadingPopUpGoogle={setLoadingPopUpGoogle}
-                        />
-                      }
-                    />
+              <Route
+                path="/signup"
+                element={
+                  <SignUp
+                    setLogin={setLogin}
+                    setLoadingPopUpGoogle={setLoadingPopUpGoogle}
+                  />
+                }
+              />
 
-                    <Route
-                      path="/forgot-password"
-                      element={
-                        <ForgotPassword
-                          login={login}
-                          setLogin={setLogin}
-                          setMenuHeight={setMenuHeight}
-                        />
-                      }
-                    />
-                  </Routes>
-                </CSSTransition>
-              </TransitionGroup>
-            </AnimationWrapper>
+              <Route
+                path="/forgot-password"
+                element={<ForgotPassword setLogin={setLogin} />}
+              />
+            </Routes>
           </RegisterContent>
         </RegisterFormContainer>
       </ResgisterContainer>

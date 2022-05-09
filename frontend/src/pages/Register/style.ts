@@ -36,39 +36,6 @@ export const RegisterContent = styled.div`
   padding: 30px 20px;
 `
 
-export const AnimationWrapper = styled.div`
-  position: relative;
-  --speed: 700ms;
-
-  .fade-enter {
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    transform: scale(1.1);
-  }
-
-  .fade-enter-active {
-    opacity: 1;
-    position: absolute;
-    width: 100%;
-    transform: scale(1);
-    transition: opacity var(--speed), transform var(--speed);
-  }
-
-  .fade-exit {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .fade-exit-active {
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity var(--speed), transform var(--speed);
-  }
-
-  transition: max-height var(--speed) ease;
-`
-
 export const LoadingLoginWithGoogle = styled.div`
   position: absolute;
   top: 0;

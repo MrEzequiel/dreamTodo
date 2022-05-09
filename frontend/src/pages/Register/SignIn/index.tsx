@@ -18,18 +18,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { registerValidation } from '../validations'
 
 interface ISignInProps {
-  login: 'sign-in' | 'sign-up' | 'forgot-password'
   setLogin: React.Dispatch<
     React.SetStateAction<'sign-in' | 'sign-up' | 'forgot-password'>
   >
-  setMenuHeight: React.Dispatch<React.SetStateAction<number | undefined>>
   setLoadingPopUpGoogle: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SignIn: React.FC<ISignInProps> = ({
-  login,
   setLogin,
-  setMenuHeight,
   setLoadingPopUpGoogle
 }) => {
   const {
@@ -117,12 +113,6 @@ const SignIn: React.FC<ISignInProps> = ({
       password: data.password
     })
   })
-
-  useEffect(() => {
-    if (login === 'sign-in') {
-      setMenuHeight(signInRef.current?.clientHeight)
-    }
-  }, [login, setMenuHeight, errors])
 
   return (
     <s.SignIn ref={signInRef}>

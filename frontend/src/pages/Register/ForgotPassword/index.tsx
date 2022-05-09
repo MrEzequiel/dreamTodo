@@ -10,11 +10,9 @@ import { Actions, FormStyle, Separator } from '../SignIn/style'
 import { forgotPasswordValidation } from '../validations'
 
 interface ForgotPasswordProps {
-  login: 'sign-in' | 'sign-up' | 'forgot-password'
   setLogin: React.Dispatch<
     React.SetStateAction<'sign-in' | 'sign-up' | 'forgot-password'>
   >
-  setMenuHeight: React.Dispatch<React.SetStateAction<number | undefined>>
 }
 
 const ForgotPassword: FC<ForgotPasswordProps> = ({ setLogin }) => {

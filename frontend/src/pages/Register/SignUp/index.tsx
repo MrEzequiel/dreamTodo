@@ -39,18 +39,14 @@ const confirmPasswordValidation = (value: string, password: string) => {
 }
 
 interface ISignUpProps {
-  login: 'sign-in' | 'sign-up' | 'forgot-password'
   setLogin: React.Dispatch<
     React.SetStateAction<'sign-in' | 'sign-up' | 'forgot-password'>
   >
-  setMenuHeight: React.Dispatch<React.SetStateAction<number | undefined>>
   setLoadingPopUpGoogle: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SignUp: React.FC<ISignUpProps> = ({
-  login,
   setLogin,
-  setMenuHeight,
   setLoadingPopUpGoogle
 }) => {
   const signUpRef = useRef<HTMLDivElement | null>(null)
@@ -167,18 +163,6 @@ const SignUp: React.FC<ISignUpProps> = ({
 
     mutateCreteUser()
   }
-
-  useEffect(() => {
-    if (login === 'sign-up') {
-      setMenuHeight(signUpRef.current?.clientHeight)
-    }
-  }, [
-    login,
-    setMenuHeight,
-    passwordField.isValid,
-    confirmPasswordField.isValid,
-    emailField.isValid
-  ])
 
   return (
     <s.SignUp ref={signUpRef}>
