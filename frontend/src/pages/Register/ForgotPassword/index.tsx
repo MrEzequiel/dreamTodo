@@ -28,18 +28,21 @@ const ForgotPassword: FC<ForgotPasswordProps> = ({ setLogin }) => {
     }
   })
 
-  const { mutate: mutateSendEmail } = useMutation(sendEmailForForgotPassword, {
-    onSuccess: () => {
-      createNotification('success', 'Email sent successfully')
-    },
-    onError: (err: any) => {
-      if (err?.response?.status === 400) {
-        createNotification('error', 'Email not found')
-      } else {
-        createNotification('error', 'Something went wrong')
+  const { mutate: mutateSendEmail, isLoading } = useMutation(
+    sendEmailForForgotPassword,
+    {
+      onSuccess: () => {
+        createNotification('success', 'Email sent successfully')
+      },
+      onError: (err: any) => {
+        if (err?.response?.status === 400) {
+          createNotification('error', 'Email not found')
+        } else {
+          createNotification('error', 'Something went wrong')
+        }
       }
     }
-  })
+  )
 
   const onSubmit = handleSubmit(data => {
     mutateSendEmail(data.email)
@@ -67,7 +70,7 @@ const ForgotPassword: FC<ForgotPasswordProps> = ({ setLogin }) => {
             </div>
           )}
         />
-        <Button outlined={false} type="submit">
+        <Button outlined={false} type="submit" loading={isLoading}>
           Send Email
         </Button>
       </FormStyle>
