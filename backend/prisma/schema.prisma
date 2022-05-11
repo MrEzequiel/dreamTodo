@@ -12,7 +12,7 @@ model User {
   name         String?
   email        String
   password     String
-  imageProfile String?
+  imageProfile String
   imageURL     String?
   created_at   DateTime     @default(now())
   Collection   Collection[]
