@@ -16,7 +16,8 @@ const endpoints = {
     put: '/collection'
   },
   todo: {
-    get: '/todo'
+    get: '/todo',
+    post: '/todo'
   }
 }
 

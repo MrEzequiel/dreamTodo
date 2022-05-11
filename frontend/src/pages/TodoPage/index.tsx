@@ -8,6 +8,8 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { TodoContext } from '../../context/TodoListContext'
 import TodoPageContext from '../../context/TodoPageContext'
 import { getIndividualCollection } from '../../functions/Todo/getTodo'
+import ICollection from '../../interfaces/Collection'
+import NotFound from '../NotFound'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
 
@@ -16,37 +18,44 @@ import * as s from './style'
 const TodoPage = () => {
   const { collectionName } = useParams()
 
-  const { data: collection } = useQuery(
-    `todo-${collectionName}`,
-    () => {
-      getIndividualCollection(collectionName as string)
-    },
+  const {
+    data: collection,
+    isLoading,
+    isError
+  } = useQuery<ICollection[]>(
+    ['todo', collectionName],
+    () => getIndividualCollection(collectionName as string),
     {
       refetchOnWindowFocus: false
     }
   )
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <h1>{collectionName}</h1>
-      {/* <TodoPageContext.Provider value={contextTodoPage}>
-        <s.TitleStyle>
-          <NavLink to="/" end>
-            <button type="button">
-              <FaAngleLeft size={20} />
-            </button>
-          </NavLink>
+    <>
+      {isLoading && <p>Loading</p>}
 
-          <h1>
-            <Emoji emoji={thisCollection?.emoji} size={32} native />
-            {thisCollection?.name}
-          </h1>
-        </s.TitleStyle>
+      {!isLoading && !!collection && (
+        <>
+          <s.TitleStyle>
+            <NavLink to="/" end>
+              <button type="button">
+                <FaAngleLeft size={20} />
+              </button>
+            </NavLink>
 
-        <FormTodo />
-        <TodoList />
-      </TodoPageContext.Provider> */}
-    </DndProvider>
+            <h1>
+              <Emoji emoji={collection[0].emoji} size={32} native />
+              {collection[0].name}
+            </h1>
+          </s.TitleStyle>
+
+          <FormTodo id={collection[0].id} />
+          {/* <TodoList /> */}
+        </>
+      )}
+
+      {isError && <NotFound />}
+    </>
   )
 }
 
