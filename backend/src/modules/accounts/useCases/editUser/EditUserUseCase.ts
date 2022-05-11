@@ -1,43 +1,32 @@
-import { User } from "@prisma/client";
-import { client } from "../../../../database/client";
+import { User } from '@prisma/client'
+import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError'
+import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
 
-
-interface IRequestEdit {
+export type IRequestEdit = {
   id: string
-  name: string
-  imageURL: string
-  imageProfile: string
+  name?: string
+  imageURL?: string
+  imageProfile?: string
 }
 
 export class EditUserUseCase {
+  constructor(private userRepository: UserRepository) {}
 
-  async execute({ id, name, imageURL, imageProfile }: IRequestEdit){
+  async execute({ id, name, imageURL, imageProfile }: IRequestEdit) {
+    const user = await this.userRepository.findUserById(id)
 
-    const user = await client.user.findFirst({
-      where: {
-        id
-      }
+    if (!user) {
+      throw new AppError('Usuário não encontrado')
+    }
+
+    const editedUser = await this.userRepository.editUser({
+      id,
+      name,
+      imageProfile,
+      imageURL
     })
 
-    const editedUser = await client.user.update({
-      where: {
-        id: user.id
-      },
-      data: {
-        name,
-        imageURL,
-        imageProfile
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        imageURL: true,
-        imageProfile: true,
-        created_at: true
-      }
-    })
-
-    return editedUser;
+    return editedUser
   }
 }

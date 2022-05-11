@@ -1,35 +1,33 @@
-import { User } from "@prisma/client";
-import { client } from "../../../../database/client";
-import { AppError } from "../../../../infra/errors/AppError";
-import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
-import { hash } from "bcryptjs";
-
-
+import { User } from '@prisma/client'
+import { hash } from 'bcryptjs'
+import { AppError } from '../../../../infra/errors/AppError'
+import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
+import { ICreateUserDTO } from '../../dtos/ICreateUserDTO'
 
 export class CreateUserUseCase {
+  constructor(private userRepository: UserRepository) {}
 
-  async execute({name, email, imageURL, password, imageProfile }: ICreateUserDTO): Promise<User>{
+  async execute({
+    id,
+    name,
+    email,
+    password,
+    imageProfile
+  }: ICreateUserDTO): Promise<User> {
+    const verifyIfUserExist = await this.userRepository.findUserByEmail(email)
 
-    const passwordHash = await hash(password, 8)
-
-    const verifyIfUserExist = await client.user.findFirst({
-      where: {
-        email
-      }
-    })
-
-    if(verifyIfUserExist) {
+    if(verifyIfUserExist){
       throw new AppError('Esse usuário já existe')
     }
     
-    const user = await client.user.create({
-      data: {
-        name,
-        email,
-        imageURL,
-        password: passwordHash,
-        imageProfile
-      }
+    const passwordHash = await hash(password, 8)
+
+    const user = await this.userRepository.create({
+      id,
+      name,
+      email,
+      password: passwordHash,
+      imageProfile,
     })
 
     return user

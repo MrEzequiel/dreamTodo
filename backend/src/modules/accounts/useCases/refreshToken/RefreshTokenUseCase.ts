@@ -14,7 +14,6 @@ export class RefreshTokenUseCase {
       token,
       String(process.env.SECRET_KEY_REFRESH_TOKEN)
     ) as TokenType
-    console.log(sub)
 
     const userId = sub
 
