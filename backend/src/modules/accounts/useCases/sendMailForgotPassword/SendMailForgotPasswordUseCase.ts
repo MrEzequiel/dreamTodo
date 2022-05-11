@@ -1,22 +1,17 @@
-
-import { sign } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
-import { client } from '../../../../database/client';
-import { AppError } from '../../../../infra/errors/AppError';
-import { createCode } from '../../../../utils/createCode';
+import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError'
+import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
+import { createCode } from '../../../../utils/createCode'
 
 export class SendMailForgotPasswordUseCase {
+  constructor(private userRepository: UserRepository) {}
 
+  async execute(email: string): Promise<Object> {
+    const verifyUserExist = await this.userRepository.findUserByEmail(email)
 
-  async execute(email: string): Promise<Object>{
-
-    const verifyUserExist = await client.user.findFirst({
-      where: {
-        email
-      } 
-    })
-
-    if(!verifyUserExist) {
+    if (!verifyUserExist) {
       throw new AppError('Usuario não encontrado, tente novamente.')
     }
 
@@ -28,13 +23,13 @@ export class SendMailForgotPasswordUseCase {
       port: 465,
       host: 'smtp.gmail.com',
       secure: true,
-      auth : {
+      auth: {
         user,
         pass
       }
-    }) 
+    })
 
-    const code = await createCode();
+    const code = await createCode()
 
     const token = sign({ cod: code }, String(process.env.NEW_PASS_SECRET), {
       subject: verifyUserExist.id,

@@ -1,16 +1,15 @@
-import { Request, Response } from "express";
-import { SendMailForgotPasswordUseCase } from "./SendMailForgotPasswordUseCase";
-
-
+import { Request, Response } from 'express'
+import { PrismaUserRepository } from '../../../../repositories/UserRepositories/prisma/PrismaUserRepository'
+import { SendMailForgotPasswordUseCase } from './SendMailForgotPasswordUseCase'
 
 export class SendMailForgotPasswordController {
+  async handle(request: Request, response: Response): Promise<Response> {
+    const { email } = request.body
 
-
-  async handle(request: Request, response: Response): Promise<Response>{
-
-    const { email } = request.body;
-
-    const sendMailForgotPasswordUseCase = new SendMailForgotPasswordUseCase();
+    const userRepository = new PrismaUserRepository()
+    const sendMailForgotPasswordUseCase = new SendMailForgotPasswordUseCase(
+      userRepository
+    )
 
     const token = await sendMailForgotPasswordUseCase.execute(email)
 
