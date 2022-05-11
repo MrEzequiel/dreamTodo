@@ -21,8 +21,8 @@ const newPasswordUserController = new NewPasswordUserController();
 const uploadAvatar = multer(multerConfig);
 
 
-usersRoutes.put('/user', ensureAuthenticareUser, uploadAvatar.single('imageURL'), editUserController.handle);
 usersRoutes.post('/user', uploadAvatar.single('imageURL'), createUserController.handle);
+usersRoutes.put('/user', ensureAuthenticareUser, uploadAvatar.single('imageURL'), editUserController.handle);
 
 usersRoutes.post('/forgotPassword', sendMailForgotPasswordController.handle);
 usersRoutes.post('/compareCode', compareCodeController.handle);
