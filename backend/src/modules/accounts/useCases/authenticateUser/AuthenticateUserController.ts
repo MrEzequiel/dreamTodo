@@ -1,15 +1,13 @@
-import { Request, Response } from "express";
-import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
-
-
+import { Request, Response } from 'express'
+import { PrismaUserRepository } from '../../../../repositories/UserRepositories/prisma/PrismaUserRepository'
+import { AuthenticateUserUseCase } from './AuthenticateUserUseCase'
 
 export class AuthenticateUserController {
-
-  async handle(request: Request, response: Response): Promise<Response>{
-
+  async handle(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body
 
-    const authenticareUserUseCase = new AuthenticateUserUseCase()
+    const userRepository = new PrismaUserRepository()
+    const authenticareUserUseCase = new AuthenticateUserUseCase(userRepository)
 
     const token = await authenticareUserUseCase.execute({
       email,
@@ -18,6 +16,6 @@ export class AuthenticateUserController {
 
     return response.json({
       token
-    });
+    })
   }
 }
