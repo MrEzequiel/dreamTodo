@@ -12,7 +12,7 @@ export class CompareCodeController {
 
     const compareCodeUseCase = new CompareCodeUseCase();
 
-    await compareCodeUseCase.execute(code, authorization);
+    await compareCodeUseCase.execute(code, String(authorization));
 
     return response.json({
       message: 'Codigo correto'
