@@ -3,12 +3,16 @@ import { client } from '../../../../database/client'
 import { AppError } from '../../../../infra/errors/AppError'
 import 'dayjs'
 import dayjs from 'dayjs'
+import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
 
 type TokenType = {
   sub: string
 }
 
 export class RefreshTokenUseCase {
+  constructor(
+    private userRespository: UserRepository
+  ){}
   async execute(token: string) {
     const { sub } = verify(
       token,
@@ -16,6 +20,8 @@ export class RefreshTokenUseCase {
     ) as TokenType
 
     const userId = sub
+
+    const user = await this.userRespository.findUserById(userId)
 
     const userToken = await client.refreshToken.findFirst({
       where: {
@@ -59,7 +65,8 @@ export class RefreshTokenUseCase {
 
     return {
       refresh,
-      token: newToken
+      token: newToken,
+      user
     }
   }
 }
