@@ -52,7 +52,7 @@ const Header = () => {
                   border: `2px solid ${colors.colorPrimary}`,
                   flexShrink: 0
                 }}
-                url={user?.picture ? user.picture : user.imageURL}
+                url={user.imageURL}
               />
 
               <s.ProfilePillText>

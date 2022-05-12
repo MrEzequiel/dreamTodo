@@ -8,32 +8,30 @@ import {
 } from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
-import { useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
+import { getRefreshToken } from '../../functions/User/getRefreshToken'
+import SuspenseFallback from '../../components/SuspenseFallback'
 
-interface IUser {
-  user: {
-    at_hash: string
-    aud: string
-    azp: string
-    email: string
-    email_verified: boolean
-    exp: number
-    family_name: string
-    given_name: string
-    iat: number
-    iss: string
-    jti: string
-    locale: string
-    name: string
-    picture: string
-    sub: string
-    created_at: string
+export interface IUser {
+  refresh: {
+    createdAt: string
+    expires_in: string
     id: string
-    imageURL: string
-    password: string
+    refreshToken: string
+    userId: string
   }
 
   token: string
+
+  user: {
+    created_at: string
+    email: string
+    id: string
+    imageProfile?: string
+    imageURL?: string
+    name?: string
+    password: string
+  }
 }
 
 interface UserContext {
@@ -45,6 +43,7 @@ interface UserContext {
 
 const removeAuthCookies = () => {
   Cookies.remove('auth')
+  Cookies.remove('refresh')
 }
 
 export const UserContext = createContext({} as UserContext)
@@ -56,6 +55,19 @@ const UserProvider: FC = ({ children }) => {
   const [data, setData] = useState<IUser>({} as IUser)
   const [isUser, setIsUser] = useState(false)
 
+  const refreshCookie = Cookies.get('refresh')
+
+  const {
+    mutate: mutateRefreshToken,
+    isLoading,
+    isError,
+    isSuccess
+  } = useMutation(getRefreshToken, {
+    onSuccess: (data: IUser) => {
+      setData(data)
+    }
+  })
+
   const signOut = useCallback(() => {
     removeAuthCookies()
     queryClient.removeQueries()
@@ -64,8 +76,9 @@ const UserProvider: FC = ({ children }) => {
     navigate('register')
   }, [navigate, queryClient])
 
-  const signIn = useCallback(user => {
+  const signIn = useCallback((user: IUser) => {
     Cookies.set('auth', JSON.stringify(user.token))
+    Cookies.set('refresh', JSON.stringify(user.refresh.refreshToken))
 
     setData(user)
   }, [])
@@ -74,9 +87,24 @@ const UserProvider: FC = ({ children }) => {
     setIsUser(!!data.token)
   }, [data])
 
+  useEffect(() => {
+    const refreshCookie = Cookies.get('refresh')
+
+    if (refreshCookie && Object.keys(data).length === 0) {
+      mutateRefreshToken(JSON.parse(refreshCookie))
+    }
+  }, [])
+
   return (
     <UserContext.Provider value={{ user: data, signIn, signOut, isUser }}>
-      {children}
+      {refreshCookie &&
+      Object.keys(data).length === 0 &&
+      !isError &&
+      !isSuccess ? (
+        <SuspenseFallback />
+      ) : (
+        children
+      )}
     </UserContext.Provider>
   )
 }

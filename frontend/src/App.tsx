@@ -27,7 +27,6 @@ const App: React.FC = () => {
             <UserProvider>
               <Routes>
                 <Route path="/register/*" element={<Register />} />
-
                 <Route
                   path="/*"
                   element={
@@ -39,12 +38,11 @@ const App: React.FC = () => {
                   }
                 />
               </Routes>
-
               <NotificationUI />
-              <GlobalStyles />
             </UserProvider>
           </BrowserRouter>
         </NotificationContextProvider>
+        <GlobalStyles />
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

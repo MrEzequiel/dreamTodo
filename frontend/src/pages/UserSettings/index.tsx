@@ -52,7 +52,7 @@ const UserSettings: FC = () => {
     url: string | null
   }>({
     file: null,
-    url: user.imageURL
+    url: user?.imageURL || null
   })
 
   const { mutate, isLoading } = useMutation(putUser, {

@@ -6,6 +6,7 @@ const endpoints = {
     modify: '/user',
     login: '/login',
     forgotPassword: '/forgotPassword',
+    refreshToken: '/refreshToken',
     compareCode: '/compareCode',
     newPassword: '/newPassword'
   },
