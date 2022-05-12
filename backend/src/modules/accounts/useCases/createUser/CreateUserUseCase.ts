@@ -12,6 +12,7 @@ export class CreateUserUseCase {
     name,
     email,
     password,
+    imageURL,
     imageProfile
   }: ICreateUserDTO): Promise<User> {
     const verifyIfUserExist = await this.userRepository.findUserByEmail(email)
@@ -28,6 +29,7 @@ export class CreateUserUseCase {
       email,
       password: passwordHash,
       imageProfile,
+      imageURL
     })
 
     return user
