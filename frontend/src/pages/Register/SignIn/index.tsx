@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useNotification } from '../../../context/NotificationContext'
 import { loginWithGoogle } from '../../../functions/User/createUser'
-import { useUser } from '../../../context/UserContext'
+import { useAuth } from '../../../context/UserContext'
 
 import { loginUser } from '../../../functions/User/loginUser'
 
@@ -45,7 +45,7 @@ const SignIn: React.FC<ISignInProps> = ({
   const signInRef = useRef<HTMLDivElement | null>(null)
 
   const { createNotification } = useNotification()
-  const { signIn } = useUser()
+  const { signIn } = useAuth()
   const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
@@ -74,7 +74,7 @@ const SignIn: React.FC<ISignInProps> = ({
       token: loginRes.tokenId
     })
 
-    navigate('/collection')
+    navigate('/')
   }, [loginRes, signIn, navigate])
 
   useEffect(() => {
@@ -94,7 +94,7 @@ const SignIn: React.FC<ISignInProps> = ({
     {
       onSuccess: data => {
         signIn(data.token)
-        navigate('/collection')
+        navigate('/')
       },
 
       onError: (err: any) => {

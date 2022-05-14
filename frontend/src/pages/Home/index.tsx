@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Header from '../../components/Header'
 import Collections from '../Collections'
 import TodoPage from '../TodoPage'
@@ -12,7 +12,7 @@ const Home: React.FC = () => {
       <Header />
 
       <Routes>
-        <Route path="/collection" element={<Collections />} />
+        <Route path="/" element={<Collections />} />
         <Route path="/user-settings" element={<UserSettings />} />
         <Route path="/todo/:collectionName" element={<TodoPage />} />
         <Route path="*" element={<NotFound />} />

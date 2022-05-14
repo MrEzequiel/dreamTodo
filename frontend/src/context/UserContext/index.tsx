@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'react'
 import Cookies from 'js-cookie'
@@ -55,16 +56,19 @@ const UserProvider: FC = ({ children }) => {
   const [data, setData] = useState<IUser>({} as IUser)
   const [isUser, setIsUser] = useState(false)
 
-  const refreshCookie = Cookies.get('refresh')
+  const refreshTokenCookie = Cookies.get('refresh')
 
   const {
     mutate: mutateRefreshToken,
-    isLoading,
     isError,
     isSuccess
   } = useMutation(getRefreshToken, {
     onSuccess: (data: IUser) => {
+      Cookies.set('auth', data.token)
+      Cookies.set('refresh', data.refresh.refreshToken)
+
       setData(data)
+      setIsUser(true)
     }
   })
 
@@ -84,23 +88,20 @@ const UserProvider: FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    setIsUser(!!data.token)
+    setIsUser(!!data?.token)
   }, [data])
 
   useEffect(() => {
     const refreshCookie = Cookies.get('refresh')
 
     if (refreshCookie && Object.keys(data).length === 0) {
-      mutateRefreshToken(JSON.parse(refreshCookie))
+      mutateRefreshToken(refreshCookie)
     }
-  }, [])
+  }, []) // eslint-disable-line
 
   return (
     <UserContext.Provider value={{ user: data, signIn, signOut, isUser }}>
-      {refreshCookie &&
-      Object.keys(data).length === 0 &&
-      !isError &&
-      !isSuccess ? (
+      {refreshTokenCookie && !isError && !isSuccess && !isUser ? (
         <SuspenseFallback />
       ) : (
         children
@@ -109,11 +110,11 @@ const UserProvider: FC = ({ children }) => {
   )
 }
 
-export const useUser = () => {
+export const useAuth = () => {
   const context = useContext(UserContext)
 
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider')
+    throw new Error('useAuth must be used within a UserProvider')
   }
   return context
 }

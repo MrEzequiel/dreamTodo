@@ -1,7 +1,7 @@
 import React, { createContext, Dispatch, useEffect, useReducer } from 'react'
 import { CollectionsActions, todoReducer, Types } from '../functions/reducers'
 import ICollection from '../interfaces/Collection'
-import { useUser } from './UserContext'
+import { useAuth } from './UserContext'
 
 export type InitialStateType = {
   collections: ICollection[]
@@ -34,7 +34,7 @@ export const TodoContext = createContext<{
 })
 
 const TodoProvider: React.FC = ({ children }) => {
-  const { isUser } = useUser()
+  const { isUser } = useAuth()
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useUser } from '../../context/UserContext'
+import { useAuth } from '../../context/UserContext'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 
@@ -32,12 +32,12 @@ const translateTitle: { [x: string]: string } = {
 
 const Register: React.FC = () => {
   // router definitions
-  const { isUser } = useUser()
+  const { isUser } = useAuth()
   const param = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (isUser) navigate('/collection')
+    if (isUser) navigate('/')
 
     if (!Object.values(param)[0]) {
       navigate('signin')
