@@ -6,6 +6,7 @@ const endpoints = {
     modify: '/user',
     login: '/login',
     forgotPassword: '/forgotPassword',
+    refreshToken: '/refreshToken',
     compareCode: '/compareCode',
     newPassword: '/newPassword'
   },
@@ -16,7 +17,8 @@ const endpoints = {
     put: '/collection'
   },
   todo: {
-    get: '/todo'
+    get: '/todo',
+    post: '/todo'
   }
 }
 

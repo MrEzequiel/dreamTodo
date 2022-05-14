@@ -1,5 +1,5 @@
 import { FC, FormEvent, useState } from 'react'
-import { useUser } from '../../context/UserContext'
+import { useAuth } from '../../context/UserContext'
 import Button from '../../styles/Button'
 import InputStyle, { FileInputStyle, HelperTextStyle } from '../../styles/Input'
 import Title from '../../styles/Title'
@@ -37,7 +37,7 @@ const UserSettings: FC = () => {
   const { createNotification } = useNotification()
   const {
     user: { user }
-  } = useUser()
+  } = useAuth()
 
   const {
     control,
@@ -52,7 +52,7 @@ const UserSettings: FC = () => {
     url: string | null
   }>({
     file: null,
-    url: user.imageURL
+    url: user?.imageURL || null
   })
 
   const { mutate, isLoading } = useMutation(putUser, {
@@ -69,7 +69,6 @@ const UserSettings: FC = () => {
     formData.append('id', user.id)
     formData.append('name', data.name)
     formData.append('email', data.email)
-    console.log(userImage.file, userImage.url)
     if (userImage.file) formData.append('image', userImage.file)
 
     mutate({ data: formData })
