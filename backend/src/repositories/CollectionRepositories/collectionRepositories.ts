@@ -1,18 +1,22 @@
-import { Collection } from "@prisma/client"
-
-
-
+import { Collection } from '@prisma/client'
+import { RequestCreateColletion } from '../../test/repositories/InMemoryCollectionRepository'
 
 export interface CollectionRepository {
-
-  createCollection: (userId: string, name: string, emoji: string) => Promise<Collection>
+  createCollection: ({
+    name,
+    userId,
+    emoji
+  }: RequestCreateColletion) => Promise<Collection>
 
   deleteColletion: (id: string) => Promise<void>
 
-  editColletion: (id: string, name: string, emoji: string) => Promise<Collection>
+  editColletion: (
+    id: string,
+    name: string,
+    emoji: string
+  ) => Promise<Collection>
 
   findCollectionByName: (name: string) => Promise<Collection | null>
 
   findCollectionById: (id: string) => Promise<Collection | null>
-
 }

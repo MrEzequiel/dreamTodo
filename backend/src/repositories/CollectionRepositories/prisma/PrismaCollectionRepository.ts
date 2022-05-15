@@ -1,9 +1,10 @@
 import { Collection } from '@prisma/client'
 import { client } from '../../../database/client'
+import { RequestCreateColletion } from '../../../test/repositories/InMemoryCollectionRepository'
 import { CollectionRepository } from '../collectionRepositories'
 
 export class PrismaCollectionRepository implements CollectionRepository {
-  async createCollection(userId: string, name: string, emoji: string) {
+  async createCollection({ name, userId, emoji }: RequestCreateColletion) {
     const colletion = await client.collection.create({
       data: {
         name,
