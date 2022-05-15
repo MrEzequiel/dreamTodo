@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import GlobalStyles from './styles/GlobalStyles'
 import darkTheme from './styles/theme/dark'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import UserProvider, { useUser } from './context/UserContext'
+import UserProvider, { useAuth } from './context/UserContext'
 import NotificationContextProvider from './context/NotificationContext'
 import NotificationUI from './components/NotificationUI'
 import Register from './pages/Register'
@@ -27,7 +27,6 @@ const App: React.FC = () => {
             <UserProvider>
               <Routes>
                 <Route path="/register/*" element={<Register />} />
-
                 <Route
                   path="/*"
                   element={
@@ -39,12 +38,11 @@ const App: React.FC = () => {
                   }
                 />
               </Routes>
-
               <NotificationUI />
-              <GlobalStyles />
             </UserProvider>
           </BrowserRouter>
         </NotificationContextProvider>
+        <GlobalStyles />
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

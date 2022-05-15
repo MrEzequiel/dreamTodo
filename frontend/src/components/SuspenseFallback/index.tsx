@@ -29,7 +29,7 @@ const SuspenseFallback: React.FC = () => {
           ></circle>
           <polyline
             className="todo-svg"
-            stroke="#fff"
+            stroke="#1a1a1a"
             strokeWidth="10"
             points="43.5,77.8 63.7,97.9 112.2,49.4 "
             style={{

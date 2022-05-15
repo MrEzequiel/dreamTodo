@@ -22,6 +22,6 @@ export const SuspenseFallbackWrapper = styled.div`
   }
 
   .todo-svg {
-    animation: checkmark 1.2s ease 0.7s infinite backwards alternate;
+    animation: checkmark 1.2s ease 0.7s infinite alternate;
   }
 `

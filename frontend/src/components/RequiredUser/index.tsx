@@ -1,8 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useUser } from '../../context/UserContext'
+import { useAuth } from '../../context/UserContext'
 
 const RequiredUser: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const { isUser } = useUser()
+  const { isUser } = useAuth()
   const location = useLocation()
 
   if (!isUser) {

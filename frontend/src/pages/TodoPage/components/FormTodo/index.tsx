@@ -1,41 +1,47 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa'
+import { useMutation, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import Modal from '../../../../components/Modal'
 import { TodoContext } from '../../../../context/TodoListContext'
 import TodoPageContext from '../../../../context/TodoPageContext'
 import { Types } from '../../../../functions/reducers'
+import { postTodo } from '../../../../functions/Todo/postTodo'
+import ITodo from '../../../../interfaces/Todo'
 import ModalForm from './ModalForm'
 
 import * as s from './styles'
 
-const FormTodo: React.FC = () => {
-  const { id } = useContext(TodoPageContext)
-  const contextTodo = useContext(TodoContext)
+interface FormTodoProps {
+  id: string
+}
 
+const FormTodo: React.FC<FormTodoProps> = ({ id }) => {
+  const queryClient = useQueryClient()
   const inputEl = useRef<HTMLInputElement>(null)
 
   const [name, setName] = useState('')
   const [focus, setFocus] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
+  const { mutate: mutatePostTodo } = useMutation(postTodo, {
+    onSuccess: (data: ITodo) => {
+      setName('')
+      inputEl.current?.focus()
+
+      queryClient.getQueryData(['todo', id])
+    }
+  })
+
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     if (!name.trim()) return
 
-    contextTodo.dispatch({
-      type: Types.Add,
-      payload: {
-        id_collection: id,
-        name,
-        description: undefined,
-        expanded: undefined
-      }
+    mutatePostTodo({
+      idCollection: id,
+      name
     })
-
-    setName('')
-    inputEl.current?.focus()
   }
 
   useEffect(() => () => setOpenModal(false), [])
@@ -65,7 +71,7 @@ const FormTodo: React.FC = () => {
         </s.MoreInformation>
       )}
 
-      <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" />
+      {/* <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" /> */}
     </s.FormWrapper>
   )
 }

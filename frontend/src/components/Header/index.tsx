@@ -7,7 +7,7 @@ import { FaBars, FaDoorClosed, FaUserCog } from 'react-icons/fa'
 import SubNavBar from './SubNavBar'
 import { CSSTransition } from 'react-transition-group'
 import Clock from './Clock'
-import { useUser } from '../../context/UserContext'
+import { useAuth } from '../../context/UserContext'
 import Dropdown from '../Dropdown'
 import { DropdownItens } from '../Dropdown/style'
 import RenderImageUser from '../RenderImageUser'
@@ -19,7 +19,7 @@ const Header = () => {
   const {
     user: { user },
     signOut
-  } = useUser()
+  } = useAuth()
   const navBarRef = createRef<HTMLDivElement>()
   const [navBar, setNavBar] = useState<boolean>(false)
   const { colors } = useTheme()
@@ -33,7 +33,7 @@ const Header = () => {
               <FaBars size={20} />
             </s.ButtonCollections>
 
-            <NavLink to="/collection">
+            <NavLink to="/">
               <img src={logo} alt="dream to do logo" />
             </NavLink>
           </div>
@@ -52,7 +52,7 @@ const Header = () => {
                   border: `2px solid ${colors.colorPrimary}`,
                   flexShrink: 0
                 }}
-                url={user?.picture ? user.picture : user.imageURL}
+                url={user.imageURL}
               />
 
               <s.ProfilePillText>

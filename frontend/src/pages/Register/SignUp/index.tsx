@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNotification } from '../../../context/NotificationContext'
 import { useNavigate } from 'react-router-dom'
-import { useUser } from '../../../context/UserContext'
+import { useAuth } from '../../../context/UserContext'
 import useForm from '../../../hooks/useForm'
 
 import GoogleLogin from 'react-google-login'
@@ -51,7 +51,7 @@ const SignUp: React.FC<ISignUpProps> = ({
 }) => {
   const signUpRef = useRef<HTMLDivElement | null>(null)
 
-  const { signIn } = useUser()
+  const { signIn } = useAuth()
   const navigate = useNavigate()
   const [userImage, setUserImage] = useState<{
     file: File | null
@@ -119,7 +119,7 @@ const SignUp: React.FC<ISignUpProps> = ({
           token: response.tokenId
         })
         // redirect to home
-        navigate('/collection')
+        navigate('/')
       })
       .catch((err: any) => {
         if (err?.response?.status === 400) {
