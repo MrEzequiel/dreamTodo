@@ -1,6 +1,6 @@
 interface ITodo {
   id: string
-  name: string
+  title: string
   complete: boolean
   description?: string
   expanded?: {
