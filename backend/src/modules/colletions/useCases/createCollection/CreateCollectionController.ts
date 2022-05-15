@@ -1,17 +1,23 @@
-import { Request, Response } from "express";
-import { CreateCollectionUseCase } from "./CreateCollectionUseCase";
+import { Request, Response } from 'express'
+import { PrismaCollectionRepository } from '../../../../repositories/CollectionRepositories/prisma/PrismaCollectionRepository'
+import { CreateCollectionUseCase } from './CreateCollectionUseCase'
 
 export class CreateCollectionController {
+  async handle(request: Request, response: Response): Promise<Response> {
+    const { id: userId } = request.user
+    const { name, emoji } = request.body
 
-  async handle(request: Request, response: Response): Promise<Response>{
+    const prismaCollectionRepository = new PrismaCollectionRepository()
+    const createCollectionUseCase = new CreateCollectionUseCase(
+      prismaCollectionRepository
+    )
 
-    const { id: userId } = request.user;
-    const { name, emoji } = request.body;
+    const colletion = await createCollectionUseCase.execute(
+      userId as string,
+      name,
+      emoji
+    )
 
-    const createCollectionUseCase = new CreateCollectionUseCase();
-
-    const colletion = await createCollectionUseCase.execute(userId as string, name, emoji);
-
-    return response.json(colletion);
+    return response.json(colletion)
   }
 }
