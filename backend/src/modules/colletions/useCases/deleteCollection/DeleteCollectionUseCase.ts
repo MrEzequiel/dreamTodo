@@ -1,24 +1,17 @@
-import { client } from "../../../../database/client"
-import { AppError } from "../../../../infra/errors/AppError"
+import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError'
+import { CollectionRepository } from '../../../../repositories/CollectionRepositories/collectionRepositories'
 
 export class DeleteCollectionUseCase {
+  constructor(private collectionRepository: CollectionRepository) {}
+  async execute(id: string): Promise<void> {
+    const verifyIfCollectionExist =
+      this.collectionRepository.findCollectionById(id)
 
-  async execute(id: string): Promise<void>{  
-    
-    const verifyIfColletionExist = await client.collection.findFirst({
-      where: {
-        id
-      }
-    })
-
-    if(!verifyIfColletionExist) {
-      throw new AppError("Colletion não encontrada!")
+    if (!verifyIfCollectionExist) {
+      throw new AppError('Colletion não encontrada!')
     }
 
-    await client.collection.delete({
-      where: {
-        id,
-      }
-    })
+    await this.collectionRepository.deleteColletion(id)
   }
 }
