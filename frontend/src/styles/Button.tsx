@@ -49,7 +49,8 @@ const Button: React.FC<IButtonProps> = ({
         width:
           !animationIsFinished && buttonRef.current
             ? `${buttonRef.current.offsetWidth}px`
-            : 'auto'
+            : 'auto',
+        ...props.style
       }}
       ref={buttonRef}
     >

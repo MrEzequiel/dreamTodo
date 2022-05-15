@@ -1,7 +1,6 @@
-import React, { useContext, useState, memo, useMemo } from 'react'
+import React, { useState, memo, useMemo } from 'react'
+
 import { NavLink } from 'react-router-dom'
-import { TodoContext } from '../../../context/TodoListContext'
-import { Types } from '../../../functions/reducers'
 import Dropdown from '../../../components/Dropdown'
 import Modal from '../../../components/Modal'
 import ICollection from '../../../interfaces/Collection'
@@ -49,6 +48,7 @@ const Card: React.FC<IProps> = ({ collection }) => {
 
   const getPercentageTodo = useMemo(() => {
     const todos = collection.Todo
+
     if (todos?.length === 0 || !todos) return '0%'
 
     const total = todos.reduce(
