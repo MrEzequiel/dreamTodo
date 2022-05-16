@@ -19,40 +19,63 @@ import { useDrag, useDrop } from 'react-dnd'
 import type { Identifier } from 'dnd-core'
 import ModalForm from '../FormTodo/ModalForm'
 import { getEmptyImage } from 'react-dnd-html5-backend'
+import { useMutation, useQueryClient } from 'react-query'
+import { deleteTodo } from '../../../../functions/Todo/deleteTodo'
+import { useTodoContext } from '../../TodoContext'
+import ICollection from '../../../../interfaces/Collection'
+import { useNotification } from '../../../../context/NotificationContext'
 
-interface Props {
+interface TodoProps {
   todo: ITodo
-  index: number
 }
 
-interface DragItem {
-  id: number
-  index: number
-  todo: ITodo
-  ref: HTMLLIElement
-}
+const Todo: React.FC<TodoProps> = ({ todo }) => {
+  const { collectionName, idCollection } = useTodoContext()
+  const queryClient = useQueryClient()
 
-const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
-  const { id } = useContext(TodoPageContext)
   const inputEl = useRef<HTMLInputElement>(null)
-  const dropRef = useRef<HTMLLIElement | null>(null)
-  const dragRef = useRef<HTMLButtonElement | null>(null)
-  const { dispatch } = useContext(TodoContext)
+  const { createNotification } = useNotification()
 
   const [toggle, setToggle] = useState(todo.complete)
 
   const [hasEdit, setHasEdit] = useState(false)
   const [modal, setModal] = useState(false)
-  const [edit, setEdit] = useState(todo.name)
+  const [edit, setEdit] = useState(todo.title)
   const [expended, setExpended] = useState(false)
 
   const expendedTodo = !!todo.description || !!todo.expanded
 
+  const { mutate: mutateDeleteTodo, isLoading: loadingDeleting } = useMutation(
+    deleteTodo,
+    {
+      onSuccess: () => {
+        createNotification('success', 'Todo deleted successfully')
+
+        const dataCollections = queryClient.getQueryData([
+          'todo',
+          collectionName
+        ]) as ICollection[]
+
+        if (dataCollections) {
+          const newDataCollections = dataCollections.map(collection => {
+            if (collection.id === idCollection) {
+              return {
+                ...collection,
+                Todo: collection.Todo.filter(t => t.id !== todo.id)
+              }
+            }
+          })
+
+          queryClient.setQueryData(['todo', collectionName], newDataCollections)
+        }
+      },
+      onError: () => {
+        createNotification('error', 'Oops! Something went wrong')
+      }
+    }
+  )
+
   function handleChangeForComplete() {
-    dispatch({
-      type: Types.Toggle,
-      payload: { id_collection: id, id: todo.id }
-    })
     setToggle(prev => !prev)
   }
 
@@ -62,18 +85,7 @@ const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
 
   function handleBlurInput() {
     if (!edit.trim()) {
-      setEdit(todo.name)
-    } else {
-      dispatch({
-        type: Types.Edit,
-        payload: {
-          id_collection: id,
-          id: todo.id,
-          name: edit,
-          description: undefined,
-          expanded: undefined
-        }
-      })
+      setEdit(todo.title)
     }
     setHasEdit(false)
   }
@@ -99,10 +111,7 @@ const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
 
   function handleClickDropdown(type: 'edit' | 'remove') {
     if (type === 'remove') {
-      dispatch({
-        type: Types.Remove,
-        payload: { id_collection: id, id: todo.id }
-      })
+      mutateDeleteTodo({ idTodo: todo.id })
     }
 
     if (type === 'edit') {
@@ -110,71 +119,6 @@ const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
       setHasEdit(true)
     }
   }
-
-  // drag and drop todo
-  const [{ handlerId }, drop] = useDrop<
-    DragItem,
-    void,
-    { handlerId: Identifier | null }
-  >({
-    accept: todo.complete ? 'TODO_COMPLETED' : 'TODO',
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId()
-      }
-    },
-    hover(item: DragItem, monitor) {
-      if (!dropRef.current) return
-
-      const dragIndex = item.index
-      const hoverIndex = index
-      if (dragIndex === hoverIndex) return
-
-      const hoverBoundingRect = dropRef.current.getBoundingClientRect()
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-      const clientOffset: any = monitor.getClientOffset()
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top
-
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return
-
-      dispatch({
-        type: Types.Move,
-        payload: {
-          id_collection: id,
-          dragIndex,
-          hoverIndex,
-          type: todo.complete ? 'complete' : 'incomplete'
-        }
-      })
-
-      item.index = hoverIndex
-    }
-  })
-
-  const [{ isDragging }, drag, preview] = useDrag({
-    type: todo.complete ? 'TODO_COMPLETED' : 'TODO',
-    item: () => {
-      return { id: todo.id, index, todo, ref: dropRef.current }
-    },
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
-  })
-
-  drop(drag(dropRef))
-  drag(dragRef)
-
-  useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true })
-  }, []) // eslint-disable-line
-
-  useEffect(() => {
-    if (isDragging) {
-      setExpended(false)
-    }
-  }, [isDragging, expendedTodo])
 
   useEffect(() => {
     if (!hasEdit) return
@@ -187,18 +131,12 @@ const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
   }, [hasEdit, expendedTodo])
 
   return (
-    <div ref={ref} className="todo-container">
+    <>
       <s.TodoWrapper
         edit={hasEdit && !expendedTodo}
+        isLoading={loadingDeleting}
         expended={expended}
-        isDragging={isDragging}
-        ref={dropRef}
-        data-handler-id={handlerId}
       >
-        <s.ButtonDrag type="button" ref={dragRef}>
-          <MdDragIndicator size={25} />
-        </s.ButtonDrag>
-
         <s.InputCheckboxTodo>
           <input
             type="checkbox"
@@ -217,7 +155,7 @@ const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
           />
         ) : (
           <p style={{ textDecoration: toggle ? 'line-through' : 'none' }}>
-            {todo.name}
+            {todo.title}
           </p>
         )}
 
@@ -258,9 +196,10 @@ const Todo = forwardRef<HTMLDivElement, Props>(({ todo, index }, ref) => {
           )}
         </s.ExpendedTodo>
       )}
-    </div>
+    </>
   )
-})
+}
 
-Todo.displayName = 'Todo'
-export default memo(Todo)
+export default memo(Todo, (prev, next) => {
+  return JSON.stringify(prev.todo.id) === JSON.stringify(next.todo.id)
+})

@@ -24,7 +24,7 @@ export const CardWrapper = styled.div`
     }
   }
 
-  animation: animeCard 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation: animeCard 1000ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
   transform: perspective(100vmax) translateZ(0px) rotateX(0deg);
   transition: all 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);

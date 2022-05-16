@@ -18,7 +18,8 @@ const endpoints = {
   },
   todo: {
     get: '/todo',
-    post: '/todo'
+    post: '/todo',
+    delete: '/todo'
   }
 }
 

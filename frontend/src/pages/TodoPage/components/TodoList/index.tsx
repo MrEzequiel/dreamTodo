@@ -1,75 +1,50 @@
-// @ts-nocheck
-
-import React, { useContext } from 'react'
-import TodoPageContext from '../../../../context/TodoPageContext'
+import React from 'react'
 import Todo from '../Todo'
-import TodoDragLayer from '../Todo/TodoDragLayer'
 import EmptyTodo from './EmptyTodo'
-import FlipMove from 'react-flip-move'
 
 import * as s from './styles'
+import ITodo from '../../../../interfaces/Todo'
 
-const TodoList: React.FC = () => {
-  const { thisCollection } = useContext(TodoPageContext)
-  const todos = thisCollection.Todo
+interface TodoListProps {
+  list: ITodo[]
+}
 
-  if (!todos.complete.length && !todos.incomplete.length) return <EmptyTodo />
+const TodoList: React.FC<TodoListProps> = ({ list }) => {
+  if (list.length === 0) return <EmptyTodo />
 
-  const enterAnimation: FlipMove.AnimationProp = {
-    from: { transform: 'translateX(-20px)', opacity: '0' },
-    to: { transform: 'initial', opacity: '1' }
-  }
-
-  const leaveAnimation: FlipMove.AnimationProp = {
-    from: { transform: 'translateX(0)', opacity: '1' },
-    to: { transform: 'translateX(-20px)', opacity: '0' }
-  }
+  const todosIncomplete = list.filter(todo => !todo.complete)
+  const todosCompleted = list.filter(todo => todo.complete)
 
   return (
     <s.TodoWrapper>
-      {!!todos.incomplete.length && (
+      {!!todosIncomplete.length && (
         <>
           <h2>
-            {todos.incomplete.length > 1 ? 'Tasks' : 'Task'} -{' '}
-            <strong>{todos.incomplete.length}</strong>
+            {todosIncomplete.length > 1 ? 'Tasks' : 'Task'} -{' '}
+            <strong>{todosIncomplete.length}</strong>
           </h2>
 
-          <FlipMove
-            typeName="ul"
-            enterAnimation={enterAnimation}
-            leaveAnimation={leaveAnimation}
-            duration={400}
-            easing="ease"
-          >
-            {todos.incomplete.map((todo, index) => (
-              <Todo key={todo.id} todo={todo} index={index} />
+          <ul>
+            {todosIncomplete.map(todo => (
+              <Todo key={todo.id} todo={todo} />
             ))}
-          </FlipMove>
+          </ul>
         </>
       )}
 
-      {!!todos.complete.length && (
+      {!!todosCompleted.length && (
         <>
           <h2>
-            Completed - <strong>{todos.complete.length}</strong>
+            Completed - <strong>{todosCompleted.length}</strong>
           </h2>
 
-          <FlipMove
-            typeName="ul"
-            enterAnimation={enterAnimation}
-            leaveAnimation={leaveAnimation}
-            duration={400}
-            easing="ease"
-          >
-            {todos.complete.map((todo, index) => (
-              <Todo key={todo.id} todo={todo} index={index} />
+          <ul>
+            {todosCompleted.map(todo => (
+              <Todo key={todo.id} todo={todo} />
             ))}
-          </FlipMove>
+          </ul>
         </>
       )}
-
-      {/* Drag n drop layer */}
-      <TodoDragLayer />
     </s.TodoWrapper>
   )
 }

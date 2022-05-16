@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 interface ContainerProps {
   edit: boolean
   expended: boolean
-  isDragging: boolean
+  isLoading: boolean
 }
 
 export const TodoWrapper = styled.li<ContainerProps>`
@@ -13,7 +13,6 @@ export const TodoWrapper = styled.li<ContainerProps>`
   border-radius: ${props => props.theme.borderRadius};
   border: 2px solid transparent;
   padding: 15px;
-  padding-left: 30px;
 
   border-color: ${({ edit }) => (edit ? '#11EEDD' : 'transparent')};
   border-radius: ${({ expended }) => (expended ? '15px 15px 0 0' : '15px')};
@@ -21,7 +20,26 @@ export const TodoWrapper = styled.li<ContainerProps>`
   display: flex;
   gap: 15px;
 
-  transition: box-shadow 500ms, transform 500ms;
+  opacity: ${({ isLoading }) => (isLoading ? 0.4 : 1)};
+  & * {
+    pointer-events: ${({ isLoading }) => (isLoading ? 'none' : 'all')};
+  }
+
+  @keyframes show-left {
+    from {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  animation: show-left 500ms ease;
+
+  transition: box-shadow 500ms, transform 500ms, opacity 500ms;
   transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 
   box-shadow: ${({ expended }) =>
@@ -39,22 +57,6 @@ export const TodoWrapper = styled.li<ContainerProps>`
     width: 100%;
     word-break: break-word;
   }
-
-  ${({ isDragging }) =>
-    isDragging &&
-    css`
-      transition: all 0.3s ease;
-      cursor: grabbing;
-      box-shadow: none;
-      background: none;
-      border-color: ${props => props.theme.colors.colorPrimary2};
-      border-style: dashed;
-
-      & > * {
-        opacity: 0;
-        transition: all 150ms ease;
-      }
-    `}
 `
 
 export const ButtonDrag = styled.button`

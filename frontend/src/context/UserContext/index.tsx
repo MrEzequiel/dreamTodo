@@ -4,7 +4,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState
 } from 'react'
 import Cookies from 'js-cookie'
@@ -81,8 +80,8 @@ const UserProvider: FC = ({ children }) => {
   }, [navigate, queryClient])
 
   const signIn = useCallback((user: IUser) => {
-    Cookies.set('auth', JSON.stringify(user.token))
-    Cookies.set('refresh', JSON.stringify(user.refresh.refreshToken))
+    Cookies.set('auth', user.token)
+    Cookies.set('refresh', user.refresh.refreshToken)
 
     setData(user)
   }, [])

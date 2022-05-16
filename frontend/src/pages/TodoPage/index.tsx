@@ -1,15 +1,11 @@
 import { Emoji } from 'emoji-mart'
-import React, { useContext, useEffect } from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import { FaAngleLeft } from 'react-icons/fa'
 import { useQuery } from 'react-query'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import { TodoContext } from '../../context/TodoListContext'
-import TodoPageContext from '../../context/TodoPageContext'
 import { getIndividualCollection } from '../../functions/Todo/getTodo'
 import ICollection from '../../interfaces/Collection'
 import NotFound from '../NotFound'
+import TodoContext from './TodoContext'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
 
@@ -35,7 +31,12 @@ const TodoPage = () => {
       {isLoading && <p>Loading</p>}
 
       {!isLoading && !!collection && (
-        <>
+        <TodoContext.Provider
+          value={{
+            idCollection: collection[0].id,
+            collectionName: collection[0].name
+          }}
+        >
           <s.TitleStyle>
             <NavLink to="/" end>
               <button type="button">
@@ -49,9 +50,9 @@ const TodoPage = () => {
             </h1>
           </s.TitleStyle>
 
-          <FormTodo id={collection[0].id} />
-          {/* <TodoList /> */}
-        </>
+          <FormTodo />
+          <TodoList list={collection[0].Todo} />
+        </TodoContext.Provider>
       )}
 
       {isError && <NotFound />}
