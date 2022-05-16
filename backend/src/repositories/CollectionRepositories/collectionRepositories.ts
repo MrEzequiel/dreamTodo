@@ -16,6 +16,8 @@ export interface CollectionRepository {
     emoji: string
   ) => Promise<Collection>
 
+  listTodoOfColletion: (name: string, complete: string) => Promise<any>
+
   findCollectionByName: (name: string) => Promise<Collection | null>
 
   findCollectionById: (id: string) => Promise<Collection | null>

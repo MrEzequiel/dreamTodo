@@ -1,4 +1,3 @@
-import { Collection } from '@prisma/client'
 import { client } from '../../../database/client'
 import { RequestCreateColletion } from '../../../test/repositories/InMemoryCollectionRepository'
 import { CollectionRepository } from '../collectionRepositories'
@@ -36,6 +35,31 @@ export class PrismaCollectionRepository implements CollectionRepository {
         id
       }
     })
+  }
+
+  async listTodoOfColletion(name: string, complete: string) {
+    const completeTodo = complete.includes('true') ? true : false
+
+    const collection = await client.collection.findMany({
+      where: {
+        name
+      },
+      select: {
+        id: true,
+        name: true,
+        emoji: true,
+        userId: true,
+        created_at: true,
+        modified_at: true,
+        Todo: {
+          where: {
+            complete: completeTodo
+          }
+        }
+      }
+    })
+
+    return collection
   }
 
   async findCollectionByName(name: string) {
