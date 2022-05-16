@@ -1,41 +1,22 @@
-import { Todo } from "@prisma/client";
-import { client } from "../../../../database/client";
-import { AppError } from "../../../../infra/errors/AppError";
+import { Todo } from '@prisma/client'
+import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError'
+import { CollectionRepository } from '../../../../repositories/CollectionRepositories/collectionRepositories'
 
 export class ListTodoOfColletionUseCase {
-  
-  async execute( name: string, complete: string ){
+  constructor(private collectionRepository: CollectionRepository) {}
+  async execute(name: string, complete: string) {
+    const verifyIfColletionExist =
+      await this.collectionRepository.findCollectionByName(name)
 
-    const verifyIfColletionExist = await client.collection.findFirst({
-      where: {
-        name
-      }
-    })
-
-    if(!verifyIfColletionExist) {
+    if (!verifyIfColletionExist) {
       throw new AppError('Colletion não encontrada.')
     }
-   
-    const completeTodo = complete.includes('true') ? true : false
 
-    const collection = await client.collection.findMany({
-      where: {
-        name,
-      },
-      select: {
-        id: true,
-        name: true,
-        emoji: true,
-        userId: true,
-        created_at: true,
-        modified_at: true,
-        Todo: {
-          where: {
-            complete : completeTodo
-          }
-        }
-      },
-    })
+    const collection = await this.collectionRepository.listTodoOfColletion(
+      name,
+      complete
+    )
 
     return collection
   }

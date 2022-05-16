@@ -1,20 +1,21 @@
-import { Request, Response } from "express";
-import { ListTodoDateUseCase } from "./ListTodoDateUseCase";
-
-
-
-
+import { Request, Response } from 'express'
+import { PrismaCollectionRepository } from '../../../../repositories/CollectionRepositories/prisma/PrismaCollectionRepository'
+import { PrismaTodoRepository } from '../../../../repositories/TodoRepositories/prisma/prismaTodoRepository'
+import { ListTodoDateUseCase } from './ListTodoDateUseCase'
 
 export class ListTodoDateController {
+  async handle(request: Request, response: Response): Promise<Response> {
+    const { id_collection } = request.params
+    const { modo } = request.query
 
-  async handle(request: Request, response: Response): Promise<Response>{
+    const prismaCollectionRepository = new PrismaCollectionRepository()
+    const prismaTodoRepository = new PrismaTodoRepository()
+    const listTodoDateUseCase = new ListTodoDateUseCase(
+      prismaCollectionRepository,
+      prismaTodoRepository
+    )
 
-    const { id_collection } = request.params;
-    const { modo } = request.query;
-
-    const listTodoDateUseCase = new ListTodoDateUseCase();
-
-    const todo = await listTodoDateUseCase.execute(id_collection, String(modo));
+    const todo = await listTodoDateUseCase.execute(id_collection, String(modo))
 
     return response.json(todo)
   }
