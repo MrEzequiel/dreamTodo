@@ -1,24 +1,16 @@
-import { client } from "../../../../database/client";
-import { AppError } from "../../../../infra/errors/AppError";
+import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError'
+import { TodoRepository } from '../../../../repositories/TodoRepositories/todoRepositories'
 
 export class DeleteTodoUseCase {
+  constructor(private todoRepository: TodoRepository) {}
+  async execute(id: string): Promise<void> {
+    const verifyIfTodoExist = await this.todoRepository.findTodoById(id)
 
-  async execute(id: string): Promise<void>{
-    
-    const verifyIfTodoExist = await client.todo.findFirst({
-      where: {
-        id
-      }
-    })
-
-    if(!verifyIfTodoExist) {
-      throw new AppError("Todo não encontrada.")
+    if (!verifyIfTodoExist) {
+      throw new AppError('Todo não encontrada.')
     }
 
-    await client.todo.delete({
-      where: {
-        id
-      }
-    })
+    await this.todoRepository.deleteTodo(id)
   }
 }

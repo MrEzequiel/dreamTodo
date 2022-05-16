@@ -1,16 +1,15 @@
-import { Request, Response } from "express";
-import { DeleteTodoUseCase } from "./DeleteTodoUseCase";
-
+import { Request, Response } from 'express'
+import { PrismaTodoRepository } from '../../../../repositories/TodoRepositories/prisma/prismaTodoRepository'
+import { DeleteTodoUseCase } from './DeleteTodoUseCase'
 
 export class DeleteTodoController {
+  async handle(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params
 
-  async handle(request: Request, response: Response): Promise<Response>{
-    
-    const { id } = request.params;
+    const prismaTodoRepository = new PrismaTodoRepository()
+    const deleteTodoUseCase = new DeleteTodoUseCase(prismaTodoRepository)
 
-    const deleteTodoUseCase = new DeleteTodoUseCase();
-
-    await deleteTodoUseCase.execute(id);
+    await deleteTodoUseCase.execute(id)
 
     return response.json({
       message: 'Todo deletada com sucessoo'

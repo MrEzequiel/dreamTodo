@@ -1,38 +1,29 @@
-import { Todo } from "@prisma/client";
-import { client } from "../../../../database/client";
-import { AppError } from "../../../../infra/errors/AppError";
+import { Todo } from '@prisma/client'
+import { client } from '../../../../database/client'
+import { AppError } from '../../../../infra/errors/AppError'
+import { TodoRepository } from '../../../../repositories/TodoRepositories/todoRepositories'
 
-
-interface IRequest {
+export interface IRequest {
   id: string
   title: string
   description: string
 }
 
 export class EditTodoUseCase {
-
+  constructor(private todoRepository: TodoRepository) {}
   async execute({ id, title, description }: IRequest): Promise<Todo> {
+    const todoExist = await this.todoRepository.findTodoById(id)
 
-    const todoExist = await client.todo.findFirst({
-      where: {
-        id
-      }
-    })
-
-    if(!todoExist) {
+    if (!todoExist) {
       throw new AppError('Todo não existente')
     }
 
-    const editedTodo = await client.todo.update({
-      data: {
-        title,
-        description,
-      },
-      where: {
-        id: todoExist.id
-      },
+    const editedTodo = await this.todoRepository.editTodo({
+      id,
+      title,
+      description
     })
 
-    return editedTodo;
+    return editedTodo
   }
 }
