@@ -12,11 +12,11 @@ export class CreateCollectionController {
       prismaCollectionRepository
     )
 
-    const colletion = await createCollectionUseCase.execute(
-      userId as string,
+    const colletion = await createCollectionUseCase.execute({
+      userId,
       name,
       emoji
-    )
+    })
 
     return response.json(colletion)
   }
