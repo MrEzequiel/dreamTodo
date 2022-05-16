@@ -33,12 +33,6 @@ export class RefreshTokenUseCase {
       throw new AppError('Refresh token não encontrado')
     }
 
-    await client.refreshToken.deleteMany({
-      where: {
-        userId: sub
-      }
-    })
-
     const refreshToken = sign(
       {},
       String(process.env.SECRET_KEY_REFRESH_TOKEN),

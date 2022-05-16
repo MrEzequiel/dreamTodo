@@ -39,6 +39,12 @@ export class AuthenticateUserUseCase {
 
     const expires_in = dayjs().add(1, 'days').toDate()
 
+    await client.refreshToken.deleteMany({
+      where: {
+        userId: user.id
+      }
+    })
+
     const refresh_token = sign(
       {},
       String(process.env.SECRET_KEY_REFRESH_TOKEN),
