@@ -1,5 +1,3 @@
-import { User } from '@prisma/client'
-import { client } from '../../../../database/client'
 import { AppError } from '../../../../infra/errors/AppError'
 import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
 
@@ -20,13 +18,11 @@ export class EditUserUseCase {
       throw new AppError('Usuário não encontrado')
     }
 
-    const editedUser = await this.userRepository.editUser({
+    await this.userRepository.editUser({
       id,
       name,
       imageProfile,
       imageURL
     })
-
-    return editedUser
   }
 }

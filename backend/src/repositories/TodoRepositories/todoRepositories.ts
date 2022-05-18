@@ -3,18 +3,13 @@ import { ICreateTodoDTO } from '../../modules/todo/dtos/ICreateTodoDTO'
 import { IRequest } from '../../modules/todo/useCases/editTodo/EditTodoUseCase'
 
 export interface TodoRepository {
-  createTodo: ({
-    title,
-    id_collection,
-    description,
-    complete
-  }: ICreateTodoDTO) => Promise<Todo>
+  createTodo: (todo: ICreateTodoDTO) => Promise<Todo>
 
-  editTodo: ({ id, title, description }: IRequest) => Promise<Todo>
+  editTodo: ({ id, title, description }: IRequest) => Promise<void>
 
   deleteTodo: (id: string) => Promise<void>
 
-  updateCheckTodo: (id: string, complete: boolean) => Promise<Todo>
+  updateCheckTodo: (id: string, complete: boolean) => Promise<void>
 
   listTodoDate: (id_collection: string, modo: string) => Promise<Todo[]>
 

@@ -24,7 +24,7 @@ export class PrismaTodoRepository implements TodoRepository {
   }
 
   async editTodo({ id, title, description }: IRequest) {
-    const todo = await client.todo.update({
+    await client.todo.update({
       data: {
         title,
         description
@@ -33,8 +33,6 @@ export class PrismaTodoRepository implements TodoRepository {
         id
       }
     })
-
-    return todo
   }
 
   async deleteTodo(id: string) {
@@ -54,8 +52,6 @@ export class PrismaTodoRepository implements TodoRepository {
         complete
       }
     })
-
-    return todo
   }
 
   async findTodoByTitle(title: string) {

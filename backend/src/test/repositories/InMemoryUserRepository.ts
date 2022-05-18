@@ -8,21 +8,21 @@ import { RefreshTokenDTO } from '../../modules/accounts/useCases/authenticateUse
 export class InMemoryUserRepository implements UserRepository {
   users: User[] = []
   refresh: RefreshToken[] = []
-  
+
   async create(user: ICreateUserDTO) {
     Object.assign(user, {
       id: user.id ?? v4()
     })
-    
+
     this.users.push(user as User)
     return user as User
   }
-  
-  async createRefreshToken(refresh: RefreshTokenDTO){
+
+  async createRefreshToken(refresh: RefreshTokenDTO) {
     Object.assign(refresh, {
       id: refresh.userId
     })
-    
+
     this.refresh.push(refresh as RefreshToken)
     return refresh as RefreshToken
   }
@@ -37,11 +37,15 @@ export class InMemoryUserRepository implements UserRepository {
     return user ?? null
   }
 
-  async editUser(user: IRequestEdit) {
-    Object.assign(user, {})
+  async editUser({ id, name, imageProfile }: IRequestEdit) {
+    await this.users.map(async () => {
+      const user = await this.findUserById(id)
 
-    this.users.push(user as User)
-    return user as User
+      if(user) {
+        user.name = name ?? user.name,
+        user.imageProfile = imageProfile ?? user.imageProfile
+      }
+    })
   }
 
   editUserPassword: (id: string, passowrd: string) => Promise<void>

@@ -13,13 +13,15 @@ export class EditUserController {
     const userRepository = new PrismaUserRepository()
     const editUserUseCase = new EditUserUseCase(userRepository)
 
-    const edit = await editUserUseCase.execute({
+    await editUserUseCase.execute({
       id,
       name,
       imageURL: `${process.env.APP_URL}/files/${imageProfile}`,
       imageProfile,
     })
 
-    return response.json(edit)
+    return response.json({
+      message: 'Usuário editado com sucesso.'
+    })
   }
 }
