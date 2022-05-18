@@ -13,15 +13,32 @@ export const FormAddTodo = styled.form`
   }
 
   .links {
+    position: relative;
+
     input {
       width: 100%;
-      margin-bottom: 5px;
+      opacity: 0.2;
     }
 
-    p:last-child {
-      margin-top: 5px;
-      color: ${props => props.theme.colors.g7};
+    .alert {
+      opacity: 0.4;
+      cursor: default;
+      position: absolute;
+      user-select: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
       font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
     }
   }
 `
@@ -57,11 +74,4 @@ export const ButtonsModal = styled.div`
     border: 2px solid ${props => props.theme.colors.colorPrimary2};
     color: ${props => props.theme.colors.g7};
   }
-`
-
-export const MessageError = styled.p`
-  color: ${props => props.theme.colors.colorError};
-  font-size: 1.4rem;
-  font-weight: 300;
-  margin-top: 4px;
 `

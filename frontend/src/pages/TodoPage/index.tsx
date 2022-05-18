@@ -18,12 +18,8 @@ const TodoPage = () => {
     data: collection,
     isLoading,
     isError
-  } = useQuery<ICollection[]>(
-    ['todo', collectionName],
-    () => getIndividualCollection(collectionName as string),
-    {
-      refetchOnWindowFocus: false
-    }
+  } = useQuery<ICollection[]>(['todo', collectionName], () =>
+    getIndividualCollection(collectionName as string)
   )
 
   return (

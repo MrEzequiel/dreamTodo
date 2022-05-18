@@ -39,7 +39,8 @@ export const TodoWrapper = styled.li<ContainerProps>`
 
   animation: show-left 500ms ease;
 
-  transition: box-shadow 500ms, transform 500ms, opacity 500ms;
+  transition: box-shadow 500ms, transform 500ms, opacity 300ms,
+    border-radius 500ms;
   transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 
   box-shadow: ${({ expended }) =>
@@ -171,37 +172,67 @@ export const ExpendedButton = styled.button<{ expended: boolean }>`
 `
 
 export const ExpendedTodo = styled.div`
-  margin-bottom: 30px;
+  margin-top: -22px;
+  margin-bottom: 10px;
+
   background: ${props => props.theme.colors.g3};
   border-radius: ${props => props.theme.borderRadius};
   box-shadow: inset 0px 12px 16px -4px rgb(0, 0, 0, 0.15);
+
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border: 1px solid transparent;
-  padding: 15px;
 
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
 
-  @keyframes show-left {
-    from {
-      opacity: 0;
-      margin-top: -30px;
-    }
-    to {
-      opacity: initial;
-      margin-top: 0px;
-    }
+  & > div {
+    padding: 15px;
+    padding-top: 25px;
   }
 
-  animation: show-left 900ms cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+  --speed: 600ms;
+  &.expended-enter {
+    max-height: 0;
+  }
+  &.expended-enter-active {
+    max-height: 100px;
+    transition: max-height var(--speed);
+    transition-timing-function: ease-in-out;
+  }
+
+  // exit animation
+  &.expended-exit {
+    max-height: 100px;
+  }
+  &.expended-exit-active {
+    max-height: 0;
+    transition: max-height var(--speed);
+    transition-timing-function: ease-in-out;
+  }
 
   p {
     font-size: 1.6rem;
     font-weight: 300;
-    color: ${props => props.theme.colors.g7};
+    color: ${props => props.theme.colors.g8};
     white-space: break-spaces;
+    word-break: break-word;
+
+    & > span {
+      white-space: break-spaces;
+      word-break: break-word;
+      color: ${props => props.theme.colors.g8};
+    }
+  }
+
+  .more {
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: 300;
+
+    color: ${props => props.theme.colors.colorPrimary};
   }
 `
 
@@ -213,9 +244,11 @@ export const LinksWrapper = styled.div`
 
   a {
     font-size: 1.4rem;
+
     svg {
       margin-right: 5px;
     }
+
     &:hover {
       color: ${props => props.theme.colors.colorPrimary};
       text-decoration: underline;

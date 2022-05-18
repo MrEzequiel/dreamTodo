@@ -1,15 +1,29 @@
-import React, { useContext, useEffect } from 'react'
-import { TodoContext } from '../../../../../context/TodoListContext'
-import { Types } from '../../../../../functions/reducers'
-import useForm from '../../../../../hooks/useForm'
-import ITodo from '../../../../../interfaces/Todo'
-import Modal from '../../../../../components/Modal'
+import React, { useEffect } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import { useTodoContext } from '../../../TodoContext'
 
-import * as s from './style'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from 'react-hook-form'
+import validationSchema from './validationSchema'
+import { postTodo } from '../../../../../functions/Todo/postTodo'
+
+import ICollection from '../../../../../interfaces/Collection'
+import ITodo from '../../../../../interfaces/Todo'
+
+import Modal from '../../../../../components/Modal'
 import Button from '../../../../../styles/Button'
 import Title from '../../../../../styles/Title'
-import TodoPageContext from '../../../../../context/TodoPageContext'
-import InputStyle, { TextAreaStyle } from '../../../../../styles/Input'
+
+import * as s from './style'
+import InputStyle, {
+  HelperTextStyle,
+  TextAreaStyle
+} from '../../../../../styles/Input'
+import { useNotification } from '../../../../../context/NotificationContext'
+
+interface ReturnTodo extends ITodo {
+  id_collection: string
+}
 
 interface Props {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -26,92 +40,75 @@ const ModalForm: React.FC<Props> = ({
   todo,
   setEdit
 }) => {
-  const { id } = useContext(TodoPageContext)
-  const titleField = useForm({ required: true, initialValue: todo?.name })
-  const descriptionField = useForm({
-    required: false,
-    initialValue: todo?.description
+  const queryClient = useQueryClient()
+  const { collectionName, idCollection } = useTodoContext()
+
+  const { control, setValue, handleSubmit } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      title: todo?.title || '',
+      description: todo?.description || ''
+    }
+  })
+  const { createNotification } = useNotification()
+
+  const { mutate: mutatePostTodo, isLoading } = useMutation(postTodo, {
+    onSuccess: (data: ReturnTodo) => {
+      const dataCollections = queryClient.getQueryData([
+        'todo',
+        collectionName
+      ]) as ICollection[]
+
+      if (dataCollections) {
+        const newDataCollections = dataCollections.map(collection => {
+          if (collection.id === idCollection) {
+            return {
+              ...collection,
+              Todo: [...collection.Todo, data]
+            }
+          }
+
+          return collection
+        })
+
+        queryClient.setQueryData(['todo', collectionName], newDataCollections)
+      } else {
+        queryClient.refetchQueries(['todo', collectionName])
+      }
+
+      createNotification('success', 'Todo added successfully')
+      closeModal(false)
+    },
+
+    onError: (error: any) => {
+      if (error?.response?.status === 400) {
+        createNotification('error', 'Todo already exists')
+      } else {
+        createNotification('error', 'ops!, Something went wrong')
+      }
+    }
   })
 
-  function validateLink(value: string): string | null {
-    if (!value.trim()) {
-      return null
-    }
-
-    const regex =
-      /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi
-
-    const spliceValues = value.split(';').map(v => v.trim())
-
-    if (!spliceValues.length) {
-      return 'Keep the pattern'
-    } else if (!spliceValues.every(valueLink => valueLink.match(regex))) {
-      return 'Link Invalid'
-    } else {
-      return null
-    }
-  }
-
-  const initialValue = todo?.expanded?.links
-    ? todo?.expanded?.links.join(';')
-    : ''
-  const linkField = useForm({
-    required: false,
-    initialValue: initialValue,
-    type: 'link',
-    customValidate: validateLink
-  })
-
-  const { dispatch } = useContext(TodoContext)
-
-  function handleSubmit(e: React.SyntheticEvent) {
-    e.preventDefault()
-
-    if (
-      !(titleField.validate(titleField.value) && !validateLink(linkField.value))
-    ) {
-      return
-    }
-
-    const links = linkField.value.split(';')
-
+  const onSubmit = handleSubmit(data => {
     if (type === 'add') {
-      dispatch({
-        type: Types.Add,
-        payload: {
-          id_collection: id,
-          name: titleField.value,
-          description: descriptionField.value,
-          expanded: !linkField.value ? undefined : { links }
-        }
+      mutatePostTodo({
+        name: data.title,
+        description: data.description,
+        idCollection
       })
     } else if (todo?.id && setEdit) {
-      dispatch({
-        type: Types.Edit,
-        payload: {
-          id_collection: id,
-          id: todo.id,
-          name: titleField.value,
-          description: descriptionField.value,
-          expanded: !linkField.value ? undefined : { links }
-        }
-      })
-
       setEdit(false)
     }
-
-    closeModal(false)
-  }
+  })
 
   useEffect(() => {
     if (setEdit) return () => setEdit(false)
 
     if (!modalIsOpen && !todo) {
-      descriptionField.setValue('')
-      titleField.setValue('')
-      linkField.setValue('')
+      setValue('title', '')
+      setValue('description', '')
     }
-  }, [setEdit, modalIsOpen, todo, descriptionField, titleField, linkField])
+  }, [setEdit, modalIsOpen, todo]) // eslint-disable-line
 
   return (
     <Modal
@@ -123,48 +120,60 @@ const ModalForm: React.FC<Props> = ({
         Add a task
       </Title>
 
-      <s.FormAddTodo onSubmit={handleSubmit}>
-        <div>
-          <InputStyle
-            type="text"
-            placeholder="Title *"
-            value={titleField.value}
-            onChange={titleField.handleChange}
-            onBlur={titleField.handleBlur}
-            isValid={titleField.isValid}
-          />
-          {titleField.error && (
-            <s.MessageError>{titleField.error}</s.MessageError>
+      <s.FormAddTodo onSubmit={onSubmit}>
+        <Controller
+          control={control}
+          name="title"
+          render={({ field, fieldState }) => (
+            <div>
+              <InputStyle
+                type="text"
+                placeholder="Title *"
+                {...field}
+                isValid={!Boolean(fieldState?.error)}
+              />
+              {fieldState.error && (
+                <HelperTextStyle isError>
+                  {fieldState.error.message}
+                </HelperTextStyle>
+              )}
+            </div>
           )}
-        </div>
+        />
 
-        <TextAreaStyle
-          placeholder="Description"
-          className="description"
-          value={descriptionField.value}
-          onChange={descriptionField.handleChange}
+        <Controller
+          control={control}
+          name="description"
+          render={({ field, fieldState }) => (
+            <div>
+              <TextAreaStyle
+                placeholder="Description"
+                className="description"
+                isValid={!Boolean(fieldState?.error)}
+                {...field}
+              />
+              {fieldState?.error && (
+                <HelperTextStyle isError>
+                  {fieldState.error.message}
+                </HelperTextStyle>
+              )}
+            </div>
+          )}
         />
 
         <div className="links">
-          <InputStyle
-            type="text"
-            placeholder="Links"
-            value={linkField.value}
-            onChange={linkField.handleChange}
-            onBlur={linkField.handleBlur}
-            isValid={linkField.isValid}
-          />
-
-          {linkField.error && (
-            <s.MessageError>{linkField.error}</s.MessageError>
-          )}
-
-          <p>Separate links with ; (semicolon)</p>
+          <InputStyle type="text" placeholder="Links" disabled />
+          <p className="alert">Comming soon</p>
         </div>
 
         <s.ButtonsModal>
           <Button type="submit">{type}</Button>
-          <Button type="button" onClick={() => closeModal(false)} outlined>
+          <Button
+            type="button"
+            onClick={() => closeModal(false)}
+            outlined
+            color="secondary"
+          >
             Cancel
           </Button>
         </s.ButtonsModal>

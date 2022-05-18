@@ -17,13 +17,14 @@ import ModalForm from './ModalForm'
 import * as s from './styles'
 
 interface ReturnTodo extends ITodo {
-  id_collection: 'b5eaab2d-16b1-42c5-bb6e-f18f427e938f'
+  id_collection: string
 }
 
 const FormTodo: React.FC = () => {
   const { idCollection, collectionName } = useTodoContext()
   const queryClient = useQueryClient()
   const inputEl = useRef<HTMLInputElement>(null)
+  const moreInformationRef = useRef<HTMLAnchorElement>(null)
 
   const [name, setName] = useState('')
   const [focus, setFocus] = useState(false)
@@ -44,7 +45,7 @@ const FormTodo: React.FC = () => {
           if (collection.id === idCollection) {
             return {
               ...collection,
-              Todo: [data, ...collection.Todo]
+              Todo: [...collection.Todo, data]
             }
           }
 
@@ -75,12 +76,12 @@ const FormTodo: React.FC = () => {
           ref={inputEl}
           type="text"
           value={name}
-          placeholder="add a task"
+          placeholder="make coffee"
           onChange={e => {
             setName(e.target.value)
           }}
           onFocus={() => setFocus(true)}
-          onBlur={() => setTimeout(() => setFocus(false), 200)}
+          onBlur={() => setFocus(false)}
         />
         <Button
           type="submit"
@@ -89,7 +90,7 @@ const FormTodo: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             padding: 0,
-            width: '40px',
+            width: '45px',
             height: '40px'
           }}
           loading={isLoading}
@@ -98,13 +99,22 @@ const FormTodo: React.FC = () => {
         </Button>
       </s.FormStyle>
 
-      {focus && (
-        <s.MoreInformation onClick={() => setOpenModal(true)}>
+      <CSSTransition
+        in={focus}
+        timeout={700}
+        unmountOnExit
+        classNames="collapse"
+        nodeRef={moreInformationRef}
+      >
+        <s.MoreInformation
+          onClick={() => setOpenModal(true)}
+          ref={moreInformationRef}
+        >
           More information
         </s.MoreInformation>
-      )}
+      </CSSTransition>
 
-      {/* <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" /> */}
+      <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" />
     </s.FormWrapper>
   )
 }

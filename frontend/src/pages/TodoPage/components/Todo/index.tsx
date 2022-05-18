@@ -24,6 +24,7 @@ import { deleteTodo } from '../../../../functions/Todo/deleteTodo'
 import { useTodoContext } from '../../TodoContext'
 import ICollection from '../../../../interfaces/Collection'
 import { useNotification } from '../../../../context/NotificationContext'
+import { CSSTransition } from 'react-transition-group'
 
 interface TodoProps {
   todo: ITodo
@@ -37,6 +38,7 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
   const { createNotification } = useNotification()
 
   const [toggle, setToggle] = useState(todo.complete)
+  const [extendDescription, setExtendDescription] = useState(false)
 
   const [hasEdit, setHasEdit] = useState(false)
   const [modal, setModal] = useState(false)
@@ -187,15 +189,43 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
         </s.ButtonsControl>
       </s.TodoWrapper>
 
-      {expended && (
+      <CSSTransition
+        in={expended}
+        timeout={600}
+        classNames="expended"
+        unmountOnExit
+      >
         <s.ExpendedTodo>
-          {todo.description && <p>{todo.description}</p>}
+          <div>
+            {todo.description && (
+              <p>
+                {extendDescription ? (
+                  todo.description
+                ) : (
+                  <span>
+                    {todo.description.slice(0, 100)}
 
-          {!!todo.expanded?.links && (
-            <s.LinksWrapper>{formateLinks(todo.expanded.links)}</s.LinksWrapper>
-          )}
+                    {todo.description.length > 100 && (
+                      <span
+                        onClick={() => setExtendDescription(prev => !prev)}
+                        className="more"
+                      >
+                        {'  '}...more
+                      </span>
+                    )}
+                  </span>
+                )}
+              </p>
+            )}
+
+            {!!todo.expanded?.links && (
+              <s.LinksWrapper>
+                {formateLinks(todo.expanded.links)}
+              </s.LinksWrapper>
+            )}
+          </div>
         </s.ExpendedTodo>
-      )}
+      </CSSTransition>
     </>
   )
 }
