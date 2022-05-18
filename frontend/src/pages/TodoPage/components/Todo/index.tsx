@@ -74,18 +74,30 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
         ]) as ICollection
 
         if (collection) {
-          const newCollections: ICollection = {
-            ...collection,
-            Todo: collection.Todo.map((todoItem: ITodo) => {
-              if (todoItem.id === todo.id) {
-                return {
-                  ...todoItem,
-                  complete: !todoItem.complete
+          // interactions for the completed todo is the last
+          const newCollections: ICollection = (() => {
+            let completedTodo = {} as ITodo
+
+            const newCollectionsWithoutCompletedTodo = {
+              ...collection,
+              Todo: collection.Todo.filter((todoItem: ITodo) => {
+                if (todoItem.id === todo.id) {
+                  completedTodo = {
+                    ...todoItem,
+                    complete: !todoItem.complete
+                  }
+                  return false
+                } else {
+                  return true
                 }
-              }
-              return todoItem
-            })
-          }
+              })
+            }
+
+            return {
+              ...newCollectionsWithoutCompletedTodo,
+              Todo: [...newCollectionsWithoutCompletedTodo.Todo, completedTodo]
+            }
+          })()
 
           queryClient.setQueryData(['todo', collectionName], newCollections)
         }
@@ -145,6 +157,7 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
             type="checkbox"
             onChange={handleChangeForComplete}
             checked={toggle}
+            disabled={loadingDeleting || isLoadingCompleting}
           />
         </s.InputCheckboxTodo>
 

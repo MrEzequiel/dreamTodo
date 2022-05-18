@@ -18,10 +18,9 @@ const TodoPage = () => {
     data: collection,
     isLoading,
     isError
-  } = useQuery<ICollection>(['todo', collectionName], async () => {
-    const collection = await getIndividualCollection(collectionName as string)
-    return collection[0]
-  })
+  } = useQuery<ICollection>(['todo', collectionName], () =>
+    getIndividualCollection(collectionName as string)
+  )
 
   return (
     <>
