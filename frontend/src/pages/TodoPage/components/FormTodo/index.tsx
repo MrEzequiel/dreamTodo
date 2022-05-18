@@ -32,24 +32,18 @@ const FormTodo: React.FC = () => {
       setName('')
       inputEl.current?.focus()
 
-      const dataCollections = queryClient.getQueryData([
+      const collection = queryClient.getQueryData([
         'todo',
         collectionName
-      ]) as ICollection[]
+      ]) as ICollection
 
-      if (dataCollections) {
-        const newDataCollections = dataCollections.map(collection => {
-          if (collection.id === idCollection) {
-            return {
-              ...collection,
-              Todo: [...collection.Todo, data]
-            }
-          }
+      if (collection) {
+        const newCollection: ICollection = {
+          ...collection,
+          Todo: [...collection.Todo, data]
+        }
 
-          return collection
-        })
-
-        queryClient.setQueryData(['todo', collectionName], newDataCollections)
+        queryClient.setQueryData(['todo', collectionName], newCollection)
       }
     }
   })

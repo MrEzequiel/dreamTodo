@@ -55,22 +55,16 @@ const ModalForm: React.FC<Props> = ({
 
   const { mutate: mutatePostTodo, isLoading } = useMutation(postTodo, {
     onSuccess: (data: ReturnTodo) => {
-      const dataCollections = queryClient.getQueryData([
+      const collection = queryClient.getQueryData([
         'todo',
         collectionName
-      ]) as ICollection[]
+      ]) as ICollection
 
-      if (dataCollections) {
-        const newDataCollections = dataCollections.map(collection => {
-          if (collection.id === idCollection) {
-            return {
-              ...collection,
-              Todo: [...collection.Todo, data]
-            }
-          }
-
-          return collection
-        })
+      if (collection) {
+        const newDataCollections: ICollection = {
+          ...collection,
+          Todo: [...collection.Todo, data]
+        }
 
         queryClient.setQueryData(['todo', collectionName], newDataCollections)
       } else {
@@ -93,31 +87,25 @@ const ModalForm: React.FC<Props> = ({
   const { mutate: mutatePutTodo, isLoading: isLoadingPut } = useMutation(
     putTodo,
     {
-      onSuccess: (data: ReturnTodo) => {
-        const dataCollections = queryClient.getQueryData([
+      onSuccess: (data: ITodo) => {
+        const collection = queryClient.getQueryData([
           'todo',
           collectionName
-        ]) as ICollection[]
+        ]) as ICollection
 
-        if (dataCollections) {
-          const newDataCollections = dataCollections.map(collection => {
-            if (collection.id === idCollection) {
-              return {
-                ...collection,
-                Todo: collection.Todo.map(todo => {
-                  if (todo.id === data.id) {
-                    return data
-                  }
-
-                  return todo
-                })
+        if (collection) {
+          const newCollections: ICollection = {
+            ...collection,
+            Todo: collection.Todo.map((todoItem: ITodo) => {
+              if (todoItem.id === data.id) {
+                return data
               }
-            }
 
-            return collection
-          })
+              return todoItem
+            })
+          }
 
-          queryClient.setQueryData(['todo', collectionName], newDataCollections)
+          queryClient.setQueryData(['todo', collectionName], newCollections)
         } else {
           queryClient.refetchQueries(['todo', collectionName])
         }

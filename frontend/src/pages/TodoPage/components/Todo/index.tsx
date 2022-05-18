@@ -1,17 +1,20 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import { useTodoContext } from '../../TodoContext'
+import { useNotification } from '../../../../context/NotificationContext'
+
 import { FaAngleDown, FaLink } from 'react-icons/fa'
+import * as s from './style'
+
+import { CSSTransition } from 'react-transition-group'
+import ModalForm from '../FormTodo/ModalForm'
 import Dropdown from '../../../../components/Dropdown'
 
-import * as s from './style'
-import ITodo from '../../../../interfaces/Todo'
-import ModalForm from '../FormTodo/ModalForm'
-import { useMutation, useQueryClient } from 'react-query'
-import { deleteTodo } from '../../../../functions/Todo/deleteTodo'
-import { useTodoContext } from '../../TodoContext'
 import ICollection from '../../../../interfaces/Collection'
-import { useNotification } from '../../../../context/NotificationContext'
-import { CSSTransition } from 'react-transition-group'
+import ITodo from '../../../../interfaces/Todo'
+
 import { putCompletedTodo } from '../../../../functions/Todo/putTodo'
+import { deleteTodo } from '../../../../functions/Todo/deleteTodo'
 
 interface TodoProps {
   todo: ITodo
@@ -39,24 +42,23 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
       onSuccess: () => {
         createNotification('success', 'Todo deleted successfully')
 
-        const dataCollections = queryClient.getQueryData([
+        const collection = queryClient.getQueryData([
           'todo',
           collectionName
-        ]) as ICollection[]
+        ]) as ICollection
 
-        if (dataCollections) {
-          const newDataCollections = dataCollections.map(collection => {
-            if (collection.id === idCollection) {
-              return {
-                ...collection,
-                Todo: collection.Todo.filter(t => t.id !== todo.id)
-              }
-            }
-          })
+        if (collection) {
+          const newDataCollections: ICollection = {
+            ...collection,
+            Todo: collection.Todo.filter(
+              (todoItem: ITodo) => todoItem.id !== todo.id
+            )
+          }
 
           queryClient.setQueryData(['todo', collectionName], newDataCollections)
         }
       },
+
       onError: () => {
         createNotification('error', 'Oops! Something went wrong')
       }
@@ -66,30 +68,26 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
   const { mutate: mutateCompleteTodo, isLoading: isLoadingCompleting } =
     useMutation(putCompletedTodo, {
       onSuccess: () => {
-        const dataCollections = queryClient.getQueryData([
+        const collection = queryClient.getQueryData([
           'todo',
           collectionName
-        ]) as ICollection[]
+        ]) as ICollection
 
-        if (dataCollections) {
-          const newDataCollections = dataCollections.map(collection => {
-            if (collection.id === idCollection) {
-              return {
-                ...collection,
-                Todo: collection.Todo.map(t => {
-                  if (t.id === todo.id) {
-                    return {
-                      ...todo,
-                      complete: !todo.complete
-                    }
-                  }
-                  return t
-                })
+        if (collection) {
+          const newCollections: ICollection = {
+            ...collection,
+            Todo: collection.Todo.map((todoItem: ITodo) => {
+              if (todoItem.id === todo.id) {
+                return {
+                  ...todoItem,
+                  complete: !todoItem.complete
+                }
               }
-            }
-          })
+              return todoItem
+            })
+          }
 
-          queryClient.setQueryData(['todo', collectionName], newDataCollections)
+          queryClient.setQueryData(['todo', collectionName], newCollections)
         }
       },
 
