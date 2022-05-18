@@ -17,7 +17,7 @@ const updateCheckTodoController = new UpdadeCheckTodoController();
 const listTodoDateController = new ListTodoDateController()
 
 todoRoutes.post('/todo/:id_collection', ensureAuthenticareUser, createTodoController.handle);
-todoRoutes.put('/todo', ensureAuthenticareUser, editTodoController.handle);
+todoRoutes.put('/todo/:id', ensureAuthenticareUser, editTodoController.handle);
 todoRoutes.get('/todo/:name', ensureAuthenticareUser, listTodoOfColletionController.handle);
 todoRoutes.delete('/todo/:id', ensureAuthenticareUser, deleteTodoController.handle);
 todoRoutes.put('/todo/check/:id', ensureAuthenticareUser, updateCheckTodoController.handle);
