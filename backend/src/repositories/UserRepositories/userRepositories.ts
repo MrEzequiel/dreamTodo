@@ -28,7 +28,7 @@ export interface UserRepository {
     name,
     imageURL,
     imageProfile
-  }: IRequestEdit) => Promise<User>
+  }: IRequestEdit) => Promise<void>
 
   editUserPassword: (id: string, passowrd: string) => Promise<void>
 }
