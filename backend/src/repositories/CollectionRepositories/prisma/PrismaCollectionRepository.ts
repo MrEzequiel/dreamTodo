@@ -1,4 +1,5 @@
 import { client } from '../../../database/client'
+import { IEditCollection } from '../../../modules/colletions/useCases/editCollectionName/EditCollectionUseCase'
 import { RequestCreateColletion } from '../../../test/repositories/InMemoryCollectionRepository'
 import { CollectionRepository } from '../collectionRepositories'
 
@@ -15,8 +16,8 @@ export class PrismaCollectionRepository implements CollectionRepository {
     return colletion
   }
 
-  async editColletion(id: string, name: string, emoji: string) {
-    const editedCollection = await client.collection.update({
+  async editColletion({ id, emoji, name }: IEditCollection) {
+    await client.collection.update({
       where: {
         id
       },
@@ -25,8 +26,6 @@ export class PrismaCollectionRepository implements CollectionRepository {
         emoji
       }
     })
-
-    return editedCollection
   }
 
   async deleteColletion(id: string) {

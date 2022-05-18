@@ -1,4 +1,5 @@
 import { Collection } from '@prisma/client'
+import { IEditCollection } from '../../modules/colletions/useCases/editCollectionName/EditCollectionUseCase'
 import { RequestCreateColletion } from '../../test/repositories/InMemoryCollectionRepository'
 
 export interface CollectionRepository {
@@ -10,11 +11,7 @@ export interface CollectionRepository {
 
   deleteColletion: (id: string) => Promise<void>
 
-  editColletion: (
-    id: string,
-    name: string,
-    emoji: string
-  ) => Promise<Collection>
+  editColletion: ({ id, emoji, name }: IEditCollection) => Promise<void>
 
   listTodoOfColletion: (name: string, complete: string) => Promise<any>
 
