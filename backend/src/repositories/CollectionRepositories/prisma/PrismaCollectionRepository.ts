@@ -36,29 +36,46 @@ export class PrismaCollectionRepository implements CollectionRepository {
     })
   }
 
-  async listTodoOfColletion(name: string, complete: string) {
-    const completeTodo = complete.includes('true') ? true : false
+  async listTodoOfColletion(name: string, complete?: string) {
+    if (complete) {
+      const completeTodo = complete.includes('true') ? true : false
 
-    const collection = await client.collection.findMany({
-      where: {
-        name
-      },
-      select: {
-        id: true,
-        name: true,
-        emoji: true,
-        userId: true,
-        created_at: true,
-        modified_at: true,
-        Todo: {
-          where: {
-            complete: completeTodo
+      const collection = await client.collection.findFirst({
+        where: {
+          name
+        },
+        select: {
+          id: true,
+          name: true,
+          emoji: true,
+          userId: true,
+          created_at: true,
+          modified_at: true,
+          Todo: {
+            where: {
+              complete: completeTodo
+            }
           }
         }
-      }
-    })
-
-    return collection
+      })
+      return collection
+    } else {
+      const collection = await client.collection.findFirst({
+        where: {
+          name
+        },
+        select: {
+          id: true,
+          name: true,
+          emoji: true,
+          userId: true,
+          created_at: true,
+          modified_at: true,
+          Todo: true
+        }
+      })
+      return collection
+    }
   }
 
   async findCollectionByName(name: string) {
