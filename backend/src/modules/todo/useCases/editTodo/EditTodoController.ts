@@ -10,12 +10,14 @@ export class EditTodoController {
     const prismaTodoRepository = new PrismaTodoRepository()
     const editTodoUseCase = new EditTodoUseCase(prismaTodoRepository)
 
-    const editedTodo = await editTodoUseCase.execute({
+    await editTodoUseCase.execute({
       id,
       title,
       description
     })
 
-    return response.json(editedTodo)
+    return response.json({
+      message: 'Todo editada com sucesso'
+    })
   }
 }
