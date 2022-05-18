@@ -1,17 +1,15 @@
-import { Collection } from '@prisma/client'
-import { client } from '../../../../database/client'
 import { AppError } from '../../../../infra/errors/AppError'
 import { CollectionRepository } from '../../../../repositories/CollectionRepositories/collectionRepositories'
 
-interface IRequest {
+export interface IEditCollection {
   id: string
-  name: string
-  emoji: string
+  name?: string
+  emoji?: string
 }
 
 export class EditCollectionUseCase {
   constructor(private collectionRepository: CollectionRepository) {}
-  async execute({ id, name, emoji }: IRequest): Promise<Collection> {
+  async execute({ id, name, emoji }: IEditCollection): Promise<void> {
     const verifyIfCollectionExist =
       await this.collectionRepository.findCollectionById(id)
 
@@ -19,12 +17,10 @@ export class EditCollectionUseCase {
       throw new AppError('Colletion não encontrada!')
     }
 
-    const editedCollection = await this.collectionRepository.editColletion(
+    await this.collectionRepository.editColletion({
       id,
-      name,
-      emoji
-    )
-
-    return editedCollection
+      emoji,
+      name
+    })
   }
 }

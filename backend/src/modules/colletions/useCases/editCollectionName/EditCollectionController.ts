@@ -12,12 +12,14 @@ export class EditCollectionController {
       prismaCollectionRepository
     )
 
-    const editedCollection = await editCollectionUseCase.execute({
+    await editCollectionUseCase.execute({
       id,
       name,
       emoji
     })
 
-    return response.json(editedCollection)
+    return response.json({
+      message: 'Colletion editada com sucesso.'
+    })
   }
 }

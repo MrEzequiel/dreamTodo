@@ -1,5 +1,4 @@
 import { Collection } from '@prisma/client'
-import { client } from '../../../../database/client'
 import { AppError } from '../../../../infra/errors/AppError'
 import { CollectionRepository } from '../../../../repositories/CollectionRepositories/collectionRepositories'
 import { RequestCreateColletion } from '../../../../test/repositories/InMemoryCollectionRepository'
@@ -16,7 +15,7 @@ export class CreateCollectionUseCase {
       await this.collectionRepository.findCollectionByName(name)
 
     if (verifyIfCollectionExist) {
-      throw new AppError('Colletion já existente')
+      throw new AppError("Collection já existe")
     }
 
     const collection = await this.collectionRepository.createCollection({
