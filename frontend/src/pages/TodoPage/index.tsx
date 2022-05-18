@@ -8,6 +8,7 @@ import NotFound from '../NotFound'
 import TodoContext from './TodoContext'
 import FormTodo from './components/FormTodo'
 import TodoList from './components/TodoList'
+import loadingAnimationIcon from '../../assets/loading.svg'
 
 import * as s from './style'
 
@@ -24,7 +25,12 @@ const TodoPage = () => {
 
   return (
     <>
-      {isLoading && <p>Loading</p>}
+      {isLoading && (
+        <s.LoadingContainer>
+          <img src={loadingAnimationIcon} alt="animation" />
+          <h3>loading your tasks...</h3>
+        </s.LoadingContainer>
+      )}
 
       {!isLoading && !!collection && (
         <TodoContext.Provider
