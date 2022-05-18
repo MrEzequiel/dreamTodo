@@ -21,7 +21,7 @@ interface TodoProps {
 }
 
 const Todo: React.FC<TodoProps> = ({ todo }) => {
-  const { collectionName, idCollection } = useTodoContext()
+  const { collectionName } = useTodoContext()
   const queryClient = useQueryClient()
 
   const moreInformationRef = useRef<HTMLDivElement>(null)
@@ -56,6 +56,7 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
           }
 
           queryClient.setQueryData(['todo', collectionName], newDataCollections)
+          queryClient.invalidateQueries('collection')
         }
       },
 
@@ -100,6 +101,7 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
           })()
 
           queryClient.setQueryData(['todo', collectionName], newCollections)
+          queryClient.invalidateQueries('collection')
         }
       },
 

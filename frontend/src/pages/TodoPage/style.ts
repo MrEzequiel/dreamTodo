@@ -34,3 +34,15 @@ export const TitleStyle = styled.div`
     }
   }
 `
+
+export const LoadingContainer = styled.div`
+  ${Container()}
+
+  height: 70vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+`

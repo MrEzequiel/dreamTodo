@@ -3,25 +3,6 @@ import styled, { css } from 'styled-components'
 export const DropdownWrapper = styled.aside`
   flex-shrink: 0;
   position: relative;
-
-  .DropdownStyle-enter {
-    opacity: 0.5;
-    transform: rotateX(-90deg);
-    transition: all 300ms;
-  }
-  .DropdownStyle-enter-active {
-    opacity: 1;
-    transform: rotateX(0deg);
-  }
-  .DropdownStyle-exit {
-    opacity: 1;
-    transform: rotateX(0);
-    transition: all 300ms;
-  }
-  .DropdownStyle-exit-active {
-    opacity: 0.5;
-    transform: rotateX(-90deg);
-  }
 `
 
 interface IButton {
@@ -59,11 +40,31 @@ export const DropdownStyle = styled.div`
   right: 10px;
   box-shadow: 0 8px 8px -4px rgba(0, 0, 0, 0.1);
 
-  transform-origin: top center;
-
   width: auto;
   border-radius: ${props => props.theme.borderRadius};
   background: ${props => props.theme.colors.g1};
+
+  transition: transform 400ms, opacity 400ms;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  // enter animation
+  &.DropdownStyle-enter {
+    transform: perspective(100vmax) translateZ(150px) rotateX(40deg);
+    opacity: 0;
+  }
+  &.DropdownStyle-enter-active {
+    transform: perspective(100vmax) translateZ(0px) rotateX(0deg);
+    opacity: 1;
+  }
+  // exit animation
+  &.DropdownStyle-exit {
+    transform: perspective(100vmax) translateZ(0px) rotateX(0deg);
+    opacity: 1;
+  }
+  &.DropdownStyle-exit-active {
+    opacity: 0;
+    transform: perspective(100vmax) translateZ(-80px) rotateX(-20deg);
+  }
 `
 
 export const DropdownItens = styled.div`
