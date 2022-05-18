@@ -44,6 +44,7 @@ const FormTodo: React.FC = () => {
         }
 
         queryClient.setQueryData(['todo', collectionName], newCollection)
+        queryClient.invalidateQueries('collection')
       }
     }
   })

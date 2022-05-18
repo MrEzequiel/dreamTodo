@@ -67,6 +67,7 @@ const ModalForm: React.FC<Props> = ({
         }
 
         queryClient.setQueryData(['todo', collectionName], newDataCollections)
+        queryClient.invalidateQueries('collection')
       } else {
         queryClient.refetchQueries(['todo', collectionName])
       }
@@ -106,6 +107,7 @@ const ModalForm: React.FC<Props> = ({
           }
 
           queryClient.setQueryData(['todo', collectionName], newCollections)
+          queryClient.invalidateQueries('collection')
         } else {
           queryClient.refetchQueries(['todo', collectionName])
         }
