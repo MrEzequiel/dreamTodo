@@ -13,7 +13,7 @@ export interface CollectionRepository {
 
   editColletion: ({ id, emoji, name }: IEditCollection) => Promise<void>
 
-  listTodoOfColletion: (name: string, complete: string) => Promise<any>
+  listTodoOfColletion: (name: string, complete?: string) => Promise<any>
 
   findCollectionByName: (name: string) => Promise<Collection | null>
 

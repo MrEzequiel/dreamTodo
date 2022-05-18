@@ -5,7 +5,7 @@ import { CollectionRepository } from '../../../../repositories/CollectionReposit
 
 export class ListTodoOfColletionUseCase {
   constructor(private collectionRepository: CollectionRepository) {}
-  async execute(name: string, complete: string) {
+  async execute(name: string, complete?: string) {
     const verifyIfColletionExist =
       await this.collectionRepository.findCollectionByName(name)
 
