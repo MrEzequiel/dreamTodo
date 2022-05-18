@@ -1,6 +1,7 @@
 import { Collection } from '@prisma/client'
 import { CollectionRepository } from '../../repositories/CollectionRepositories/collectionRepositories'
 import { v4 } from 'uuid'
+import { IEditCollection } from '../../modules/colletions/useCases/editCollectionName/EditCollectionUseCase'
 
 export type RequestCreateColletion = {
   userId: string
@@ -18,17 +19,26 @@ export class InMemoryCollectionRepository implements CollectionRepository {
     })
 
     this.colletions.push(data as Collection)
+
     return data as Collection
   }
+
   async deleteColletion(id: string) {
-    this.colletions.filter(colletion => colletion.id === id)
+    this.colletions.filter(colletion => colletion.id !== id)
   }
 
-  editColletion: (
-    id: string,
-    name: string,
-    emoji: string
-  ) => Promise<Collection>
+  async editColletion({ id, emoji, name }: IEditCollection) {
+    this.colletions.map(async () => {
+      const collection = await this.findCollectionById(id)
+
+      if (collection) {
+        collection.name = name ?? collection.name,
+        collection.emoji = emoji ?? collection.emoji
+
+        return collection
+      }
+    })
+  }
 
   async findCollectionByName(name: string) {
     const colletion = this.colletions.find(colletion => colletion.name === name)
