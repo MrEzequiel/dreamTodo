@@ -1,3 +1,4 @@
+import { AppError } from '../../../../infra/errors/AppError'
 import { InMemoryUserRepository } from '../../../../test/repositories/InMemoryUserRepository'
 import { CreateUserUseCase } from './CreateUserUseCase'
 
@@ -25,6 +26,6 @@ describe('Create a user', () => {
         password: '1235',
         imageProfile: 'testImage'
       })
-    ).rejects.toBeTruthy()
+    ).rejects.toEqual(new AppError("Esse usuário já existe", 400))
   })
 })
