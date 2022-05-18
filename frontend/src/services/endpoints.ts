@@ -19,7 +19,9 @@ const endpoints = {
   todo: {
     get: '/todo',
     post: '/todo',
-    delete: '/todo'
+    delete: '/todo',
+    put: '/todo',
+    putCheck: '/todo/check'
   }
 }
 

@@ -10,7 +10,7 @@ export const FormStyle = styled.form<{ inFocus: boolean }>`
   display: flex;
   gap: 15px;
   align-items: center;
-  height: 60px;
+  height: 65px;
   border: 2px solid ${props => props.theme.colors.g1};
   border-radius: ${props => props.theme.borderRadius};
   padding: 0 15px;
@@ -53,20 +53,32 @@ export const MoreInformation = styled.a`
   position: absolute;
   bottom: -25px;
   left: 20px;
+  z-index: 0;
+  overflow: hidden;
+
   text-decoration: underline;
   font-size: 1.4rem;
   font-weight: 300;
-  z-index: 0;
   color: ${props => props.theme.colors.g7};
 
-  @keyframes show-down-anime {
-    from {
-      transform: translateY(-25px);
-    }
-    to {
-      transform: translateY(0px);
-    }
+  --speed: 700ms;
+
+  &.collapse-enter {
+    max-height: 0;
+  }
+  &.collapse-enter-active {
+    max-height: 100px;
+    transition: max-height var(--speed);
+    transition-timing-function: ease-in-out;
   }
 
-  animation: show-down-anime 500ms;
+  // exit animation
+  &.collapse-exit {
+    max-height: 100px;
+  }
+  &.collapse-exit-active {
+    max-height: 0;
+    transition: max-height 400ms;
+    transition-timing-function: ease-in-out;
+  }
 `

@@ -1,29 +1,27 @@
-import React, { useRef, useState, useContext, useEffect } from 'react'
-import { FaPlus } from 'react-icons/fa'
+import React, { useRef, useState, useEffect } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { useParams } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
-import Modal from '../../../../components/Modal'
-import { TodoContext } from '../../../../context/TodoListContext'
-import TodoPageContext from '../../../../context/TodoPageContext'
-import { Types } from '../../../../functions/reducers'
-import { postTodo } from '../../../../functions/Todo/postTodo'
-import ICollection from '../../../../interfaces/Collection'
-import ITodo from '../../../../interfaces/Todo'
-import Button from '../../../../styles/Button'
 import { useTodoContext } from '../../TodoContext'
-import ModalForm from './ModalForm'
 
+import { postTodo } from '../../../../functions/Todo/postTodo'
+import { FaPlus } from 'react-icons/fa'
+import { CSSTransition } from 'react-transition-group'
+
+import ModalForm from './ModalForm'
+import Button from '../../../../styles/Button'
 import * as s from './styles'
 
+import ICollection from '../../../../interfaces/Collection'
+import ITodo from '../../../../interfaces/Todo'
+
 interface ReturnTodo extends ITodo {
-  id_collection: 'b5eaab2d-16b1-42c5-bb6e-f18f427e938f'
+  id_collection: string
 }
 
 const FormTodo: React.FC = () => {
   const { idCollection, collectionName } = useTodoContext()
   const queryClient = useQueryClient()
   const inputEl = useRef<HTMLInputElement>(null)
+  const moreInformationRef = useRef<HTMLAnchorElement>(null)
 
   const [name, setName] = useState('')
   const [focus, setFocus] = useState(false)
@@ -34,24 +32,18 @@ const FormTodo: React.FC = () => {
       setName('')
       inputEl.current?.focus()
 
-      const dataCollections = queryClient.getQueryData([
+      const collection = queryClient.getQueryData([
         'todo',
         collectionName
-      ]) as ICollection[]
+      ]) as ICollection
 
-      if (dataCollections) {
-        const newDataCollections = dataCollections.map(collection => {
-          if (collection.id === idCollection) {
-            return {
-              ...collection,
-              Todo: [data, ...collection.Todo]
-            }
-          }
+      if (collection) {
+        const newCollection: ICollection = {
+          ...collection,
+          Todo: [...collection.Todo, data]
+        }
 
-          return collection
-        })
-
-        queryClient.setQueryData(['todo', collectionName], newDataCollections)
+        queryClient.setQueryData(['todo', collectionName], newCollection)
       }
     }
   })
@@ -75,12 +67,12 @@ const FormTodo: React.FC = () => {
           ref={inputEl}
           type="text"
           value={name}
-          placeholder="add a task"
+          placeholder="make coffee"
           onChange={e => {
             setName(e.target.value)
           }}
           onFocus={() => setFocus(true)}
-          onBlur={() => setTimeout(() => setFocus(false), 200)}
+          onBlur={() => setFocus(false)}
         />
         <Button
           type="submit"
@@ -89,7 +81,7 @@ const FormTodo: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             padding: 0,
-            width: '40px',
+            width: '45px',
             height: '40px'
           }}
           loading={isLoading}
@@ -98,13 +90,22 @@ const FormTodo: React.FC = () => {
         </Button>
       </s.FormStyle>
 
-      {focus && (
-        <s.MoreInformation onClick={() => setOpenModal(true)}>
+      <CSSTransition
+        in={focus}
+        timeout={700}
+        unmountOnExit
+        classNames="collapse"
+        nodeRef={moreInformationRef}
+      >
+        <s.MoreInformation
+          onClick={() => setOpenModal(true)}
+          ref={moreInformationRef}
+        >
           More information
         </s.MoreInformation>
-      )}
+      </CSSTransition>
 
-      {/* <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" /> */}
+      <ModalForm closeModal={setOpenModal} modalIsOpen={openModal} type="add" />
     </s.FormWrapper>
   )
 }

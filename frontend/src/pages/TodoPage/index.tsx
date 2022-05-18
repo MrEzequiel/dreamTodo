@@ -18,12 +18,8 @@ const TodoPage = () => {
     data: collection,
     isLoading,
     isError
-  } = useQuery<ICollection[]>(
-    ['todo', collectionName],
-    () => getIndividualCollection(collectionName as string),
-    {
-      refetchOnWindowFocus: false
-    }
+  } = useQuery<ICollection>(['todo', collectionName], () =>
+    getIndividualCollection(collectionName as string)
   )
 
   return (
@@ -33,8 +29,8 @@ const TodoPage = () => {
       {!isLoading && !!collection && (
         <TodoContext.Provider
           value={{
-            idCollection: collection[0].id,
-            collectionName: collection[0].name
+            idCollection: collection.id,
+            collectionName: collection.name
           }}
         >
           <s.TitleStyle>
@@ -45,13 +41,13 @@ const TodoPage = () => {
             </NavLink>
 
             <h1>
-              <Emoji emoji={collection[0].emoji} size={32} native />
-              {collection[0].name}
+              <Emoji emoji={collection.emoji} size={32} native />
+              {collection.name}
             </h1>
           </s.TitleStyle>
 
           <FormTodo />
-          <TodoList list={collection[0].Todo} />
+          <TodoList list={collection.Todo} />
         </TodoContext.Provider>
       )}
 
