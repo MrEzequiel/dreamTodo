@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
 import validationSchema from './validationSchema'
 import { postTodo } from '../../../../../functions/Todo/postTodo'
-import { pustTodo } from '../../../../../functions/Todo/putTodo'
+import { putTodo } from '../../../../../functions/Todo/putTodo'
 
 import ICollection from '../../../../../interfaces/Collection'
 import ITodo from '../../../../../interfaces/Todo'
@@ -91,7 +91,7 @@ const ModalForm: React.FC<Props> = ({
   })
 
   const { mutate: mutatePutTodo, isLoading: isLoadingPut } = useMutation(
-    pustTodo,
+    putTodo,
     {
       onSuccess: (data: ReturnTodo) => {
         const dataCollections = queryClient.getQueryData([
@@ -146,7 +146,6 @@ const ModalForm: React.FC<Props> = ({
     } else if (todo?.id && setEdit) {
       mutatePutTodo({
         idTodo: todo.id,
-        idCollection,
         name: data.title,
         description: data.description
       })
