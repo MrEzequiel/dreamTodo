@@ -12,8 +12,10 @@ export class UpdadeCheckTodoController {
       prismaTodoRepository
     )
 
-    const todo = await updadeCheckTodoUseCase.execute(id, complete)
+    await updadeCheckTodoUseCase.execute(id, complete)
 
-    return response.json(todo)
+    return response.json({
+      message: 'Todo editada com sucesso'
+    })
   }
 }
