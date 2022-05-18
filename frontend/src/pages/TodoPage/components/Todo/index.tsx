@@ -35,6 +35,7 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
   const queryClient = useQueryClient()
 
   const inputEl = useRef<HTMLInputElement>(null)
+  const moreInformationRef = useRef<HTMLDivElement>(null)
   const { createNotification } = useNotification()
 
   const [toggle, setToggle] = useState(todo.complete)
@@ -194,8 +195,9 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
         timeout={600}
         classNames="expended"
         unmountOnExit
+        nodeRef={moreInformationRef}
       >
-        <s.ExpendedTodo>
+        <s.ExpendedTodo ref={moreInformationRef}>
           <div>
             {todo.description && (
               <p>

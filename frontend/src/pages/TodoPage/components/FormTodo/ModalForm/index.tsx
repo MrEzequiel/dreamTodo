@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { useNotification } from '../../../../../context/NotificationContext'
 import { useTodoContext } from '../../../TodoContext'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
 import validationSchema from './validationSchema'
 import { postTodo } from '../../../../../functions/Todo/postTodo'
+import { pustTodo } from '../../../../../functions/Todo/putTodo'
 
 import ICollection from '../../../../../interfaces/Collection'
 import ITodo from '../../../../../interfaces/Todo'
@@ -19,7 +21,6 @@ import InputStyle, {
   HelperTextStyle,
   TextAreaStyle
 } from '../../../../../styles/Input'
-import { useNotification } from '../../../../../context/NotificationContext'
 
 interface ReturnTodo extends ITodo {
   id_collection: string
@@ -89,6 +90,52 @@ const ModalForm: React.FC<Props> = ({
     }
   })
 
+  const { mutate: mutatePutTodo, isLoading: isLoadingPut } = useMutation(
+    pustTodo,
+    {
+      onSuccess: (data: ReturnTodo) => {
+        const dataCollections = queryClient.getQueryData([
+          'todo',
+          collectionName
+        ]) as ICollection[]
+
+        if (dataCollections) {
+          const newDataCollections = dataCollections.map(collection => {
+            if (collection.id === idCollection) {
+              return {
+                ...collection,
+                Todo: collection.Todo.map(todo => {
+                  if (todo.id === data.id) {
+                    return data
+                  }
+
+                  return todo
+                })
+              }
+            }
+
+            return collection
+          })
+
+          queryClient.setQueryData(['todo', collectionName], newDataCollections)
+        } else {
+          queryClient.refetchQueries(['todo', collectionName])
+        }
+
+        createNotification('success', 'Todo updated successfully')
+        closeModal(false)
+      },
+
+      onError: (error: any) => {
+        if (error?.response?.status === 400) {
+          createNotification('error', 'Todo already exists')
+        } else {
+          createNotification('error', 'ops!, Something went wrong')
+        }
+      }
+    }
+  )
+
   const onSubmit = handleSubmit(data => {
     if (type === 'add') {
       mutatePostTodo({
@@ -97,6 +144,12 @@ const ModalForm: React.FC<Props> = ({
         idCollection
       })
     } else if (todo?.id && setEdit) {
+      mutatePutTodo({
+        idTodo: todo.id,
+        idCollection,
+        name: data.title,
+        description: data.description
+      })
       setEdit(false)
     }
   })
@@ -167,7 +220,9 @@ const ModalForm: React.FC<Props> = ({
         </div>
 
         <s.ButtonsModal>
-          <Button type="submit">{type}</Button>
+          <Button type="submit" loading={isLoading || isLoadingPut}>
+            {type}
+          </Button>
           <Button
             type="button"
             onClick={() => closeModal(false)}

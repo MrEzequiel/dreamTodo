@@ -1,20 +1,17 @@
-import React, { useRef, useState, useContext, useEffect } from 'react'
-import { FaPlus } from 'react-icons/fa'
+import React, { useRef, useState, useEffect } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { useParams } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
-import Modal from '../../../../components/Modal'
-import { TodoContext } from '../../../../context/TodoListContext'
-import TodoPageContext from '../../../../context/TodoPageContext'
-import { Types } from '../../../../functions/reducers'
+import { useTodoContext } from '../../TodoContext'
+
 import { postTodo } from '../../../../functions/Todo/postTodo'
+import { FaPlus } from 'react-icons/fa'
+import { CSSTransition } from 'react-transition-group'
+
+import ModalForm from './ModalForm'
+import Button from '../../../../styles/Button'
+import * as s from './styles'
+
 import ICollection from '../../../../interfaces/Collection'
 import ITodo from '../../../../interfaces/Todo'
-import Button from '../../../../styles/Button'
-import { useTodoContext } from '../../TodoContext'
-import ModalForm from './ModalForm'
-
-import * as s from './styles'
 
 interface ReturnTodo extends ITodo {
   id_collection: string
