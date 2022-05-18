@@ -25,6 +25,7 @@ import { useTodoContext } from '../../TodoContext'
 import ICollection from '../../../../interfaces/Collection'
 import { useNotification } from '../../../../context/NotificationContext'
 import { CSSTransition } from 'react-transition-group'
+import { putCompletedTodo } from '../../../../functions/Todo/putTodo'
 
 interface TodoProps {
   todo: ITodo
@@ -78,7 +79,42 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
     }
   )
 
+  const { mutate: mutateCompleteTodo } = useMutation(putCompletedTodo, {
+    onSuccess: (data: ITodo) => {
+      const dataCollections = queryClient.getQueryData([
+        'todo',
+        collectionName
+      ]) as ICollection[]
+
+      if (dataCollections) {
+        const newDataCollections = dataCollections.map(collection => {
+          if (collection.id === idCollection) {
+            return {
+              ...collection,
+              Todo: collection.Todo.map(t => {
+                if (t.id === data.id) {
+                  return data
+                }
+                return t
+              })
+            }
+          }
+        })
+
+        queryClient.setQueryData(['todo', collectionName], newDataCollections)
+      }
+    },
+
+    onError: () => {
+      createNotification('error', 'Oops! Something went wrong')
+    }
+  })
+
   function handleChangeForComplete() {
+    mutateCompleteTodo({
+      idTodo: todo.id,
+      completed: !toggle
+    })
     setToggle(prev => !prev)
   }
 

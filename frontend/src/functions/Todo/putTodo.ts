@@ -15,3 +15,18 @@ export const putTodo = async ({ idTodo, name, description }: PutTodoArgs) => {
   })
   return response.data
 }
+
+interface PutTodoCompleteArgs {
+  idTodo: string
+  completed: boolean
+}
+
+export const putCompletedTodo = async ({
+  idTodo,
+  completed
+}: PutTodoCompleteArgs) => {
+  const response = await api.put(`${endpoints.todo.put}/${idTodo}`, {
+    complete: completed
+  })
+  return response.data
+}
