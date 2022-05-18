@@ -1,24 +1,10 @@
-import React, {
-  memo,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  forwardRef
-} from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { FaAngleDown, FaLink } from 'react-icons/fa'
 import Dropdown from '../../../../components/Dropdown'
 
 import * as s from './style'
-import { TodoContext } from '../../../../context/TodoListContext'
-import { Types } from '../../../../functions/reducers'
 import ITodo from '../../../../interfaces/Todo'
-import TodoPageContext from '../../../../context/TodoPageContext'
-import { MdDragIndicator } from 'react-icons/md'
-import { useDrag, useDrop } from 'react-dnd'
-import type { Identifier } from 'dnd-core'
 import ModalForm from '../FormTodo/ModalForm'
-import { getEmptyImage } from 'react-dnd-html5-backend'
 import { useMutation, useQueryClient } from 'react-query'
 import { deleteTodo } from '../../../../functions/Todo/deleteTodo'
 import { useTodoContext } from '../../TodoContext'
@@ -35,7 +21,6 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
   const { collectionName, idCollection } = useTodoContext()
   const queryClient = useQueryClient()
 
-  const inputEl = useRef<HTMLInputElement>(null)
   const moreInformationRef = useRef<HTMLDivElement>(null)
   const { createNotification } = useNotification()
 
@@ -43,8 +28,7 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
   const [extendDescription, setExtendDescription] = useState(false)
 
   const [hasEdit, setHasEdit] = useState(false)
-  const [modal, setModal] = useState(false)
-  const [edit, setEdit] = useState(todo.title)
+  const [modalEditIsOpen, setModalEditIsOpen] = useState(false)
   const [expended, setExpended] = useState(false)
 
   const expendedTodo = !!todo.description || !!todo.expanded
@@ -79,54 +63,47 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
     }
   )
 
-  const { mutate: mutateCompleteTodo } = useMutation(putCompletedTodo, {
-    onSuccess: (data: ITodo) => {
-      const dataCollections = queryClient.getQueryData([
-        'todo',
-        collectionName
-      ]) as ICollection[]
+  const { mutate: mutateCompleteTodo, isLoading: isLoadingCompleting } =
+    useMutation(putCompletedTodo, {
+      onSuccess: () => {
+        const dataCollections = queryClient.getQueryData([
+          'todo',
+          collectionName
+        ]) as ICollection[]
 
-      if (dataCollections) {
-        const newDataCollections = dataCollections.map(collection => {
-          if (collection.id === idCollection) {
-            return {
-              ...collection,
-              Todo: collection.Todo.map(t => {
-                if (t.id === data.id) {
-                  return data
-                }
-                return t
-              })
+        if (dataCollections) {
+          const newDataCollections = dataCollections.map(collection => {
+            if (collection.id === idCollection) {
+              return {
+                ...collection,
+                Todo: collection.Todo.map(t => {
+                  if (t.id === todo.id) {
+                    return {
+                      ...todo,
+                      complete: !todo.complete
+                    }
+                  }
+                  return t
+                })
+              }
             }
-          }
-        })
+          })
 
-        queryClient.setQueryData(['todo', collectionName], newDataCollections)
+          queryClient.setQueryData(['todo', collectionName], newDataCollections)
+        }
+      },
+
+      onError: () => {
+        createNotification('error', 'Oops! Something went wrong')
       }
-    },
+    })
 
-    onError: () => {
-      createNotification('error', 'Oops! Something went wrong')
-    }
-  })
-
-  function handleChangeForComplete() {
+  const handleChangeForComplete = () => {
     mutateCompleteTodo({
       idTodo: todo.id,
       completed: !toggle
     })
     setToggle(prev => !prev)
-  }
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setEdit(e.target.value)
-  }
-
-  function handleBlurInput() {
-    if (!edit.trim()) {
-      setEdit(todo.title)
-    }
-    setHasEdit(false)
   }
 
   function formateLinks(links: string[]) {
@@ -154,26 +131,15 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
     }
 
     if (type === 'edit') {
-      setModal(true)
-      setHasEdit(true)
+      setModalEditIsOpen(true)
     }
   }
-
-  useEffect(() => {
-    if (!hasEdit) return
-
-    if (expendedTodo) {
-      setModal(true)
-    } else {
-      inputEl.current?.focus()
-    }
-  }, [hasEdit, expendedTodo])
 
   return (
     <>
       <s.TodoWrapper
         edit={hasEdit && !expendedTodo}
-        isLoading={loadingDeleting}
+        isLoading={loadingDeleting || isLoadingCompleting}
         expended={expended}
       >
         <s.InputCheckboxTodo>
@@ -184,23 +150,13 @@ const Todo: React.FC<TodoProps> = ({ todo }) => {
           />
         </s.InputCheckboxTodo>
 
-        {hasEdit && !expendedTodo ? (
-          <s.InputEditTodo
-            type="text"
-            value={edit}
-            onChange={handleChange}
-            ref={inputEl}
-            onBlur={handleBlurInput}
-          />
-        ) : (
-          <p style={{ textDecoration: toggle ? 'line-through' : 'none' }}>
-            {todo.title}
-          </p>
-        )}
+        <p style={{ textDecoration: toggle ? 'line-through' : 'none' }}>
+          {todo.title}
+        </p>
 
         <ModalForm
-          closeModal={setModal}
-          modalIsOpen={modal}
+          closeModal={setModalEditIsOpen}
+          modalIsOpen={modalEditIsOpen}
           type="edit"
           todo={todo}
           setEdit={setHasEdit}

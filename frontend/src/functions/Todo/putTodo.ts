@@ -10,7 +10,7 @@ interface PutTodoArgs {
 
 export const putTodo = async ({ idTodo, name, description }: PutTodoArgs) => {
   const response = await api.put(`${endpoints.todo.put}/${idTodo}`, {
-    name: name,
+    title: name,
     description: description || null
   })
   return response.data
@@ -25,7 +25,7 @@ export const putCompletedTodo = async ({
   idTodo,
   completed
 }: PutTodoCompleteArgs) => {
-  const response = await api.put(`${endpoints.todo.put}/${idTodo}`, {
+  const response = await api.put(`${endpoints.todo.putCheck}/${idTodo}`, {
     complete: completed
   })
   return response.data

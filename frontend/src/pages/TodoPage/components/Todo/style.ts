@@ -129,14 +129,6 @@ export const InputCheckboxTodo = styled.label`
   }
 `
 
-export const InputEditTodo = styled.input`
-  width: 100%;
-  line-height: 1.5em;
-  font-size: 1.6rem;
-  font-weight: 400;
-  caret-color: ${props => props.theme.colors.colorPrimary};
-`
-
 export const ButtonsControl = styled.div`
   flex-shrink: 0;
   display: flex;

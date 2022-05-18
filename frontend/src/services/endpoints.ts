@@ -20,7 +20,8 @@ const endpoints = {
     get: '/todo',
     post: '/todo',
     delete: '/todo',
-    put: '/todo'
+    put: '/todo',
+    putCheck: '/todo/check'
   }
 }
 
