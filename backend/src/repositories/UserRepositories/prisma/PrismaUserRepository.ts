@@ -63,7 +63,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async editUser({ id, name, imageURL, imageProfile }: IRequestEdit) {
-    await client.user.update({
+    const user = await client.user.update({
       where: {
         id
       },
@@ -73,6 +73,8 @@ export class PrismaUserRepository implements UserRepository {
         imageProfile
       }
     })
+
+    return user
   }
 
   async editUserPassword(id: string, password: string) {

@@ -1,9 +1,10 @@
-import { RefreshToken, User } from '@prisma/client'
+import { Collection, RefreshToken, User } from '@prisma/client'
 import { ICreateUserDTO } from '../../modules/accounts/dtos/ICreateUserDTO'
 import { IRequestEdit } from '../../modules/accounts/useCases/editUser/EditUserUseCase'
 import { UserRepository } from '../../repositories/UserRepositories/userRepositories'
 import { v4 } from 'uuid'
 import { RefreshTokenDTO } from '../../modules/accounts/useCases/authenticateUser/AuthenticateUserUseCase'
+import { AppError } from '../../infra/errors/AppError'
 
 export class InMemoryUserRepository implements UserRepository {
   users: User[] = []
@@ -38,14 +39,16 @@ export class InMemoryUserRepository implements UserRepository {
   }
 
   async editUser({ id, name, imageProfile }: IRequestEdit) {
-    await this.users.map(async () => {
-      const user = await this.findUserById(id)
+    const user = await this.findUserById(id)
 
-      if(user) {
-        user.name = name ?? user.name,
-        user.imageProfile = imageProfile ?? user.imageProfile
-      }
-    })
+    if (!user) {
+      throw new AppError('Error')
+    }
+
+    user.name = name ?? user.name
+    user.imageProfile = imageProfile ?? user.imageProfile
+
+    return user
   }
 
   editUserPassword: (id: string, passowrd: string) => Promise<void>
