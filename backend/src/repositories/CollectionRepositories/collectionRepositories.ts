@@ -11,7 +11,7 @@ export interface CollectionRepository {
 
   deleteColletion: (id: string) => Promise<void>
 
-  editColletion: ({ id, emoji, name }: IEditCollection) => Promise<void>
+  editColletion: ({ id, emoji, name }: IEditCollection) => Promise<Collection>
 
   listTodoOfColletion: (name: string, complete?: string) => Promise<any>
 

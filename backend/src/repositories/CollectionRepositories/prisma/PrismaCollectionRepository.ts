@@ -17,7 +17,7 @@ export class PrismaCollectionRepository implements CollectionRepository {
   }
 
   async editColletion({ id, emoji, name }: IEditCollection) {
-    await client.collection.update({
+    const collection = await client.collection.update({
       where: {
         id
       },
@@ -26,6 +26,8 @@ export class PrismaCollectionRepository implements CollectionRepository {
         emoji
       }
     })
+
+    return collection
   }
 
   async deleteColletion(id: string) {
