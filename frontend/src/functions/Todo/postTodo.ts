@@ -5,11 +5,17 @@ import endpoints from '../../services/endpoints'
 interface PostTodoArgs {
   idCollection: string
   name: string
+  description?: string | null
 }
 
-export const postTodo = async ({ idCollection, name }: PostTodoArgs) => {
+export const postTodo = async ({
+  idCollection,
+  name,
+  description
+}: PostTodoArgs) => {
   const response = await api.post(`${endpoints.todo.post}/${idCollection}`, {
-    title: name
+    title: name,
+    description: description || null
   })
   return response.data
 }

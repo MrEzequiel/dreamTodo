@@ -6,7 +6,7 @@ const darkTheme = {
   colors: {
     colorPrimary: '#11EEDD',
     colorPrimary2: '#29B0A6',
-    colorError: '#e43e3d',
+    colorError: '#ED4337',
     colorWarning: '#e3a007',
     colorInfo: '#9493fb',
     g1: '#0E0E0E',

@@ -32,10 +32,19 @@ const Card: React.FC<IProps> = ({ collection }) => {
       const collections = query.getQueryData('collection') as ICollection[]
 
       if (collections) {
-        const newCollections = collections.filter(
-          (collection: ICollection) => collection.id !== idCollection
-        )
+        let removedCollection = {} as ICollection
+
+        const newCollections = collections.filter((collection: ICollection) => {
+          if (collection.id === idCollection) {
+            removedCollection = collection
+            return false
+          }
+
+          return true
+        })
+
         query.setQueryData('collection', newCollections)
+        query.removeQueries(['todo', removedCollection.name])
       } else {
         query.refetchQueries('collection')
       }
