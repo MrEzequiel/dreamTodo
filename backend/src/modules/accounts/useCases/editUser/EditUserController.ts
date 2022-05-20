@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { PrismaUserRepository } from '../../../../repositories/UserRepositories/prisma/PrismaUserRepository'
-import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
 import { EditUserUseCase } from './EditUserUseCase'
 
 export class EditUserController {
@@ -8,20 +7,18 @@ export class EditUserController {
     const { id } = request.user
 
     const { name } = request.body
-    const  imageProfile = request?.file?.filename
+    const imageProfile = request?.file?.filename
 
-    const userRepository = new PrismaUserRepository()
-    const editUserUseCase = new EditUserUseCase(userRepository)
+    const prismaUserRepository = new PrismaUserRepository()
+    const editUserUseCase = new EditUserUseCase(prismaUserRepository)
 
-    await editUserUseCase.execute({
+    const user = await editUserUseCase.execute({
       id,
       name,
       imageURL: `${process.env.APP_URL}/files/${imageProfile}`,
-      imageProfile,
+      imageProfile
     })
 
-    return response.json({
-      message: 'Usuário editado com sucesso.'
-    })
+    return response.json(user)
   }
 }

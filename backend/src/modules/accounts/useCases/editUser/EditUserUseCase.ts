@@ -18,11 +18,13 @@ export class EditUserUseCase {
       throw new AppError('Usuário não encontrado')
     }
 
-    await this.userRepository.editUser({
+    const userEdited = await this.userRepository.editUser({
       id,
       name,
       imageProfile,
       imageURL
     })
+
+    return userEdited
   }
 }
