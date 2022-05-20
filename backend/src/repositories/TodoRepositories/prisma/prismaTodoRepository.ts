@@ -1,7 +1,7 @@
 import { Todo } from '@prisma/client'
 import { client } from '../../../database/client'
 import { ICreateTodoDTO } from '../../../modules/todo/dtos/ICreateTodoDTO'
-import { IRequest } from '../../../modules/todo/useCases/editTodo/EditTodoUseCase'
+import { IEditTodo } from '../../../modules/todo/useCases/editTodo/EditTodoUseCase'
 import { TodoRepository } from '../todoRepositories'
 
 export class PrismaTodoRepository implements TodoRepository {
@@ -23,8 +23,8 @@ export class PrismaTodoRepository implements TodoRepository {
     return todo
   }
 
-  async editTodo({ id, title, description }: IRequest) {
-    await client.todo.update({
+  async editTodo({ id, title, description }: IEditTodo) {
+    const todo = await client.todo.update({
       data: {
         title,
         description
@@ -33,6 +33,8 @@ export class PrismaTodoRepository implements TodoRepository {
         id
       }
     })
+
+    return todo
   }
 
   async deleteTodo(id: string) {
@@ -52,6 +54,7 @@ export class PrismaTodoRepository implements TodoRepository {
         complete
       }
     })
+    return todo
   }
 
   async findTodoByTitle(title: string) {

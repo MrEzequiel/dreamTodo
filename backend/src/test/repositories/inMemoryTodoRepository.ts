@@ -4,6 +4,7 @@ import { IEditTodo } from '../../modules/todo/useCases/editTodo/EditTodoUseCase'
 import { TodoRepository } from '../../repositories/TodoRepositories/todoRepositories'
 
 import { v4 } from 'uuid'
+import { AppError } from '../../infra/errors/AppError'
 
 export class InMemoryTodoRepository implements TodoRepository {
   todos: Todo[] = []
@@ -18,14 +19,16 @@ export class InMemoryTodoRepository implements TodoRepository {
   }
 
   async editTodo({ id, title, description }: IEditTodo) {
-    this.todos.map(async () => {
-      const todo = await this.findTodoById(id)
+    const todo = await this.findTodoById(id)
 
-      if (todo) {
-        ;(todo.title = title ?? todo.title),
-          (todo.description = description ?? todo.description)
-      }
-    })
+    if (!todo) {
+      throw new AppError('Error')
+    }
+
+    todo.title = title ?? todo.title
+    todo.description = description ?? todo.description
+
+    return todo
   }
 
   async deleteTodo(id: string) {
@@ -33,13 +36,15 @@ export class InMemoryTodoRepository implements TodoRepository {
   }
 
   async updateCheckTodo(id: string, complete: boolean) {
-    this.todos.map(async () => {
-      const todo = await this.findTodoById(id)
+    const todo = await this.findTodoById(id)
 
-      if (todo) {
-        todo.complete = complete
-      }
-    })
+    if (!todo) {
+      throw new AppError('eeror')
+    }
+
+    todo.complete = complete
+
+    return todo
   }
 
   listTodoDate: (id_collection: string, modo: string) => Promise<Todo[]>
