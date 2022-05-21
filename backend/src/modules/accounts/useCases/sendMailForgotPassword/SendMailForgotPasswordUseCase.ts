@@ -1,12 +1,14 @@
 import { sign } from 'jsonwebtoken'
-import nodemailer from 'nodemailer'
-import { client } from '../../../../database/client'
 import { AppError } from '../../../../infra/errors/AppError'
+import { MailProvider } from '../../../../providers/MailProvider/MailProvider'
 import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
 import { createCode } from '../../../../utils/createCode'
 
 export class SendMailForgotPasswordUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private mailProvider: MailProvider
+  ) {}
 
   async execute(email: string): Promise<Object> {
     const verifyUserExist = await this.userRepository.findUserByEmail(email)
@@ -15,20 +17,6 @@ export class SendMailForgotPasswordUseCase {
       throw new AppError('Usuario não encontrado, tente novamente.')
     }
 
-    const user = process.env.EMAIL_SECRET_GMAIL
-    const pass = process.env.EMAIL_SECRET_PASSWD
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      port: 465,
-      host: 'smtp.gmail.com',
-      secure: true,
-      auth: {
-        user,
-        pass
-      }
-    })
-
     const code = await createCode()
 
     const token = sign({ cod: code }, String(process.env.NEW_PASS_SECRET), {
@@ -36,11 +24,10 @@ export class SendMailForgotPasswordUseCase {
       expiresIn: '15m'
     })
 
-    await transporter.sendMail({
-      from: 'Equipe todo <dreamtodoapp@gmail.com>',
+    await this.mailProvider.sendMail({
       to: email,
-      subject: 'Recuperação de senha do DreamApp',
-      text: `Boa tarde, para recuperar sua senha, use esse codigo: ${code}`
+      subject: 'Recuperação de senha',
+      content: `<p>Boa tarde, para recuperar sua senha, use esse codigo: ${code}</p>`
     })
 
     return { token }
