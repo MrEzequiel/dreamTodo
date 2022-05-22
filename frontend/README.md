@@ -7,7 +7,7 @@
 
 ## 🏆 Sobre o projeto
 
-Projeto dreamTodo nasceu para gerenciar os tarefas com base nas coleções. Ele está sendo desenvolvido no seu core com ReactJS, styled-components e TS, seguindo padrões de projetos e boas práticas.
+Projeto dreamTodo nasceu para gerenciar os tarefas com base nas coleções. Ele está sendo desenvolvido no seu core com ReactJS, styled-components, react-query e TS, seguindo padrões de projetos e boas práticas.
  
 ---
 
@@ -15,11 +15,11 @@ Projeto dreamTodo nasceu para gerenciar os tarefas com base nas coleções. Ele 
 
 Algumas ferramentas que foram ultilizadas no front end da aplicação dreamTodo abaixo:
 
-- [Nodejs](https://nodejs.org/en/)
-- [ReatJS](https://pt-br.reactjs.org/)
-- [Typescript](https://www.typescriptlang.org/)
+- [ReactJS](https://pt-br.reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [styled-components](https://styled-components.com/)
 - [react-router-dom](https://reactrouter.com/)
+- [react-query](https://react-query.tanstack.com/)
 - [axios](https://axios-http.com/docs/intro)
 
 ---
