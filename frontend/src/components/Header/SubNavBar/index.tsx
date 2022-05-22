@@ -1,10 +1,10 @@
 import { Emoji } from 'emoji-mart'
 import React, { useRef } from 'react'
 import { FaStickyNote, FaTimes } from 'react-icons/fa'
-import { useQueryClient } from 'react-query'
 import { NavLink } from 'react-router-dom'
-import ICollection from '../../../interfaces/Collection'
+import useCollections from '../../../pages/Collections/hooks/useCollections'
 import Title from '../../../styles/Title'
+import LoadingIndicator from '../../LoadingIndicator'
 
 import * as s from './style'
 
@@ -16,13 +16,13 @@ interface IProps {
 const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
   const subNavBarRef = useRef<HTMLDivElement>(null)
 
+  const { data: collections, isLoading, isFetching } = useCollections()
+
   const handleClickOutside = ({ target }: React.MouseEvent) => {
     if (!subNavBarRef.current?.contains(target as Node)) {
       props.setNavBar(false)
     }
   }
-  const query = useQueryClient()
-  const collections = query.getQueriesData('collection')[0][1] as ICollection[]
 
   return (
     <s.SubNavBarWrapper ref={ref} onClick={handleClickOutside}>
@@ -38,7 +38,14 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
         </s.SubNavBarHeader>
 
         <s.SubNavBarContent>
-          {collections && collections.length ? (
+          {(isLoading || isFetching) && (
+            <s.LoadingWrapper>
+              <LoadingIndicator color="#11eedd" />
+            </s.LoadingWrapper>
+          )}
+
+          {collections &&
+            !!collections.length &&
             collections.map(collection => (
               <NavLink
                 key={collection.id}
@@ -46,13 +53,14 @@ const SubNavBar = React.forwardRef<HTMLDivElement, IProps>((props, ref) => {
                 className={({ isActive }) => (isActive ? 'active' : 'inactive')}
                 onClick={() => props.setNavBar(false)}
               >
-                <s.CollectionsItems>
+                <s.CollectionsItems loading={isLoading || isFetching}>
                   <Emoji emoji={collection.emoji} size={20} native />
                   {collection.name}
                 </s.CollectionsItems>
               </NavLink>
-            ))
-          ) : (
+            ))}
+
+          {collections?.length === 0 && !isLoading && (
             <s.EmptyCollections>
               <FaStickyNote size={30} />
               <p>You don&#8219;t have any collection</p>

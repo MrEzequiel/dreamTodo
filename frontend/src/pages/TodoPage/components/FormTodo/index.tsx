@@ -12,6 +12,7 @@ import * as s from './styles'
 
 import ICollection from '../../../../interfaces/Collection'
 import ITodo from '../../../../interfaces/Todo'
+import queryKeys from '../../../../react-query/queryKeys'
 
 interface ReturnTodo extends ITodo {
   id_collection: string
@@ -33,7 +34,7 @@ const FormTodo: React.FC = () => {
       inputEl.current?.focus()
 
       const collection = queryClient.getQueryData([
-        'todo',
+        queryKeys.todo,
         collectionName
       ]) as ICollection
 
@@ -43,13 +44,16 @@ const FormTodo: React.FC = () => {
           Todo: [...collection.Todo, data]
         }
 
-        queryClient.setQueryData(['todo', collectionName], newCollection)
-        queryClient.invalidateQueries('collection')
+        queryClient.setQueryData(
+          [queryKeys.todo, collectionName],
+          newCollection
+        )
+        queryClient.invalidateQueries(queryKeys.collection)
       }
     }
   })
 
-  function handleSubmit(e: React.SyntheticEvent) {
+  const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
     if (!name.trim()) return
 
