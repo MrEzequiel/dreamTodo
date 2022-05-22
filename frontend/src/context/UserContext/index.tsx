@@ -1,6 +1,7 @@
 import {
   createContext,
   FC,
+  PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
@@ -48,7 +49,7 @@ const removeAuthCookies = () => {
 
 export const UserContext = createContext({} as UserContext)
 
-const UserProvider: FC = ({ children }) => {
+const UserProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 

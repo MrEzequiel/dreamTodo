@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react'
 
 import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa'
 import { CSSTransition } from 'react-transition-group'
@@ -9,7 +9,10 @@ interface Props {
   callbackClick?: (arg: 'edit' | 'remove') => void
 }
 
-const Dropdown: React.FC<Props> = ({ callbackClick, children }) => {
+const Dropdown: React.FC<PropsWithChildren<Props>> = ({
+  callbackClick,
+  children
+}) => {
   const DropdownItemEl = useRef<HTMLDivElement>(null)
   const DropdownEl = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
