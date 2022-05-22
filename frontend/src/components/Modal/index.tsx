@@ -8,6 +8,7 @@ interface IModalProps {
   setCloseModal: React.Dispatch<React.SetStateAction<boolean>>
   size?: string
   styleModalContent?: React.CSSProperties
+  children: React.ReactNode
 }
 
 const Modal: React.FC<IModalProps> = ({

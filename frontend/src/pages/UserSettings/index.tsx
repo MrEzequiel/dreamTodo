@@ -1,7 +1,10 @@
-import { FC, FormEvent, useState } from 'react'
+import { FC, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/UserContext'
-import Button from '../../styles/Button'
+import routesPaths from '../../utils/routesPaths'
+
 import InputStyle, { FileInputStyle, HelperTextStyle } from '../../styles/Input'
+import Button from '../../styles/Button'
 import Title from '../../styles/Title'
 
 import { useNotification } from '../../context/NotificationContext'
@@ -20,13 +23,6 @@ import RenderImageUser from '../../components/RenderImageUser'
 import { FaUpload } from 'react-icons/fa'
 import { useMutation } from 'react-query'
 import { putUser } from '../../functions/User/putUser'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-
-interface LocationState {
-  from: {
-    pathname: string
-  }
-}
 
 const schema = yup.object().shape({
   name: yup.string().required('Username is required'),
@@ -99,7 +95,7 @@ const UserSettings: FC = () => {
     <UserSettingsContainer>
       <UserSettingsTitle>
         <Title size="2.8rem" separator as="p">
-          <Link to="/collection" className="link-to-home">
+          <Link to={routesPaths.collection} className="link-to-home">
             Home
           </Link>{' '}
           / Edit Profile

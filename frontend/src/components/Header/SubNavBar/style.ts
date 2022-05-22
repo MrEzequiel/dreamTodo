@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const SubNavBarWrapper = styled.aside`
   position: fixed;
@@ -32,6 +32,28 @@ export const SubNavBarWrapper = styled.aside`
     transition: opacity 400ms, transform 400ms;
     transition-timing-function: ease-in-out;
   }
+`
+
+export const LoadingWrapper = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @keyframes show-down {
+    from {
+      transform: translateY(-40px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  animation: show-down 400ms ease-in-out;
 `
 
 export const SubNavBar = styled.div`
@@ -72,6 +94,7 @@ export const ButtonCloseBar = styled.button`
 `
 
 export const SubNavBarContent = styled.nav`
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
@@ -82,7 +105,7 @@ export const SubNavBarContent = styled.nav`
   }
 `
 
-export const CollectionsItems = styled.div`
+export const CollectionsItems = styled.div<{ loading: boolean }>`
   width: 100%;
   padding: 15px 10px;
 
@@ -92,6 +115,8 @@ export const CollectionsItems = styled.div`
 
   color: ${props => props.theme.colors.g6};
   font-weight: 300;
+
+  transition: opacity 400ms ease-in-out;
 
   > span {
     width: 40px;
@@ -105,6 +130,17 @@ export const CollectionsItems = styled.div`
     border-radius: 10px;
     font-size: 1.8rem;
   }
+
+  ${props =>
+    props.loading &&
+    css`
+      opacity: 0.5;
+      pointer-events: none;
+
+      * {
+        pointer-events: none;
+      }
+    `}
 `
 
 export const EmptyCollections = styled.div`

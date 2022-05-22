@@ -12,9 +12,8 @@ import Register from './pages/Register'
 import RequiredUser from './components/RequiredUser'
 import SuspenseFallback from './components/SuspenseFallback'
 
-import { QueryClient, QueryClientProvider } from 'react-query'
-
-const queryClient = new QueryClient()
+import { QueryClientProvider } from 'react-query'
+import queryClient from './react-query/queryClient'
 
 const Home = lazy(() => import('./pages/Home'))
 

@@ -12,6 +12,7 @@ import LoadingIndicator from '../../../components/LoadingIndicator'
 import { useMutation, useQueryClient } from 'react-query'
 import { putCollection } from '../../../functions/Collection/editCollection'
 import { useNotification } from '../../../context/NotificationContext'
+import queryKeys from '../../../react-query/queryKeys'
 
 interface IProps {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -38,7 +39,7 @@ const FormCollection: React.FC<IProps> = ({
     postCollection,
     {
       onSuccess: () => {
-        query.invalidateQueries('collection')
+        query.invalidateQueries(queryKeys.collection)
         setShowForm(false)
         createNotification('success', 'Collection created')
       },
@@ -61,23 +62,24 @@ const FormCollection: React.FC<IProps> = ({
         setShowForm(false)
         createNotification('success', 'Collection edited successfully')
 
-        const collections = query.getQueryData('collection') as ICollection[]
+        const collections = query.getQueryData(
+          queryKeys.collection
+        ) as ICollection[]
 
         if (collections) {
-          query.setQueryData(
-            'collection',
-            collections.map(collection => {
-              if (collection.id === newCollection.id) {
-                return {
-                  ...collection,
-                  ...newCollection
-                }
+          const newCollections = collections.map(collection => {
+            if (collection.id === newCollection.id) {
+              return {
+                ...collection,
+                ...newCollection
               }
-              return collection
-            })
-          )
+            }
+            return collection
+          })
+
+          query.setQueryData(queryKeys.collection, newCollections)
         } else {
-          query.refetchQueries('collection')
+          query.refetchQueries(queryKeys.collection)
         }
       },
       onError: (err: any) => {
