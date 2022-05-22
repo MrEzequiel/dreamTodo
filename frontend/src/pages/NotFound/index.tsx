@@ -8,7 +8,7 @@ const NotFound: React.FC = () => {
       <h1>404</h1>
       <p>Page not found</p>
       <p>
-        <NavLink to="/collection">click here</NavLink> to go to home page
+        <NavLink to="/">click here</NavLink> to go to home page
       </p>
     </NotFoundStyle>
   )
