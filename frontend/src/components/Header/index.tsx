@@ -52,7 +52,10 @@ const Header = () => {
                   border: `2px solid ${colors.colorPrimary}`,
                   flexShrink: 0
                 }}
-                url={user.imageURL}
+                url={
+                  user.imageURL ||
+                  `http://localhost:3333/files/${user.imageProfile}`
+                }
               />
 
               <s.ProfilePillText>
