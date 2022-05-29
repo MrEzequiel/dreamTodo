@@ -21,6 +21,7 @@ import InputStyle, {
   HelperTextStyle,
   TextAreaStyle
 } from '../../../../../styles/Input'
+import queryKeys from '../../../../../react-query/queryKeys'
 
 interface ReturnTodo extends ITodo {
   id_collection: string
@@ -90,14 +91,14 @@ const ModalForm: React.FC<Props> = ({
     {
       onSuccess: (data: ITodo) => {
         const collection = queryClient.getQueryData([
-          'todo',
+          queryKeys.todo,
           collectionName
         ]) as ICollection
 
         if (collection) {
           const newCollections: ICollection = {
             ...collection,
-            Todo: collection.Todo.map((todoItem: ITodo) => {
+            Todo: collection.Todo.map(todoItem => {
               if (todoItem.id === data.id) {
                 return data
               }
@@ -106,10 +107,13 @@ const ModalForm: React.FC<Props> = ({
             })
           }
 
-          queryClient.setQueryData(['todo', collectionName], newCollections)
-          queryClient.invalidateQueries('collection')
+          queryClient.setQueryData(
+            [queryKeys.todo, collectionName],
+            newCollections
+          )
+          queryClient.invalidateQueries(queryKeys.collection)
         } else {
-          queryClient.refetchQueries(['todo', collectionName])
+          queryClient.refetchQueries([queryKeys.todo, collectionName])
         }
 
         createNotification('success', 'Todo updated successfully')
@@ -117,7 +121,7 @@ const ModalForm: React.FC<Props> = ({
       },
 
       onError: (error: any) => {
-        if (error?.response?.status === 400) {
+        if (error?.response && error.response?.status === 400) {
           createNotification('error', 'Todo already exists')
         } else {
           createNotification('error', 'ops!, Something went wrong')

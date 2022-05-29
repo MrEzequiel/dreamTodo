@@ -1,9 +1,11 @@
 import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import routesPaths from '../../utils/routesPaths'
+
 import Header from '../../components/Header'
 import Collections from '../Collections'
 import TodoPage from '../TodoPage'
 import NotFound from '../NotFound'
-import { Route, Routes } from 'react-router-dom'
 import UserSettings from '../UserSettings'
 
 const Home: React.FC = () => {
@@ -12,9 +14,12 @@ const Home: React.FC = () => {
       <Header />
 
       <Routes>
-        <Route path="/" element={<Collections />} />
-        <Route path="/user-settings" element={<UserSettings />} />
-        <Route path="/todo/:collectionName" element={<TodoPage />} />
+        <Route path={routesPaths.collection} element={<Collections />} />
+        <Route path={routesPaths.settings} element={<UserSettings />} />
+        <Route
+          path={`${routesPaths.todo}/:collectionName`}
+          element={<TodoPage />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

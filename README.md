@@ -12,8 +12,10 @@
 
 ## ✨ Preview
 
-<img src="./.github/page1.png">
-<img src="./.github/page2.png">
+
+https://user-images.githubusercontent.com/85039218/169712952-5ef6b3d8-6d7f-4b43-afc4-d6e423c8d8c1.mp4
+
+
 🔗<a href="https://dreamtodo.netlify.app/">dreamTodo deploy</a>
 <hr>
 

@@ -4,8 +4,16 @@ import { Container } from '../../styles/LayoutComponents'
 export const TitleStyle = styled.div`
   ${Container()}
   margin-bottom: 20px;
+
   display: flex;
+  justify-content: space-between;
   align-items: center;
+
+  .title,
+  .icon-loading {
+    display: flex;
+    align-items: center;
+  }
 
   button {
     margin-right: 15px;

@@ -1,83 +1,135 @@
-import React from 'react'
-import { FaStickyNote } from 'react-icons/fa'
-import { useQuery } from 'react-query'
-import LoadingIndicator from '../../../components/LoadingIndicator'
-import { getCollection } from '../../../functions/Collection/getCollection'
+import React, { useState, memo, useMemo } from 'react'
+
+import { NavLink } from 'react-router-dom'
+import Dropdown from '../../../components/Dropdown'
+import Modal from '../../../components/Modal'
 import ICollection from '../../../interfaces/Collection'
-import { Skeleton } from '../../../styles/Skeleton'
-import Card from '../Card'
-import { CardWrapper } from '../Card/style'
+import FormCollection from '../FormCollection'
+import Button from '../../../styles/Button'
 
 import * as s from './style'
+import Title from '../../../styles/Title'
+import { Emoji } from 'emoji-mart'
+import { useMutation, useQueryClient } from 'react-query'
+import deleteCollection from '../../../functions/Collection/deleteCollection'
+import { useNotification } from '../../../context/NotificationContext'
 
 interface IProps {
-  setShowForm: React.Dispatch<React.SetStateAction<boolean>>
+  collection: ICollection
 }
 
-const CollectionCard: React.FC<IProps> = ({ setShowForm }) => {
-  const {
-    data: collections,
-    isLoading,
-    isRefetching
-  } = useQuery<ICollection[]>('collection', getCollection, {
-    staleTime: 1000 * 60 * 2 // 2 minutes
+const Card: React.FC<IProps> = ({ collection }) => {
+  const { createNotification } = useNotification()
+  const [hasEdit, setHasEdit] = useState(false)
+  const [confirmed, setConfirmed] = useState(false)
+
+  const query = useQueryClient()
+  const { isLoading, mutate: mutateDelete } = useMutation(deleteCollection, {
+    onSuccess: (data, idCollection: string) => {
+      setConfirmed(false)
+      createNotification('success', 'Collection deleted successfully')
+
+      const collections = query.getQueryData('collection') as ICollection[]
+
+      if (collections) {
+        let removedCollection = {} as ICollection
+
+        const newCollections = collections.filter((collection: ICollection) => {
+          if (collection.id === idCollection) {
+            removedCollection = collection
+            return false
+          }
+
+          return true
+        })
+
+        query.setQueryData('collection', newCollections)
+        query.removeQueries(['todo', removedCollection.name])
+      } else {
+        query.refetchQueries('collection')
+      }
+    },
+
+    onError: () => {
+      createNotification('error', 'Error deleting collection')
+    }
   })
+
+  const getPercentageTodo = useMemo(() => {
+    const todos = collection.Todo
+
+    if (todos?.length === 0 || !todos) return '0%'
+
+    const total = todos.reduce(
+      (acc, item) => (item.complete ? acc + 1 : acc),
+      0
+    )
+    return `${((total * 100) / todos.length).toFixed()}%`
+  }, [collection.Todo])
+
+  function handleClickDropdown(types: 'edit' | 'remove') {
+    if (types === 'remove') {
+      setConfirmed(true)
+    }
+
+    if (types === 'edit') {
+      setHasEdit(true)
+    }
+  }
 
   return (
     <>
-      {collections && collections.length === 0 && !isLoading && (
-        <s.EmptyCollection>
-          <FaStickyNote size={30} />
-          <p>
-            You don&#8219;t have any collection
-            <br />
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault()
-                setShowForm(true)
-              }}
-            >
-              click here
-            </a>{' '}
-            to add
-          </p>
-        </s.EmptyCollection>
-      )}
+      <s.CardWrapper>
+        <div className="upper">
+          <Emoji emoji={collection.emoji} size={50} native />
 
-      {collections && collections.length > 0 && !isLoading && (
-        <s.CollectionCardWrapper isFetching={isRefetching}>
-          {collections.map(collection => (
-            <Card key={collection.id} collection={collection} />
-          ))}
-        </s.CollectionCardWrapper>
-      )}
+          <Dropdown callbackClick={handleClickDropdown} />
+        </div>
 
-      {isRefetching && Boolean(collections?.length) && (
-        <s.LoadingWrapper>
-          <LoadingIndicator size={40} />
-        </s.LoadingWrapper>
-      )}
+        <div className="down">
+          <h2>
+            <NavLink to={`/todo/${collection.name}`}>{collection.name}</NavLink>
+          </h2>
 
-      {isLoading && (
-        <CardWrapper style={{ maxWidth: '280px', marginTop: '40px' }}>
-          <div className="upper">
-            <Skeleton
-              width={50}
-              height={50}
-              variant="circle"
-              style={{ margin: '0 auto' }}
-            />
-          </div>
+          <p>Tasks: {collection.Todo.length}</p>
 
-          <div className="down">
-            <Skeleton height={25} />
-            <Skeleton height={15} style={{ marginTop: '5px', width: '80%' }} />
-          </div>
-        </CardWrapper>
-      )}
+          <s.Porcetage quant={getPercentageTodo}>
+            <p>{getPercentageTodo}</p>
+            <span></span>
+          </s.Porcetage>
+        </div>
+      </s.CardWrapper>
+
+      <FormCollection
+        setShowForm={setHasEdit}
+        showForm={hasEdit}
+        initial={collection}
+      />
+
+      <Modal
+        size="min(500px, 80%)"
+        setCloseModal={setConfirmed}
+        modalIsOpen={confirmed}
+      >
+        <Title size="2.2rem" weight="300" separator>
+          Want to delete collection
+          <strong>{` "${collection.name}"`}?</strong>
+        </Title>
+
+        <s.ControlsButton>
+          <Button outlined onClick={() => setConfirmed(false)}>
+            No
+          </Button>
+          <Button
+            onClick={() => mutateDelete(collection.id)}
+            loading={isLoading}
+          >
+            Yes
+          </Button>
+        </s.ControlsButton>
+      </Modal>
     </>
   )
 }
 
-export default CollectionCard
+export default memo(Card)

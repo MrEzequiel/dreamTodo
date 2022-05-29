@@ -1,4 +1,11 @@
-import { createContext, FC, useCallback, useContext, useState } from 'react'
+import {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useState,
+  PropsWithChildren
+} from 'react'
 import { v4 as uuidv4 } from 'uuid'
 export type ITypeNotification = 'success' | 'error' | 'warning' | 'info'
 
@@ -21,10 +28,9 @@ interface INotificationProviderProps {
   delayNotification?: number
 }
 
-const NotificationContextProvider: FC<INotificationProviderProps> = ({
-  delayNotification = 5000,
-  children
-}) => {
+const NotificationContextProvider: FC<
+  PropsWithChildren<INotificationProviderProps>
+> = ({ delayNotification = 5000, children }) => {
   const [notification, setNotification] = useState<INotification[]>([])
 
   // function to create a notification, don't use it in the body of a component, it will cause a looping

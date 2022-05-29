@@ -1,9 +1,7 @@
 import { Emoji } from 'emoji-mart'
-import { FaAngleLeft } from 'react-icons/fa'
-import { useQuery } from 'react-query'
-import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import { getIndividualCollection } from '../../functions/Todo/getTodo'
-import ICollection from '../../interfaces/Collection'
+import { FaAngleLeft, FaCloudUploadAlt } from 'react-icons/fa'
+import { useIsMutating } from 'react-query'
+import { NavLink, useParams } from 'react-router-dom'
 import NotFound from '../NotFound'
 import TodoContext from './TodoContext'
 import FormTodo from './components/FormTodo'
@@ -11,6 +9,9 @@ import TodoList from './components/TodoList'
 import loadingAnimationIcon from '../../assets/loading.svg'
 
 import * as s from './style'
+import queryKeys from '../../react-query/queryKeys'
+import useTodoQuery from './hooks/useTodoQuery'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 const TodoPage = () => {
   const { collectionName } = useParams()
@@ -19,9 +20,8 @@ const TodoPage = () => {
     data: collection,
     isLoading,
     isError
-  } = useQuery<ICollection>(['todo', collectionName], () =>
-    getIndividualCollection(collectionName as string)
-  )
+  } = useTodoQuery(collectionName as string)
+  const isFetching = useIsMutating() > 0
 
   return (
     <>
@@ -40,16 +40,30 @@ const TodoPage = () => {
           }}
         >
           <s.TitleStyle>
-            <NavLink to="/" end>
-              <button type="button">
-                <FaAngleLeft size={20} />
-              </button>
-            </NavLink>
+            <div className="title">
+              <NavLink to="/" end>
+                <button type="button">
+                  <FaAngleLeft size={20} />
+                </button>
+              </NavLink>
 
-            <h1>
-              <Emoji emoji={collection.emoji} size={32} native />
-              {collection.name}
-            </h1>
+              <h1>
+                <Emoji emoji={collection.emoji} size={32} native />
+                {collection.name}
+              </h1>
+            </div>
+
+            <div className="icon-loading">
+              {isFetching ? (
+                <LoadingIndicator />
+              ) : (
+                <FaCloudUploadAlt
+                  size={26}
+                  color="#606060"
+                  title="save to cloud"
+                />
+              )}
+            </div>
           </s.TitleStyle>
 
           <FormTodo />
