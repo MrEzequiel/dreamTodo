@@ -1,4 +1,3 @@
-import { hash } from 'bcryptjs'
 import { client } from '../../../../database/client'
 import { AppError } from '../../../../infra/errors/AppError'
 import { UserRepository } from '../../../../repositories/UserRepositories/userRepositories'
